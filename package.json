@@ -1,0 +1,13 @@
+{
+  "name": "diraq_desktop",
+  "version": "0.0.0",
+  "description": "DiraQ desktop application",
+  "author": "DiraQ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "4.0.0"
+  }
+}
