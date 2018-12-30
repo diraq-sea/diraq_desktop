@@ -4,10 +4,28 @@
   "description": "DiraQ desktop application",
   "author": "DiraQ",
   "main": "main.js",
+  "private": true,
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "nuxt",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "5.3.6",
+    "cross-env": "5.2.0",
+    "element-ui": "2.4.11",
+    "nuxt": "2.3.4"
   },
   "devDependencies": {
-    "electron": "4.0.0"
+    "babel-eslint": "10.0.1",
+    "electron": "4.0.0",
+    "eslint": "5.11.1",
+    "eslint-config-prettier": "3.3.0",
+    "eslint-loader": "2.1.1",
+    "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-vue": "5.0.0",
+    "nodemon": "1.18.9",
+    "prettier": "1.15.3"
   }
 }
