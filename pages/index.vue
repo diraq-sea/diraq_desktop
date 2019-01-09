@@ -2,7 +2,7 @@
   <section class="container">
     <div>
       <logo />
-      <h1 class="title">diraq_desktop</h1>
+      <h1 class="title">diraq_desktop test</h1>
       <h2 class="subtitle">DiraQ desktop application</h2>
       <div class="links">
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
