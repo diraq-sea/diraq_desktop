@@ -2,11 +2,18 @@
   <section class="container">
     <div>
       <logo />
-      <h1 class="title">diraq_desktop test</h1>
+      <h1 class="title">diraq_desktop</h1>
       <h2 class="subtitle">DiraQ desktop application</h2>
       <div class="links">
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
+      </div>
+      <div class="email">
+        <form id="form_email" onsubmit="prelogin">
+          <input id="input_email" type="text" />
+
+          <input type="submit" value="送信" />
+        </form>
       </div>
     </div>
   </section>
@@ -18,6 +25,11 @@ import Logo from '~/components/Logo.vue'
 export default {
   components: {
     Logo,
+  },
+  methods: {
+    async prelogin() {
+      await this.$axios.$post('auth/prelogin', JSON.stringify(email, 'master@diraq.io'))
+    },
   },
 }
 </script>
