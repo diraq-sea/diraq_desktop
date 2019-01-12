@@ -9,11 +9,8 @@
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
       </div>
       <div class="email">
-        <form id="form_email" onsubmit="prelogin">
-          <input id="input_email" type="text" />
-
-          <input type="submit" value="送信" />
-        </form>
+        <input id="input_email" type="text" />
+        <p><button @click="prelogin">登録</button></p>
       </div>
     </div>
   </section>
@@ -28,7 +25,7 @@ export default {
   },
   methods: {
     async prelogin() {
-      await this.$axios.$post('auth/prelogin', JSON.stringify(email, 'master@diraq.io'))
+      await this.$axios.$post('auth/prelogin', 'master@diraq.io')
     },
   },
 }
