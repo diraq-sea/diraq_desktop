@@ -8,9 +8,17 @@
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
       </div>
-      <div class="email">
-        <input v-model="text" id="input_email" type="text" />
-        <p><button @click="prelogin">登録</button></p>
+      <div v-if="before_login == true">
+        <div class="email">
+          <input v-model="prelogin_email" id="input_email" type="text" />
+          <p><button @click="prelogin">登録</button></p>
+        </div>
+      </div>
+      <div v-else>
+        <div class="login">
+          <input v-model="login_token" id="input_token" type="text" />
+          <p><button @click="login">ログイン</button></p>
+        </div>
       </div>
     </div>
   </section>
@@ -22,7 +30,9 @@ import { ipcRenderer } from 'electron'
 export default {
   data() {
     return {
-      text: '',
+      prelogin_email: '',
+      before_login: true,
+      login_token: '',
     }
   },
   components: {
@@ -30,7 +40,15 @@ export default {
   },
   methods: {
     async prelogin() {
-      ipcRenderer.send('prelogin', this.text)
+      ipcRenderer.send('prelogin', this.prelogin_email)
+      this.before_login = false
+    },
+    async login() {
+      //console.log(this.login_token)
+      ipcRenderer.send('login', this.login_token)
+      // ipcRenderer.on('reply', (event, arg) => {
+      //   console.log(arg)
+      // })
     },
   },
 }
