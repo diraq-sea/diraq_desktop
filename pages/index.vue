@@ -9,7 +9,7 @@
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
       </div>
       <div class="email">
-        <input id="input_email" type="text" />
+        <input v-model="text" id="input_email" type="text" />
         <p><button @click="prelogin">登録</button></p>
       </div>
     </div>
@@ -18,14 +18,19 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
-
+const { ipcRenderer } = window.require('electron')
 export default {
+  data() {
+    return {
+      text: '',
+    }
+  },
   components: {
     Logo,
   },
   methods: {
     async prelogin() {
-      await this.$axios.$post('auth/prelogin', 'master@diraq.io')
+      ipcRenderer.send('prelogin', this.text)
     },
   },
 }

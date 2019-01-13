@@ -14,6 +14,8 @@
     <script>
       // You can also require other files to run in this process
       require('./renderer.js')
+      import electron from 'electron'
+      const { ipcRenderer } = electron.ipcRenderer
     </script>
   </body>
 </html>
