@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-
+const { app, BrowserWindow, ipcMain } = require('electron')
+const axios = require('axios')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -48,3 +48,6 @@ app.on('activate', function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('prelogin', async (event, arg) => {
+  await axios.post('http://localhost:8080/v1/auth/prelogin', { email: arg })
+})

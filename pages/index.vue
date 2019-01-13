@@ -8,16 +8,30 @@
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
       </div>
+      <div class="email">
+        <input v-model="text" id="input_email" type="text" />
+        <p><button @click="prelogin">登録</button></p>
+      </div>
     </div>
   </section>
 </template>
 
 <script>
 import Logo from '~/components/Logo.vue'
-
+import { ipcRenderer } from 'electron'
 export default {
+  data() {
+    return {
+      text: '',
+    }
+  },
   components: {
     Logo,
+  },
+  methods: {
+    async prelogin() {
+      ipcRenderer.send('prelogin', this.text)
+    },
   },
 }
 </script>
