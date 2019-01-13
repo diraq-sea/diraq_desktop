@@ -18,7 +18,7 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
-const { ipcRenderer } = window.require('electron')
+import { ipcRenderer } from 'electron'
 export default {
   data() {
     return {

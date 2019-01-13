@@ -63,6 +63,7 @@ module.exports = {
           exclude: /(node_modules)/,
         })
       }
+      config.target = 'electron-renderer'
     },
   },
 }
