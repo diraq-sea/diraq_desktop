@@ -1,6 +1,13 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 const axios = require('axios')
+const fs = require('fs')
+const path = require('path')
+const homedir = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
+const diraq_study_dir_path = path.join(homedir, '.diraq_study')
+const diraq_study_file_path = path.join(diraq_study_dir_path, 'auth.json')
+const content =
+  '{\n\t"_": "This is your DiraQ credentials file. DON\'T SHARE!",\n\t"credentials": [\n\t\t{\n\t\t\t"type": "login",\n\t\t\t"token": ""\n\t\t}\n\t]\n}'
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -12,6 +19,8 @@ function createWindow() {
   // and load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000/')
 
+  //create new directory for login
+  createfile_login()
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
@@ -22,6 +31,13 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+}
+
+function createfile_login() {
+  if (!fs.existsSync(diraq_study_dir_path)) {
+    fs.mkdirSync(diraq_study_dir_path)
+    fs.writeFileSync(diraq_study_file_path, content)
+  }
 }
 
 // This method will be called when Electron has finished
