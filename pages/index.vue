@@ -3,14 +3,22 @@
     <div>
       <logo />
       <h1 class="title">diraq_desktop</h1>
-      <h2 class="subtitle">DiraQ desktop application</h2>
+      <h2 class="subtitle">Welcome {{ name }}</h2>
       <div class="links">
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
       </div>
-      <div class="email">
-        <input v-model="text" id="input_email" type="text" />
-        <p><button @click="prelogin">登録</button></p>
+      <div v-if="before_login">
+        <div class="email">
+          <input v-model="prelogin_email" id="input_email" type="text" />
+          <p><button @click="prelogin">登録</button></p>
+        </div>
+      </div>
+      <div v-else>
+        <div class="login">
+          <input v-model="login_token" id="input_token" type="text" />
+          <p><button @click="login">ログイン</button></p>
+        </div>
       </div>
     </div>
   </section>
@@ -22,7 +30,10 @@ import { ipcRenderer } from 'electron'
 export default {
   data() {
     return {
-      text: '',
+      prelogin_email: '',
+      before_login: true,
+      login_token: '',
+      name: '',
     }
   },
   components: {
@@ -30,7 +41,14 @@ export default {
   },
   methods: {
     async prelogin() {
-      ipcRenderer.send('prelogin', this.text)
+      ipcRenderer.send('prelogin', this.prelogin_email)
+      this.before_login = false
+    },
+    async login() {
+      ipcRenderer.send('login', this.login_token)
+      ipcRenderer.on('reply_login', (event, arg) => {
+        this.name = arg
+      })
     },
   },
 }
