@@ -8,7 +8,7 @@
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
       </div>
-      <div v-if="before_login == true">
+      <div v-if="before_login">
         <div class="email">
           <input v-model="prelogin_email" id="input_email" type="text" />
           <p><button @click="prelogin">登録</button></p>
