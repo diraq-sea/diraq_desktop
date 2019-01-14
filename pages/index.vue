@@ -44,11 +44,7 @@ export default {
       this.before_login = false
     },
     async login() {
-      //console.log(this.login_token)
       ipcRenderer.send('login', this.login_token)
-      // ipcRenderer.on('reply', (event, arg) => {
-      //   console.log(arg)
-      // })
     },
   },
 }
