@@ -3,7 +3,7 @@
     <div>
       <logo />
       <h1 class="title">diraq_desktop</h1>
-      <h2 class="subtitle">DiraQ desktop application</h2>
+      <h2 class="subtitle">Welcome {{ name }}</h2>
       <div class="links">
         <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
@@ -33,6 +33,7 @@ export default {
       prelogin_email: '',
       before_login: true,
       login_token: '',
+      name: '',
     }
   },
   components: {
@@ -45,6 +46,9 @@ export default {
     },
     async login() {
       ipcRenderer.send('login', this.login_token)
+      ipcRenderer.on('reply_login', (event, arg) => {
+        this.name = arg
+      })
     },
   },
 }

@@ -83,4 +83,11 @@ ipcMain.on('login', async (event, arg) => {
   })
   content.credentials[0].token = token
   fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
+  const {
+    data: { name },
+  } = await axios.get('http://localhost:8080/v1/users', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  event.sender.send('reply_login', name)
+  //console.log(name)
 })
