@@ -6,7 +6,7 @@ const path = require('path')
 const homedir = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
 const diraq_study_dir_path = path.join(homedir, '.diraq_study')
 const diraq_study_file_path = path.join(diraq_study_dir_path, 'auth.json')
-const content = {
+let content = {
   _: "This is your DiraQ credentials file. DON'T SHARE!",
   credentials: [
     {
@@ -76,10 +76,10 @@ ipcMain.on('prelogin', async (event, arg) => {
 })
 
 ipcMain.on('login', async (event, arg) => {
-  //console.log('Bearer ' + arg)
-  await axios.post('http://localhost:8080/v1/auth/login', {
-    headers: { Authorization: 'Bearer ' + arg },
-  })
-  //console.log(arg)
-  //event.sender.send('reply', 'pong')
+  await axios
+    .post('http://localhost:8080/v1/auth/login', null, {
+      headers: { Authorization: 'Bearer ' + arg },
+    })
+    .then(response => (content.credentials[0]['token'] = response.data.token))
+  fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
 })
