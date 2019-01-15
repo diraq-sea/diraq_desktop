@@ -19,18 +19,24 @@ const content = {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow() {
+async function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({ width: 800, height: 600 })
-
+  const auth_file = read_auth_json()
+  if (!auth_file) {
+    createfile_login() //create new directory for login
+  }
+  if (auth_file.credentials[0].token) {
+    const {
+      data: { name },
+    } = await axios.get('http://localhost:8080/v1/users', {
+      headers: { Authorization: `Bearer ${auth_file.credentials[0].token}` },
+    })
+  }
   // and load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000/')
-
-  //create new directory for login
-  createfile_login()
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
-
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -46,7 +52,13 @@ function createfile_login() {
     fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
   }
 }
-
+function read_auth_json() {
+  if (fs.existsSync(diraq_study_file_path)) {
+    return JSON.parse(fs.readFileSync(diraq_study_file_path))
+  } else {
+    return null
+  }
+}
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -89,5 +101,4 @@ ipcMain.on('login', async (event, arg) => {
     headers: { Authorization: `Bearer ${token}` },
   })
   event.sender.send('reply_login', name)
-  //console.log(name)
 })
