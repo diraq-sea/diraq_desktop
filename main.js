@@ -15,6 +15,7 @@ const content = {
     },
   ],
 }
+const auth_file = read_auth_json()
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -22,16 +23,8 @@ let mainWindow
 async function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({ width: 800, height: 600 })
-  const auth_file = read_auth_json()
   if (!auth_file) {
     createfile_login() //create new directory for login
-  }
-  if (auth_file.credentials[0].token) {
-    const {
-      data: { name },
-    } = await axios.get('http://localhost:8080/v1/users', {
-      headers: { Authorization: `Bearer ${auth_file.credentials[0].token}` },
-    })
   }
   // and load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000/')
@@ -95,10 +88,33 @@ ipcMain.on('login', async (event, arg) => {
   })
   content.credentials[0].token = token
   fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
-  const {
-    data: { name },
-  } = await axios.get('http://localhost:8080/v1/users', {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  event.sender.send('reply_login', name)
+  // const {
+  //   data: { name },
+  // } = await axios.get('http://localhost:8080/v1/users', {
+  //   headers: { Authorization: `Bearer ${token}` },
+  // })
+  // event.sender.send('reply_login', name)
 })
+
+ipcMain.on('user-name-request', async (event, arg) => {
+  let resdat
+  if (auth_file && auth_file.credentials[0].token) {
+    const {
+      data: { name },
+    } = await axios.get('http://localhost:8080/v1/users', {
+      headers: { Authorization: `Bearer ${auth_file.credentials[0].token}` },
+    })
+    resdat = name
+  } else {
+    resdat = null
+  }
+  event.sender.send('user-name-reply', resdat)
+})
+
+// ipcMain.on('user-name-reply', async () => {
+//   const {
+//     data: { name },
+//   } = await axios.get('http://localhost:8080/v1/users', {
+//     headers: { Authorization: `Bearer ${ auth_file.credentials[0].token }` },
+//   })
+// })
