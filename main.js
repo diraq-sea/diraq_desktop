@@ -76,6 +76,8 @@ app.on('activate', function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+//login,logout
 ipcMain.on('prelogin', async (event, arg) => {
   await axios.post('http://localhost:8080/v1/auth/prelogin', { email: arg })
 })
@@ -88,12 +90,6 @@ ipcMain.on('login', async (event, arg) => {
   })
   content.credentials[0].token = token
   fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
-  // const {
-  //   data: { name },
-  // } = await axios.get('http://localhost:8080/v1/users', {
-  //   headers: { Authorization: `Bearer ${token}` },
-  // })
-  // event.sender.send('reply_login', name)
 })
 
 ipcMain.on('user-name-request', async (event, arg) => {
@@ -111,10 +107,7 @@ ipcMain.on('user-name-request', async (event, arg) => {
   event.sender.send('user-name-reply', resdat)
 })
 
-// ipcMain.on('user-name-reply', async () => {
-//   const {
-//     data: { name },
-//   } = await axios.get('http://localhost:8080/v1/users', {
-//     headers: { Authorization: `Bearer ${ auth_file.credentials[0].token }` },
-//   })
-// })
+ipcMain.on('logout', async () => {
+  content.credentials[0].token = ''
+  fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
+})

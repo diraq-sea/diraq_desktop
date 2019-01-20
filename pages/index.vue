@@ -12,6 +12,9 @@
         <input v-model="login_token" id="input_token" type="text" />
         <p><button @click="login">ログイン</button></p>
       </div>
+      <div class="logout">
+        <p><button @click="logout">ログアウト</button></p>
+      </div>
     </div>
   </section>
 </template>
@@ -43,10 +46,9 @@ export default {
     },
     async login() {
       ipcRenderer.send('login', this.login_token)
-      //ipcRenderer.send('user-name-request')
-      // ipcRenderer.on('reply_login', (event, arg) => {
-      //   this.name = arg
-      // })
+    },
+    async logout() {
+      ipcRenderer.send('logout')
     },
   },
 }
