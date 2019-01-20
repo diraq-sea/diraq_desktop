@@ -6,6 +6,7 @@ const path = require('path')
 const homedir = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
 const diraq_study_dir_path = path.join(homedir, '.diraq_study')
 const diraq_study_file_path = path.join(diraq_study_dir_path, 'auth.json')
+let initial_url = 'http://localhost:3000/login'
 const content = {
   _: "This is your DiraQ credentials file. DON'T SHARE!",
   credentials: [
@@ -24,10 +25,10 @@ async function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({ width: 800, height: 600 })
   if (!auth_file) {
-    createfile_login() //create new directory for login
+    initial_url = 'http://localhost:3000/'
   }
-  // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:3000/')
+  // and load the index.html of the app or redirect to user-page
+  mainWindow.loadURL(initial_url)
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
   // Emitted when the window is closed.
@@ -79,6 +80,7 @@ app.on('activate', function() {
 
 //login,logout
 ipcMain.on('prelogin', async (event, arg) => {
+  createfile_login() //create new directory for login
   await axios.post('http://localhost:8080/v1/auth/prelogin', { email: arg })
 })
 

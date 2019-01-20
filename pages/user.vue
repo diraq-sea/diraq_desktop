@@ -4,21 +4,21 @@
       <logo />
       <h1 class="title">diraq_desktop</h1>
       <h2 class="subtitle">Welcome {{ name }}</h2>
-      <div class="email">
+      <!-- <div class="email">
         <input v-model="prelogin_email" id="input_email" type="text" />
         <p>
           <nuxt-link to="/login"><button @click="prelogin">登録</button></nuxt-link>
         </p>
-      </div>
+      </div> -->
       <!-- <div class="login">
         <input v-model="login_token" id="input_token" type="text" />
         <p><button @click="login">ログイン</button></p>
       </div> -->
-      <!-- <div class="logout">
+      <div class="logout">
         <p>
           <nuxt-link to="/login"><button @click="logout">ログアウト</button></nuxt-link>
         </p>
-      </div> -->
+      </div>
     </div>
   </section>
 </template>
@@ -27,7 +27,7 @@
 import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
 export default {
-  //middleware, storeでthis.prelogin_emailが存在する時loginに戻す
+  //middleware, storeでthis.login_tokenが空の時loginに戻す
   asyncData() {
     return new Promise(resolve => {
       ipcRenderer.once('user-name-reply', (event, name) => {
