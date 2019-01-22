@@ -3,12 +3,9 @@
     <div>
       <logo />
       <h1 class="title">diraq_desktop</h1>
-      <h2 class="subtitle">Welcome {{ name }}</h2>
       <div class="login">
         <input v-model="login_token" id="input_token" type="text" />
-        <p>
-          <nuxt-link to="/user"><button @click="login">ログイン</button></nuxt-link>
-        </p>
+        <p><button @click="login">ログイン</button></p>
       </div>
     </div>
   </section>
@@ -17,19 +14,12 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
+import { mapMutations } from 'vuex'
 export default {
-  //middleware, storeでthis.prelogin_emailが空の時新規登録に戻す
-  asyncData() {
-    return new Promise(resolve => {
-      ipcRenderer.once('user-name-reply', (event, name) => {
-        resolve({ name })
-      })
-      ipcRenderer.send('user-name-request')
-    })
-  },
+  //middleware, storeでthis.prelogin_emailが空の時新規登録に戻す,二重ログイン防ぐ,loginしてるとuserへ
+  middleware: 'login',
   data() {
     return {
-      prelogin_email: '',
       login_token: '',
     }
   },
@@ -37,16 +27,12 @@ export default {
     Logo,
   },
   methods: {
-    // async prelogin() {
-    //   ipcRenderer.send('prelogin', this.prelogin_email)
-    //   redirect('/login')
-    // },
     async login() {
       ipcRenderer.send('login', this.login_token)
+      ipcRenderer.on('login-reply', async (event, arg) => {
+        this.$router.push('/user')
+      })
     },
-    // async logout() {
-    //   ipcRenderer.send('logout')
-    // },
   },
 }
 </script>

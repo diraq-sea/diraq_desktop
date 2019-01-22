@@ -82,6 +82,7 @@ app.on('activate', function() {
 ipcMain.on('prelogin', async (event, arg) => {
   createfile_login() //create new directory for login
   await axios.post('http://localhost:8080/v1/auth/prelogin', { email: arg })
+  event.sender.send('prelogin-reply')
 })
 
 ipcMain.on('login', async (event, arg) => {
@@ -92,6 +93,7 @@ ipcMain.on('login', async (event, arg) => {
   })
   content.credentials[0].token = token
   fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
+  event.sender.send('login-reply')
 })
 
 ipcMain.on('user-name-request', async (event, arg) => {
@@ -112,4 +114,29 @@ ipcMain.on('user-name-request', async (event, arg) => {
 ipcMain.on('logout', async () => {
   content.credentials[0].token = ''
   fs.writeFileSync(diraq_study_file_path, JSON.stringify(content))
+})
+
+//middleware ipc
+
+ipcMain.on('login-state-request', async (event, arg) => {
+  const auth_file = read_auth_json()
+  if (auth_file && auth_file.credentials[0].token) {
+    event.sender.send('login-state-reply', 'already login')
+  } else if (!auth_file) {
+    event.sender.send('login-state-reply', 'need prelogin')
+  }
+})
+
+ipcMain.on('prelogin-state-request', async (event, arg) => {
+  const auth_file_token = read_auth_json().credentials[0].token
+  if (auth_file_token && auth_file_token != '') {
+    event.sender.send('prelogin-state-reply', 'to user')
+  }
+})
+
+ipcMain.on('user-state-request', async (event, arg) => {
+  const auth_file_token = read_auth_json().credentials[0].token
+  if (!auth_file_token) {
+    event.sender.send('user-state-reply', 'reject')
+  }
 })

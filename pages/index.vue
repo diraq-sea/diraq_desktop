@@ -3,22 +3,10 @@
     <div>
       <logo />
       <h1 class="title">diraq_desktop</h1>
-      <h2 class="subtitle">Welcome {{ name }}</h2>
       <div class="email">
         <input v-model="prelogin_email" id="input_email" type="text" />
-        <p>
-          <nuxt-link to="/login"><button @click="prelogin">登録</button></nuxt-link>
-        </p>
+        <p><button @click="prelogin">登録</button></p>
       </div>
-      <!-- <div class="login">
-        <input v-model="login_token" id="input_token" type="text" />
-        <p><button @click="login">ログイン</button></p>
-      </div> -->
-      <!-- <div class="logout">
-        <p>
-          <nuxt-link to="/login"><button @click="logout">ログアウト</button></nuxt-link>
-        </p>
-      </div> -->
     </div>
   </section>
 </template>
@@ -27,19 +15,10 @@
 import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
 export default {
-  //middleware, storeでthis.prelogin_emailが存在する時loginに戻す
-  asyncData() {
-    return new Promise(resolve => {
-      ipcRenderer.once('user-name-reply', (event, name) => {
-        resolve({ name })
-      })
-      ipcRenderer.send('user-name-request')
-    })
-  },
+  middleware: 'prelogin',
   data() {
     return {
       prelogin_email: '',
-      login_token: '',
     }
   },
   components: {
@@ -48,12 +27,9 @@ export default {
   methods: {
     async prelogin() {
       ipcRenderer.send('prelogin', this.prelogin_email)
-    },
-    async login() {
-      ipcRenderer.send('login', this.login_token)
-    },
-    async logout() {
-      ipcRenderer.send('logout')
+      ipcRenderer.on('prelogin-reply', async (event, arg) => {
+        this.$router.push('/login')
+      })
     },
   },
 }
