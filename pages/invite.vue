@@ -4,10 +4,11 @@
       <logo />
       <h1 class="title">diraq_desktop</h1>
       <h2 class="subtitle">Welcome {{ name }}</h2>
-      <div class="email">
-        <input v-model="prelogin_email" id="input_email" type="text" />
-        <p><button @click="prelogin">登録</button></p>
-      </div>
+      名前
+      <p><input type="text" v-model="invitee_name" /></p>
+      メールアドレス
+      <p><input type="text" v-model="invitee_email" /></p>
+      <p><button @click="invite">招待</button></p>
     </div>
   </section>
 </template>
@@ -16,21 +17,27 @@
 import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
 export default {
-  middleware: 'prelogin',
+  middleware: 'user', //middleware, storeでthis.login_tokenが空の時loginに戻す
   data() {
     return {
-      prelogin_email: '',
+      invitee_name: '',
+      invitee_email: '',
     }
+  },
+  asyncData() {
+    return new Promise(resolve => {
+      ipcRenderer.once('user-name-reply', (event, name) => {
+        resolve({ name })
+      })
+      ipcRenderer.send('user-name-request')
+    })
   },
   components: {
     Logo,
   },
   methods: {
-    async prelogin() {
-      ipcRenderer.send('prelogin', this.prelogin_email)
-      ipcRenderer.on('prelogin-reply', async (event, arg) => {
-        this.$router.push('/login')
-      })
+    async invite() {
+      ipcRenderer.send('invite-token-request')
     },
   },
 }

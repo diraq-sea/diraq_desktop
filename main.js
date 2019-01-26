@@ -98,11 +98,12 @@ ipcMain.on('login', async (event, arg) => {
 
 ipcMain.on('user-name-request', async (event, arg) => {
   let resdat
-  if (auth_file && auth_file.credentials[0].token) {
+  const auth_file_instant = read_auth_json()
+  if (auth_file_instant && auth_file_instant.credentials[0].token) {
     const {
       data: { name },
     } = await axios.get('http://localhost:8080/v1/users', {
-      headers: { Authorization: `Bearer ${auth_file.credentials[0].token}` },
+      headers: { Authorization: `Bearer ${auth_file_instant.credentials[0].token}` },
     })
     resdat = name
   } else {
@@ -119,10 +120,10 @@ ipcMain.on('logout', async () => {
 //middleware ipc
 
 ipcMain.on('login-state-request', async (event, arg) => {
-  const auth_file = read_auth_json()
-  if (auth_file && auth_file.credentials[0].token) {
+  const auth_file_login_state = read_auth_json()
+  if (auth_file_login_state && auth_file_login_state.credentials[0].token) {
     event.sender.send('login-state-reply', 'already login')
-  } else if (!auth_file) {
+  } else if (!auth_file_login_state) {
     event.sender.send('login-state-reply', 'need prelogin')
   }
 })
@@ -139,4 +140,16 @@ ipcMain.on('user-state-request', async (event, arg) => {
   if (!auth_file_token) {
     event.sender.send('user-state-reply', 'reject')
   }
+})
+
+//招待トークン生成
+ipcMain.on('invite-token-request', async (event, arg) => {
+  const auth_file_instant = read_auth_json()
+  const {
+    data: { token },
+  } = await axios.post('http://localhost:8080/v1/auth/invite', null, {
+    headers: { Authorization: `Bearer ${auth_file_instant.credentials[0].token}` },
+  })
+  // console.log(auth_file_instant.credentials[0].token)
+  // console.log(token)
 })
