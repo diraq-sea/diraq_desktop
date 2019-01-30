@@ -4,10 +4,13 @@
       <logo />
       <h1 class="title">diraq_desktop</h1>
       <h2 class="subtitle">Welcome {{ name }}</h2>
+      <div class="invite">
+        <nuxt-link to="/invite">
+          <p><button>招待する</button></p>
+        </nuxt-link>
+      </div>
       <div class="logout">
-        <p>
-          <nuxt-link to="/login"><button @click="logout">ログアウト</button></nuxt-link>
-        </p>
+        <p><button @click="logout">ログアウト</button></p>
       </div>
     </div>
   </section>
@@ -16,6 +19,7 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
+//import { mapMutations } from 'vuex'
 export default {
   middleware: 'user', //middleware, storeでthis.login_tokenが空の時loginに戻す
   asyncData() {
@@ -26,6 +30,17 @@ export default {
       ipcRenderer.send('user-name-request')
     })
   },
+  // computed: {
+  //   name: function() {
+  //     this.$store.dispatch('user/get_name')
+  //     return this.$store.getters['user/user_name']
+  //   },
+  // },
+  // data() {
+  //   return {
+  //     name: this.$store.getters['user/user_name'],
+  //   }
+  // },
   components: {
     Logo,
   },
