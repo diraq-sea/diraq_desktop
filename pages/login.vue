@@ -3,9 +3,9 @@
     <div>
       <logo />
       <h1 class="title">diraq_desktop</h1>
-      <div class="email">
-        <input v-model="prelogin_email" id="input_email" type="text" />
-        <p><button @click="prelogin">登録</button></p>
+      <div class="login">
+        <input v-model="login_token" id="input_token" type="text" />
+        <p><button @click="login">ログイン</button></p>
       </div>
     </div>
   </section>
@@ -14,21 +14,23 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
+import { mapMutations } from 'vuex'
 export default {
-  middleware: 'prelogin',
+  //middleware, storeでthis.prelogin_emailが空の時新規登録に戻す,二重ログイン防ぐ,loginしてるとuserへ
+  middleware: 'login',
   data() {
     return {
-      prelogin_email: '',
+      login_token: '',
     }
   },
   components: {
     Logo,
   },
   methods: {
-    async prelogin() {
-      ipcRenderer.send('prelogin', this.prelogin_email)
-      ipcRenderer.on('prelogin-reply', async (event, arg) => {
-        this.$router.push('/login')
+    async login() {
+      ipcRenderer.send('login', this.login_token)
+      ipcRenderer.on('login-reply', async (event, arg) => {
+        this.$router.push('/user')
       })
     },
   },

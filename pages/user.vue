@@ -3,9 +3,11 @@
     <div>
       <logo />
       <h1 class="title">diraq_desktop</h1>
-      <div class="email">
-        <input v-model="prelogin_email" id="input_email" type="text" />
-        <p><button @click="prelogin">登録</button></p>
+      <h2 class="subtitle">Welcome {{ name }}</h2>
+      <div class="logout">
+        <p>
+          <nuxt-link to="/login"><button @click="logout">ログアウト</button></nuxt-link>
+        </p>
       </div>
     </div>
   </section>
@@ -15,21 +17,22 @@
 import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
 export default {
-  middleware: 'prelogin',
-  data() {
-    return {
-      prelogin_email: '',
-    }
+  middleware: 'user', //middleware, storeでthis.login_tokenが空の時loginに戻す
+  asyncData() {
+    return new Promise(resolve => {
+      ipcRenderer.once('user-name-reply', (event, name) => {
+        resolve({ name })
+      })
+      ipcRenderer.send('user-name-request')
+    })
   },
   components: {
     Logo,
   },
   methods: {
-    async prelogin() {
-      ipcRenderer.send('prelogin', this.prelogin_email)
-      ipcRenderer.on('prelogin-reply', async (event, arg) => {
-        this.$router.push('/login')
-      })
+    async logout() {
+      ipcRenderer.send('logout')
+      this.$router.push('/login')
     },
   },
 }
