@@ -1,50 +1,41 @@
 <template>
-  <section class="container">
-    <div>
-      <logo />
-      <h1 class="title">diraq_desktop</h1>
-      <h2 class="subtitle">Welcome {{ name }}</h2>
-      <div class="email">
-        <input v-model="prelogin_email" id="input_email" type="text" />
-        <p><button @click="prelogin">登録</button></p>
-      </div>
+  <div>
+    <h1 class="title">diraq_desktop</h1>
+    <h2 class="subtitle">Welcome {{ name }}</h2>
+    <div class="invite">
+      <nuxt-link to="/invite">
+        <p><button>招待する</button></p>
+      </nuxt-link>
     </div>
-  </section>
+    <div class="logout">
+      <p><button @click="logout">ログアウト</button></p>
+    </div>
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import { ipcRenderer } from 'electron'
+import { mapState } from 'vuex'
+
 export default {
-  middleware: 'prelogin',
-  data() {
-    return {
-      prelogin_email: '',
-    }
+  fetch({ store }) {
+    return store.dispatch('user/getUserInfo')
   },
-  components: {
-    Logo,
+  destroyed() {
+    this.$store.commit('user/clearUserInfo')
+  },
+  computed: {
+    ...mapState('user', ['name']),
   },
   methods: {
-    async prelogin() {
-      ipcRenderer.send('prelogin', this.prelogin_email)
-      ipcRenderer.on('prelogin-reply', async (event, arg) => {
-        this.$router.push('/login')
-      })
+    async logout() {
+      await this.$store.dispatch('login/logout')
+      this.$router.push('/login')
     },
   },
 }
 </script>
 
-<style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
+<style scoped>
 .title {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
@@ -61,9 +52,5 @@ export default {
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
 }
 </style>

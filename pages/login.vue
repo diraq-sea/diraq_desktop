@@ -3,9 +3,13 @@
     <div>
       <logo />
       <h1 class="title">diraq_desktop</h1>
-      <div class="login">
-        <input v-model="login_token" id="input_token" type="text" />
-        <p><button @click="login">ログイン</button></p>
+      <div>
+        <input v-model="email" type="text" />
+        <p><button @click="prelogin">Tokenをメールに送信する</button></p>
+      </div>
+      <div>
+        <input v-model="loginToken" type="text" />
+        <p><button @click="login">Tokenをコピペしてログイン</button></p>
       </div>
     </div>
   </section>
@@ -16,28 +20,34 @@ import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
 import { mapMutations } from 'vuex'
 export default {
-  //middleware, storeでthis.prelogin_emailが空の時新規登録に戻す,二重ログイン防ぐ,loginしてるとuserへ
-  middleware: 'login',
+  layout: 'login',
+  async asyncData({ store }) {
+    await store.dispatch('login/getAuthEmail')
+    return {
+      email: store.state.login.email,
+    }
+  },
   data() {
     return {
-      login_token: '',
+      loginToken: '',
     }
   },
   components: {
     Logo,
   },
   methods: {
+    prelogin() {
+      return this.$store.dispatch('login/prelogin', this.email)
+    },
     async login() {
-      ipcRenderer.send('login', this.login_token)
-      ipcRenderer.on('login-reply', async (event, arg) => {
-        this.$router.push('/user')
-      })
+      await this.$store.dispatch('login/login', this.loginToken)
+      this.$router.push('/')
     },
   },
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   min-height: 100vh;
   display: flex;
@@ -62,9 +72,5 @@ export default {
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
 }
 </style>

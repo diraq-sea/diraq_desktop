@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "DiraQ desktop application",
   "author": "DiraQ",
-  "main": "main.js",
+  "main": "main/index.js",
   "private": true,
   "scripts": {
     "start": "electron .",
@@ -11,12 +11,11 @@
     "dev:renderer": "nuxt",
     "dev:main": "npm-run-all --serial dev:util dev:app",
     "dev:util": "wait-on http://localhost:3000/",
-    "dev:app": "nodemon --watch main.js --exec npm start",
+    "dev:app": "nodemon --watch main  --watch common --exec npm start",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@nuxtjs/axios": "5.3.6",
-    "cross-env": "5.2.0",
+    "axios": "0.18.0",
     "element-ui": "2.4.11",
     "nuxt": "2.3.4"
   },

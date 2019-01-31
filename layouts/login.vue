@@ -1,17 +1,10 @@
 <template>
-  <section class="container">
-    <div><logo /><nuxt /></div>
-  </section>
+  <div><nuxt /></div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
 export default {
-  middleware: 'isLogin',
-  components: {
-    Logo,
-  },
+  middleware: 'isNotLogin',
 }
 </script>
 
@@ -33,15 +26,5 @@ html {
 *:after {
   box-sizing: border-box;
   margin: 0;
-}
-</style>
-
-<style scoped>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 </style>

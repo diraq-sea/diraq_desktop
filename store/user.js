@@ -1,27 +1,24 @@
-import { ipcRenderer } from 'electron'
+import { GET_USER_INFO } from '../common/ipcTypes'
+
 export const state = () => ({
-  name: 'hjjh',
+  name: null,
+  email: null,
 })
 
 export const mutations = {
-  get_user_name(state) {
-    state.name = new Promise(resolve => {
-      ipcRenderer.once('user-name-reply', (event, arg) => {
-        resolve({ arg })
-      })
-      ipcRenderer.send('user-name-request')
-    })
+  setUserInfo(state, { name, email }) {
+    state.name = name
+    state.email = email
   },
-}
-
-export const getters = {
-  user_name(state) {
-    return state.name
+  clearUserInfo(state) {
+    state.name = null
+    state.email = null
   },
 }
 
 export const actions = {
-  get_name(context) {
-    context.commit('get_user_name')
+  async getUserInfo({ commit }) {
+    const userInfo = await this.$ipc(GET_USER_INFO)
+    commit('setUserInfo', userInfo)
   },
 }

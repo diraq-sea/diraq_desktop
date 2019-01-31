@@ -1,23 +1,19 @@
 <template>
-  <section class="container">
-    <div>
-      <logo />
-      <h1 class="title">diraq_desktop</h1>
-      <h2 class="subtitle">Welcome {{ name }}</h2>
-      名前
-      <p><input type="text" v-model="invitee_name" /></p>
-      メールアドレス
-      <p><input type="text" v-model="invitee_email" /></p>
-      <p><button @click="invite">招待</button></p>
-    </div>
-  </section>
+  <div>
+    <h1 class="title">diraq_desktop</h1>
+    <h2 class="subtitle">Welcome {{ name }}</h2>
+    名前
+    <p><input type="text" v-model="invitee_name" /></p>
+    メールアドレス
+    <p><input type="text" v-model="invitee_email" /></p>
+    <p><button @click="invite">招待</button></p>
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
+
 export default {
-  middleware: 'user', //middleware, storeでthis.login_tokenが空の時loginに戻す
   data() {
     return {
       invitee_name: '',
@@ -32,9 +28,6 @@ export default {
       ipcRenderer.send('user-name-request')
     })
   },
-  components: {
-    Logo,
-  },
   methods: {
     async invite() {
       ipcRenderer.send('invite-token-request')
@@ -43,15 +36,7 @@ export default {
 }
 </script>
 
-<style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
+<style scoped>
 .title {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
@@ -68,9 +53,5 @@ export default {
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
 }
 </style>
