@@ -31,8 +31,8 @@ export default {
     }
   },
   methods: {
-    prelogin() {
-      this.$store.dispatch('login/prelogin', this.email)
+    async prelogin() {
+      await this.$store.dispatch('login/prelogin', this.email)
       this.$message('Please check your e-mail')
     },
     async login() {
