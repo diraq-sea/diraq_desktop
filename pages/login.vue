@@ -1,22 +1,20 @@
 <template>
   <section class="container">
     <div>
-      <logo />
-      <h1 class="title">diraq_desktop</h1>
-      <div>
-        <input v-model="email" type="text" />
-        <p><button @click="prelogin">Tokenをメールに送信する</button></p>
+      <h1 class="title">Dira<span>Q</span></h1>
+      <div class="format">
+        <el-input placeholder="Please input e-mail" v-model="email" type="text"></el-input>
+        <p><el-button type="primary" @click="prelogin">send</el-button></p>
       </div>
-      <div>
-        <input v-model="loginToken" type="text" />
-        <p><button @click="login">Tokenをコピペしてログイン</button></p>
+      <div class="format">
+        <el-input placeholder="Please input token" v-model="loginToken" type="text"></el-input>
+        <p><el-button type="primary" @click="login">send</el-button></p>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
 import { ipcRenderer } from 'electron'
 import { mapMutations } from 'vuex'
 export default {
@@ -32,12 +30,10 @@ export default {
       loginToken: '',
     }
   },
-  components: {
-    Logo,
-  },
   methods: {
     prelogin() {
-      return this.$store.dispatch('login/prelogin', this.email)
+      this.$store.dispatch('login/prelogin', this.email)
+      this.$message('Please check your e-mail')
     },
     async login() {
       await this.$store.dispatch('login/login', this.loginToken)
@@ -54,16 +50,37 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+  background: #0300a342;
 }
 
 .title {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
+  font-weight: right;
+  font-size: 70px;
+  color: #0071eb;
   letter-spacing: 1px;
+  margin-bottom: 30px;
+}
+
+.title > span {
+  color: #ebe700;
+}
+
+.format {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.el-input {
+  margin-right: 10px;
+}
+
+.el-button--primary {
+  color: #fff;
+  background-color: rgb(111, 138, 255);
+  border-color: rgb(111, 138, 255);
 }
 
 .subtitle {

@@ -1,17 +1,10 @@
 <template>
-  <section class="container">
-    <div><logo /><nuxt /></div>
-  </section>
+  <section class="container"></section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
 export default {
   middleware: 'isLogin',
-  components: {
-    Logo,
-  },
 }
 </script>
 
