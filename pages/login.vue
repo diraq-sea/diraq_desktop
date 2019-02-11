@@ -3,22 +3,12 @@
     <div>
       <h1 class="title">Dira<span>Q</span></h1>
       <div class="format">
-        <el-input
-          placeholder="Please input e-mail"
-          v-model="email"
-          type="text"
-          clearable
-        ></el-input>
-        <p><el-button type="info" @click="prelogin" :disabled="emailStyle()">send</el-button></p>
+        <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
+        <p><el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button></p>
       </div>
       <div class="format">
-        <el-input
-          placeholder="Please input token"
-          v-model="loginToken"
-          type="text"
-          clearable
-        ></el-input>
-        <p><el-button type="info" @click="login" :disabled="tokenStyle()">send</el-button></p>
+        <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
+        <p><el-button type="info" @click="login" :disabled="notHaveToken">send</el-button></p>
       </div>
     </div>
   </section>
@@ -40,6 +30,16 @@ export default {
       loginToken: '',
     }
   },
+  computed: {
+    notHaveEmail() {
+      return !this.email.match(
+        /^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/,
+      )
+    },
+    notHaveToken() {
+      return this.loginToken.length < 192
+    },
+  },
   methods: {
     async prelogin() {
       await this.$store.dispatch('login/prelogin', this.email)
@@ -48,12 +48,6 @@ export default {
     async login() {
       await this.$store.dispatch('login/login', this.loginToken)
       this.$router.push('/')
-    },
-    emailStyle() {
-      return !this.email.match(/@/) || this.email.length < 10
-    },
-    tokenStyle() {
-      return this.loginToken.length < 192
     },
   },
 }
