@@ -3,12 +3,12 @@
     <div>
       <h1 class="title">Dira<span>Q</span></h1>
       <div class="format">
-        <el-input placeholder="Please input e-mail" v-model="email" type="text"></el-input>
-        <p><el-button type="primary" @click="prelogin">send</el-button></p>
+        <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
+        <p><el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button></p>
       </div>
       <div class="format">
-        <el-input placeholder="Please input token" v-model="loginToken" type="text"></el-input>
-        <p><el-button type="primary" @click="login">send</el-button></p>
+        <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
+        <p><el-button type="info" @click="login" :disabled="notHaveToken">send</el-button></p>
       </div>
     </div>
   </section>
@@ -30,6 +30,16 @@ export default {
       loginToken: '',
     }
   },
+  computed: {
+    notHaveEmail() {
+      return !/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        this.email,
+      )
+    },
+    notHaveToken() {
+      return this.loginToken.length < 192
+    },
+  },
   methods: {
     async prelogin() {
       await this.$store.dispatch('login/prelogin', this.email)
@@ -50,22 +60,22 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: #0300a342;
+  background: #2c38a82f;
 }
 
 .title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Times New Roman', 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: right;
-  font-size: 70px;
-  color: #0071eb;
+  font-size: 85px;
+  color: #0c173d;
   letter-spacing: 1px;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .title > span {
-  color: #ebe700;
+  color: #e5ec00;
 }
 
 .format {
@@ -75,12 +85,6 @@ export default {
 
 .el-input {
   margin-right: 10px;
-}
-
-.el-button--primary {
-  color: #fff;
-  background-color: rgb(111, 138, 255);
-  border-color: rgb(111, 138, 255);
 }
 
 .subtitle {
