@@ -32,8 +32,8 @@ export default {
   },
   computed: {
     notHaveEmail() {
-      return !this.email.match(
-        /^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/,
+      return !RegExp(/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/).test(
+        this.email,
       )
     },
     notHaveToken() {
