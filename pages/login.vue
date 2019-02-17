@@ -1,27 +1,20 @@
 <template>
-  <section class="container">
-    <div>
-      <div class="header">
-        <div class="header-inner">
-          <div class="title">Dira<span>Q</span></div>
+  <div>
+    <div class="body">
+      <div class="login-container">
+        <div class="greeding">Welcome to DiraQ</div>
+        <div class="signin">Sign in from here</div>
+        <div class="format">
+          <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
+          <el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button>
         </div>
-      </div>
-      <div class="body">
-        <div class="login-container">
-          <div class="greeding">Welcome to DiraQ</div>
-          <div class="signin">Sign in from here</div>
-          <div class="format">
-            <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
-            <el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button>
-          </div>
-          <div class="format">
-            <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
-            <el-button type="info" @click="login" :disabled="notHaveToken">send</el-button>
-          </div>
+        <div class="format">
+          <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
+          <el-button type="info" @click="login" :disabled="notHaveToken">send</el-button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -64,41 +57,6 @@ export default {
 </script>
 
 <style scoped>
-.container {
-}
-
-.header {
-  /* background: #0c173d; */
-  background: #0e1e25;
-  position: relative;
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 70px;
-}
-
-.header-inner {
-  line-height: 66px;
-  height: 66px;
-  padding: 0 70px;
-  position: relative;
-}
-
-.title {
-  font-family: 'Times New Roman', 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: bold;
-  font-size: 30px;
-  color: #fff;
-  letter-spacing: 1px;
-}
-
-.title > span {
-  color: #e5ec00;
-}
-
 .body {
   min-height: 100vh;
   display: flex;
