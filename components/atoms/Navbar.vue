@@ -8,7 +8,6 @@
 
 <style scoped>
 .header {
-  /* background: #0c173d; */
   background: #0e1e25;
   position: relative;
   position: fixed;
