@@ -1,14 +1,24 @@
 <template>
   <section class="container">
     <div>
-      <h1 class="title">Dira<span>Q</span></h1>
-      <div class="format">
-        <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
-        <p><el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button></p>
+      <div class="header">
+        <div class="header-inner">
+          <div class="title">Dira<span>Q</span></div>
+        </div>
       </div>
-      <div class="format">
-        <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
-        <p><el-button type="info" @click="login" :disabled="notHaveToken">send</el-button></p>
+      <div class="body">
+        <div class="login-container">
+          <div class="greeding">Welcome to DiraQ</div>
+          <div class="signin">Sign in from here</div>
+          <div class="format">
+            <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
+            <el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button>
+          </div>
+          <div class="format">
+            <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
+            <el-button type="info" @click="login" :disabled="notHaveToken">send</el-button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -55,36 +65,87 @@ export default {
 
 <style scoped>
 .container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background: #2c38a82f;
+}
+
+.header {
+  /* background: #0c173d; */
+  background: #0e1e25;
+  position: relative;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 70px;
+}
+
+.header-inner {
+  line-height: 66px;
+  height: 66px;
+  padding: 0 70px;
+  position: relative;
 }
 
 .title {
   font-family: 'Times New Roman', 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
-  font-weight: right;
-  font-size: 85px;
-  color: #0c173d;
+  font-weight: bold;
+  font-size: 30px;
+  color: #fff;
   letter-spacing: 1px;
-  margin-bottom: 50px;
 }
 
 .title > span {
   color: #e5ec00;
 }
 
+.body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  color: #333;
+  line-height: 20px;
+  font-weight: 400;
+  background: #fff;
+  border-radius: 6px;
+  padding: 30px 40px;
+  border: 1px solid rgb(216, 216, 216);
+  box-shadow: rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
+}
+
+.greeding {
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  color: #202124;
+  font-weight: bold;
+  font-size: 27px;
+  font-weight: 300;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+.signin {
+  margin: 20px 5px;
+  color: #6a6e77;
+}
 .format {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  width: 400px;
 }
 
 .el-input {
-  margin-right: 10px;
+  margin-right: 15px;
 }
 
 .subtitle {
