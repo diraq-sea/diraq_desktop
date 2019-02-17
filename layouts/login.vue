@@ -1,10 +1,15 @@
 <template>
-  <div><nuxt /></div>
+  <div><navbar /><nuxt /></div>
 </template>
 
 <script>
+import Navbar from '~/components/atoms/Navbar.vue'
+
 export default {
   middleware: 'isNotLogin',
+  components: {
+    Navbar,
+  },
 }
 </script>
 

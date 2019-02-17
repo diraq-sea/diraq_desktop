@@ -1,10 +1,15 @@
 <template>
-  <section class="container"><nuxt /></section>
+  <section class="container"><navbar /><nuxt /></section>
 </template>
 
 <script>
+import Navbar from '~/components/atoms/Navbar.vue'
+
 export default {
   middleware: 'isLogin',
+  components: {
+    Navbar,
+  },
 }
 </script>
 

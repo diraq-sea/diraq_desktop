@@ -1,17 +1,20 @@
 <template>
-  <section class="container">
-    <div>
-      <h1 class="title">Dira<span>Q</span></h1>
-      <div class="format">
-        <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
-        <p><el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button></p>
-      </div>
-      <div class="format">
-        <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
-        <p><el-button type="info" @click="login" :disabled="notHaveToken">send</el-button></p>
+  <div>
+    <div class="body">
+      <div class="login-container">
+        <div class="greeding">Welcome to DiraQ</div>
+        <div class="signin">Sign in from here</div>
+        <div class="format">
+          <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
+          <el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button>
+        </div>
+        <div class="format">
+          <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
+          <el-button type="info" @click="login" :disabled="notHaveToken">send</el-button>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -54,37 +57,53 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.login-container {
+  color: #333;
+  line-height: 20px;
+  font-weight: 400;
+  background: #fff;
+  border-radius: 6px;
+  padding: 30px 40px;
+  border: 1px solid rgb(216, 216, 216);
+  box-shadow: rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
+}
+
+.greeding {
   text-align: center;
-  background: #2c38a82f;
+  letter-spacing: 0.05em;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  color: #202124;
+  font-weight: bold;
+  font-size: 27px;
+  font-weight: 300;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
-.title {
-  font-family: 'Times New Roman', 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: right;
-  font-size: 85px;
-  color: #0c173d;
-  letter-spacing: 1px;
-  margin-bottom: 50px;
+.signin {
+  margin: 20px 5px;
+  color: #6a6e77;
 }
-
-.title > span {
-  color: #e5ec00;
-}
-
 .format {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  width: 400px;
 }
 
 .el-input {
-  margin-right: 10px;
+  margin-right: 15px;
 }
 
 .subtitle {
