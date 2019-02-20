@@ -1,14 +1,20 @@
 <template>
-  <section class="container"><navbar /><nuxt /></section>
+  <section class="container">
+    <navbar />
+    <div class="page"><nuxt /></div>
+    <side-menu />
+  </section>
 </template>
 
 <script>
-import Navbar from '~/components/atoms/Navbar.vue'
+import Navbar from '~/components/atoms/Navbar'
+import SideMenu from '~/components/molecules/SideMenu'
 
 export default {
   middleware: 'isLogin',
   components: {
     Navbar,
+    SideMenu,
   },
 }
 </script>
@@ -32,14 +38,26 @@ html {
   box-sizing: border-box;
   margin: 0;
 }
+
+a {
+  text-decoration: none;
+}
 </style>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/assets/css/admin.scss';
+
 .container {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
+
+.page {
+  position: absolute;
+  top: $NAVBAR_HEIGHT;
+  left: $SIDEMENU_WIDTH;
+  right: 0;
+  bottom: 0;
+}
+
+@include getSideMenuWidthQuery('.page', 'left');
 </style>
