@@ -7,4 +7,7 @@ module.exports = {
   GET_USER_INFO: 'get-user-info',
   GET_AUTH_EMAIL: 'show-auth-email',
   INVITE: 'invite',
+  CHECK_WORKING_DIR: 'check-working-dir',
+  GET_WORKING_DIR: 'get-working-dir',
+  SET_WORKING_DIR: 'set-working-dir',
 }

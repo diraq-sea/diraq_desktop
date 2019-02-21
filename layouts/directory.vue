@@ -2,19 +2,16 @@
   <div>
     <navbar />
     <div class="page"><nuxt /></div>
-    <side-menu />
   </div>
 </template>
 
 <script>
-import Navbar from '~/components/atoms/Navbar'
-import SideMenu from '~/components/molecules/SideMenu'
+import Navbar from '~/components/atoms/Navbar.vue'
 
 export default {
-  middleware: ['isLogin', 'hasWorkingDir'],
+  middleware: 'isLogin',
   components: {
     Navbar,
-    SideMenu,
   },
 }
 </script>
@@ -29,10 +26,8 @@ export default {
 .page {
   position: fixed;
   top: $NAVBAR_HEIGHT;
-  left: $SIDEMENU_WIDTH;
+  left: 0;
   right: 0;
   bottom: 0;
 }
-
-@include getSideMenuWidthQuery('.page', 'left');
 </style>
