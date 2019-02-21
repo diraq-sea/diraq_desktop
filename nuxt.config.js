@@ -24,7 +24,7 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: ['element-ui/lib/theme-chalk/index.css'],
+  css: ['element-ui/lib/theme-chalk/index.css', '@fortawesome/fontawesome-free/css/all.css'],
 
   /*
    ** Plugins to load before mounting the App

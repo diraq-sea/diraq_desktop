@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron')
+const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
 const { WINDOW_ORIGIN } = require('./const')
 const configStore = require('./store/config.store')
 const authStore = require('./store/auth.store')
@@ -19,6 +20,7 @@ function createWindow() {
 
   mainWindow.loadURL(WINDOW_ORIGIN)
   mainWindow.webContents.openDevTools()
+  installExtension(VUEJS_DEVTOOLS)
 
   mainWindow.on('resize', () => {
     const [width, height] = mainWindow.getSize()
