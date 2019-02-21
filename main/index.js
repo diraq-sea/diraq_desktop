@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron')
+const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
 const { WINDOW_ORIGIN } = require('./const')
 const configStore = require('./store/config.store')
 const authStore = require('./store/auth.store')
@@ -8,7 +9,7 @@ const ipcController = require('./modules/ipc/ipc.controller')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow() {
+async function createWindow() {
   configStore.init()
   authStore.init()
   ipcController.init()
@@ -17,6 +18,7 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({ width, height })
 
+  await installExtension(VUEJS_DEVTOOLS)
   mainWindow.loadURL(WINDOW_ORIGIN)
   mainWindow.webContents.openDevTools()
 

@@ -1,27 +1,28 @@
 <template>
-  <div>
-    <div class="body">
-      <div class="login-container">
-        <div class="greeding">Welcome to DiraQ</div>
-        <div class="signin">Sign in from here</div>
-        <div class="format">
-          <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
-          <el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button>
-        </div>
-        <div class="format">
-          <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
-          <el-button type="info" @click="login" :disabled="notHaveToken">send</el-button>
-        </div>
+  <div class="body">
+    <card title="Welcome to DiraQ">
+      <div class="signin">Sign in from here</div>
+      <div class="format">
+        <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
+        <el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button>
       </div>
-    </div>
+      <div class="format">
+        <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
+        <el-button type="info" @click="login" :disabled="notHaveToken">send</el-button>
+      </div>
+    </card>
   </div>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron'
 import { mapMutations } from 'vuex'
+import Card from '~/components/atoms/Card'
+
 export default {
   layout: 'login',
+  components: {
+    Card,
+  },
   async asyncData({ store }) {
     await store.dispatch('login/getAuthEmail')
     return {
@@ -56,40 +57,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/assets/css/admin.scss';
+
 .body {
-  min-height: 100vh;
+  position: fixed;
+  top: $NAVBAR_HEIGHT;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.login-container {
-  color: #333;
-  line-height: 20px;
-  font-weight: 400;
-  background: #fff;
-  border-radius: 6px;
-  padding: 30px 40px;
-  border: 1px solid rgb(216, 216, 216);
-  box-shadow: rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
-}
-
-.greeding {
-  text-align: center;
-  letter-spacing: 0.05em;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  padding-bottom: 10px;
-  box-sizing: border-box;
-  color: #202124;
-  font-weight: bold;
-  font-size: 27px;
-  font-weight: 300;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
 .signin {

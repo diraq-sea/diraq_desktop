@@ -1,5 +1,8 @@
 <template>
-  <div><navbar /><nuxt /></div>
+  <div>
+    <navbar />
+    <div class="page"><nuxt /></div>
+  </div>
 </template>
 
 <script>
@@ -13,23 +16,18 @@ export default {
 }
 </script>
 
-<style>
-html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
+<style lang="scss">
+@import '@/assets/css/common.scss';
+</style>
 
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 0;
+<style scoped lang="scss">
+@import '@/assets/css/admin.scss';
+
+.page {
+  position: fixed;
+  top: $NAVBAR_HEIGHT;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>
