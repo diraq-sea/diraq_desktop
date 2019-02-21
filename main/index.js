@@ -9,7 +9,7 @@ const ipcController = require('./modules/ipc/ipc.controller')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow() {
+async function createWindow() {
   configStore.init()
   authStore.init()
   ipcController.init()
@@ -18,9 +18,9 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({ width, height })
 
+  await installExtension(VUEJS_DEVTOOLS)
   mainWindow.loadURL(WINDOW_ORIGIN)
   mainWindow.webContents.openDevTools()
-  installExtension(VUEJS_DEVTOOLS)
 
   mainWindow.on('resize', () => {
     const [width, height] = mainWindow.getSize()
