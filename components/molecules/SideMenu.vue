@@ -1,23 +1,47 @@
 <template>
   <div class="side-menu">
+    <div class="controls"><i class="fas fa-folder-plus" @click="openRoomNameModal" /></div>
     <div class="menu">
-      <nuxt-link v-for="menu in menuList" :key="menu.path" :to="`/admin/${menu.path}`">
-        <div :class="['menu-item', menuPath === menu.path ? 'current' : '']">
-          <i :class="['fas', menu.icon]" /><span>{{ menu.label }}</span>
-          <div class="hover-border" />
-        </div>
-      </nuxt-link>
+      <div
+        v-for="room in rooms"
+        :key="room.id"
+        :class="itemClass(room.id)"
+        class="menu-item"
+        @click="changeRoom(room.id)"
+      >
+        <i class="fas fa-door-open" /><span>{{ room.name }}</span>
+        <div class="hover-border" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState('menu', ['menuPath']),
-    ...mapGetters('menu', ['menuList']),
+    ...mapState('room', ['rooms', 'currentRoom']),
+    itemClass() {
+      return id => ({ current: this.currentRoom.id === id })
+    },
+  },
+  methods: {
+    async openRoomNameModal() {
+      const { value } = await this.$prompt('Please input name', 'Create new room', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        inputPattern: /^[a-z0-9]{3,20}$/,
+        inputErrorMessage: 'Invalid name',
+      }).catch(() => ({}))
+
+      if (!value) return
+
+      await this.$store.dispatch('room/createRoom', value)
+    },
+    changeRoom(id) {
+      this.$store.commit('room/setCurrentRoom', id)
+    },
   },
 }
 </script>
@@ -43,8 +67,22 @@ export default {
 
 @include getSideMenuWidthQuery('.side-menu', 'width');
 
+.controls {
+  text-align: right;
+  padding: 12px 20px;
+
+  i {
+    color: #ddd;
+    cursor: pointer;
+    font-size: 20px;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
 .menu {
-  padding-top: 18px;
   width: $SIDEMENU_WIDTH;
 }
 
