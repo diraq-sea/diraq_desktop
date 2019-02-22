@@ -11,7 +11,7 @@ import Navbar from '~/components/atoms/Navbar'
 import SideMenu from '~/components/molecules/SideMenu'
 
 export default {
-  middleware: ['isLogin', 'hasWorkingDir'],
+  middleware: ['isLogin', 'hasWorkingDir', 'fetchRooms'],
   components: {
     Navbar,
     SideMenu,
