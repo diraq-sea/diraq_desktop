@@ -21,3 +21,19 @@ html {
 a {
   text-decoration: none;
 }
+
+/*スクロールバー全体*/
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/*スクロールバーの軌道*/
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/*スクロールバーの動く部分*/
+::-webkit-scrollbar-thumb {
+  background: #535353;
+}

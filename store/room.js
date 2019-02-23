@@ -16,9 +16,9 @@ export const mutations = {
 
 export const actions = {
   async fetchRooms({ commit }) {
-    const rooms = await this.$ipc(FETCH_ROOMS)
+    const rooms = (await this.$ipc(FETCH_ROOMS)).reverse()
     commit('setRooms', rooms)
-    commit('setCurrentRoom', rooms[rooms.length - 1].id)
+    commit('setCurrentRoom', rooms[0].id)
   },
 
   async createRoom({ dispatch }, name) {
