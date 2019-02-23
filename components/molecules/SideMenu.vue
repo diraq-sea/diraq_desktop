@@ -1,17 +1,14 @@
 <template>
   <div class="side-menu">
     <div class="controls"><i class="fas fa-folder-plus" @click="openRoomNameModal" /></div>
-    <div class="menu">
-      <div
-        v-for="room in rooms"
-        :key="room.id"
-        :class="itemClass(room.id)"
-        class="menu-item"
-        @click="changeRoom(room.id)"
-      >
-        <i class="fas fa-door-open" /><span>{{ room.name }}</span>
-        <div class="hover-border" />
-      </div>
+    <div
+      v-for="room in rooms"
+      :key="room.id"
+      :class="itemClass(room.id)"
+      class="menu-item"
+      @click="changeRoom(room.id)"
+    >
+      <i class="fas fa-caret-right" /><span>{{ room.name }}</span>
     </div>
   </div>
 </template>
@@ -55,26 +52,20 @@ export default {
   left: 0;
   display: block;
   min-height: 100%;
-  background-color: $COLOR_DARK;
+  background: $COLOR_GRAY2;
   height: 100%;
   position: fixed;
   overflow: hidden;
-
-  &:hover {
-    width: $SIDEMENU_WIDTH;
-  }
 }
-
-@include getSideMenuWidthQuery('.side-menu', 'width');
 
 .controls {
   text-align: right;
-  padding: 12px 20px;
+  padding: 8px 20px;
 
   i {
     color: #ddd;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 16px;
 
     &:hover {
       color: #fff;
@@ -82,15 +73,11 @@ export default {
   }
 }
 
-.menu {
-  width: $SIDEMENU_WIDTH;
-}
-
 .menu-item {
-  height: 42px;
-  padding-left: 18px;
+  height: 26px;
+  padding-left: 12px;
   font-size: 14px;
-  line-height: 42px;
+  line-height: 26px;
   cursor: pointer;
   color: #fff;
   transition: 0.2s color, background-color ease;
@@ -98,35 +85,20 @@ export default {
 }
 
 .menu-item:hover {
-  color: $COLOR_ACCENT;
+  background: rgb(42, 45, 46);
 }
 
 .menu-item.current {
-  background: #{$COLOR_ACCENT}cc;
+  background: rgb(55, 55, 61);
 }
 
 .menu-item.current:hover {
   color: #fff;
 }
 
-.hover-border {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 4px;
-  background: $COLOR_ACCENT;
-  transition: 0.2s opacity ease;
-}
-
-.menu-item:hover > .hover-border {
-  opacity: 1;
-}
-
 .menu-item > i {
-  margin-right: 18px;
-  width: 16px;
+  margin-right: 10px;
   display: inline-block;
+  font-size: 14px;
 }
 </style>
