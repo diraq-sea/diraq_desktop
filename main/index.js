@@ -4,6 +4,7 @@ const { WINDOW_ORIGIN } = require('./const')
 const configStore = require('./store/config.store')
 const authStore = require('./store/auth.store')
 const ipcController = require('./modules/ipc/ipc.controller')
+const watcherController = require('./modules/watcher/watcher.controller')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -13,6 +14,7 @@ async function createWindow() {
   configStore.init()
   authStore.init()
   ipcController.init()
+  //watcherController.init()
 
   const { width, height } = configStore.get('windowSize')
 
