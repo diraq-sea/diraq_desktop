@@ -32,7 +32,7 @@ export const actions = {
   async fetchRooms({ commit }) {
     const rooms = (await this.$ipc(FETCH_ROOMS)).reverse()
     commit('setRooms', rooms)
-    commit('setCurrentRoom', rooms[0].id)
+    if (rooms.length) commit('setCurrentRoom', rooms[0].id)
   },
 
   async createRoom({ dispatch }, name) {
