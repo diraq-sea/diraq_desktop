@@ -2,10 +2,6 @@
   <div />
 </template>
 
-<script>
-export default {
-  fetch({ store, redirect }) {
-    redirect(`/admin/${store.state.menu.menuPath.path}`)
-  },
-}
-</script>
+<style scoped lang="scss">
+@import '@/assets/css/admin.scss';
+</style>

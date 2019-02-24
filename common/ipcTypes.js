@@ -10,4 +10,6 @@ module.exports = {
   CHECK_WORKING_DIR: 'check-working-dir',
   GET_WORKING_DIR: 'get-working-dir',
   SET_WORKING_DIR: 'set-working-dir',
+  FETCH_ROOMS: 'fetch-rooms',
+  CREATE_ROOM: 'create-room',
 }

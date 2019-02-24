@@ -8,6 +8,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  user-select: none;
 }
 
 *,
@@ -19,4 +20,20 @@ html {
 
 a {
   text-decoration: none;
+}
+
+/*スクロールバー全体*/
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/*スクロールバーの軌道*/
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/*スクロールバーの動く部分*/
+::-webkit-scrollbar-thumb {
+  background: #535353;
 }

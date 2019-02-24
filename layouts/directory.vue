@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar />
+    <navbar :isLoggedIn="true" />
     <div class="page"><nuxt /></div>
   </div>
 </template>
