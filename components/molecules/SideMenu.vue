@@ -1,6 +1,8 @@
 <template>
   <div class="side-menu">
-    <div class="controls"><i class="fas fa-folder-plus" @click="openRoomNameModal" /></div>
+    <div class="controls">
+      <i class="fas fa-folder-plus" title="Create new room" @click="openRoomNamePrompt" />
+    </div>
     <div
       v-for="room in rooms"
       :key="room.id"
@@ -8,23 +10,43 @@
       class="menu-item"
       @click="changeRoom(room.id)"
     >
-      <i class="fas fa-caret-right" /><span>{{ room.name }}</span>
+      <i :class="arrowClass(room.id)" class="fas fa-caret-right arrow" />
+      <span>{{ room.name }}</span>
+      <i class="fas fa-plus plus" title="Create new file or folder" @click.stop="toggleDialog" />
     </div>
+
+    <el-dialog :visible.sync="dialogVisible" :append-to-body="true" title="Create new">
+      <span>This is a message</span>
+      <upload-dialog-footer slot="footer" @close="toggleDialog" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
+import UploadDialogFooter from '~/components/atoms/UploadDialogFooter'
 
 export default {
+  components: {
+    UploadDialogFooter,
+  },
   computed: {
     ...mapState('room', ['rooms', 'currentRoom']),
+    ...mapGetters('room', ['isOpening']),
     itemClass() {
       return id => ({ current: this.currentRoom.id === id })
     },
+    arrowClass() {
+      return id => ({ opening: this.isOpening(id) })
+    },
+  },
+  data() {
+    return {
+      dialogVisible: false,
+    }
   },
   methods: {
-    async openRoomNameModal() {
+    async openRoomNamePrompt() {
       const { value } = await this.$prompt('Please input name', 'Create new room', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
@@ -38,6 +60,10 @@ export default {
     },
     changeRoom(id) {
       this.$store.commit('room/setCurrentRoom', id)
+      this.$store.commit('room/toggleOpening', id)
+    },
+    toggleDialog() {
+      this.dialogVisible = !this.dialogVisible
     },
   },
 }
@@ -56,6 +82,7 @@ export default {
   height: 100%;
   position: fixed;
   overflow: hidden;
+  color: $FONT_WHITE;
 }
 
 .controls {
@@ -63,13 +90,8 @@ export default {
   padding: 8px 20px;
 
   i {
-    color: #ddd;
     cursor: pointer;
     font-size: 16px;
-
-    &:hover {
-      color: #fff;
-    }
   }
 }
 
@@ -79,26 +101,37 @@ export default {
   font-size: 14px;
   line-height: 26px;
   cursor: pointer;
-  color: #fff;
   transition: 0.2s color, background-color ease;
   position: relative;
 }
 
 .menu-item:hover {
   background: rgb(42, 45, 46);
+
+  .plus {
+    opacity: 1;
+  }
 }
 
 .menu-item.current {
   background: rgb(55, 55, 61);
 }
 
-.menu-item.current:hover {
-  color: #fff;
-}
-
-.menu-item > i {
+.arrow {
   margin-right: 10px;
   display: inline-block;
   font-size: 14px;
+
+  &.opening {
+    transform: rotateZ(45deg);
+  }
+}
+
+.plus {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  opacity: 0;
 }
 </style>
