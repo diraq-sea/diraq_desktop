@@ -1,22 +1,9 @@
 $COLOR_DARK: #0e1e25;
 $COLOR_ACCENT: #e5ec00;
-$NAVBAR_HEIGHT: 70px;
+$NAVBAR_HEIGHT: 56px;
 $SIDEMENU_WIDTH: 180px;
-
-@mixin getSideMenuWidthQuery($selector, $key) {
-  #{$selector} {
-    transition: #{$key} 0.5s ease;
-  }
-
-  @media (max-width: 1200px) {
-    #{$selector} {
-      #{$key}: 52px;
-    }
-  }
-
-  @media (max-width: 500px) {
-    #{$selector} {
-      #{$key}: 0;
-    }
-  }
-}
+$TAB_HEIGHT: 42px;
+$COLOR_BLACK: #1e1e1e;
+$COLOR_GRAY: #2d2d2d;
+$COLOR_GRAY2: #252526;
+$FONT_WHITE: #e8e8e8;
