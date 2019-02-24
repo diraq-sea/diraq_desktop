@@ -8,7 +8,7 @@
       @click="$store.dispatch('tab/changeCurrentTab', tab.id)"
     >
       <span>{{ tab.name }}</span
-      ><i class="fas fa-times" @click.stop="$store.commit('tab/removeTab', tab.id)" />
+      ><i class="fas fa-times" title="Close" @click.stop="$store.commit('tab/removeTab', tab.id)" />
     </div>
   </div>
 </template>
@@ -73,6 +73,8 @@ export default {
       font-size: 12px;
       opacity: 0;
       color: $FONT_WHITE;
+      display: block;
+      padding: 8px 5px;
     }
   }
 }
