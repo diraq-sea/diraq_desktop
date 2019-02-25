@@ -14,7 +14,7 @@ async function createWindow() {
   configStore.init()
   authStore.init()
   ipcController.init()
-  //watcherController.init()
+  watcherController.init()
 
   const { width, height } = configStore.get('windowSize')
 
