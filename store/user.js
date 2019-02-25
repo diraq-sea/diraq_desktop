@@ -1,4 +1,4 @@
-import { GET_USER_INFO } from '../common/ipcTypes'
+import { GET_USER_INFO } from '~/common/ipcTypes'
 
 export const state = () => ({
   name: null,

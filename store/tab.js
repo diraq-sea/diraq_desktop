@@ -1,13 +1,7 @@
-const currentTab = { id: 1, name: 'file1.js' }
+const currentTab = { id: 1 }
 
 export const state = () => ({
-  tabs: [
-    currentTab,
-    { id: 2, name: 'file2.js' },
-    { id: 3, name: 'file3.js' },
-    { id: 4, name: 'file4.js' },
-    { id: 5, name: 'file5.js' },
-  ],
+  tabs: [currentTab, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
   currentTab,
 })
 
