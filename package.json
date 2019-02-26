@@ -16,7 +16,9 @@
   },
   "dependencies": {
     "axios": "0.18.0",
+    "chokidar": "2.1.2",
     "element-ui": "2.4.11",
+    "moment-timezone": "0.5.23",
     "node-sass": "4.11.0",
     "nuxt": "2.3.4",
     "sass-loader": "7.1.0"

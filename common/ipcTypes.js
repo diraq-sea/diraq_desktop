@@ -12,4 +12,5 @@ module.exports = {
   SET_WORKING_DIR: 'set-working-dir',
   FETCH_ROOMS: 'fetch-rooms',
   CREATE_ROOM: 'create-room',
+  FETCH_FILE: 'fetch-file',
 }
