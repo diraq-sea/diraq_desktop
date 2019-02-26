@@ -43,12 +43,12 @@ export default {
   margin-left: 28px;
   border-bottom: 1px solid #ccc;
   position: relative;
-  margin-top: 18px;
+  margin-top: 15px;
   padding-bottom: 3px;
   font-size: 20px;
 
   &::after {
-    background-color: $COLOR_ACCENT;
+    background-color: $COLOR_BLUE;
     bottom: -1px;
     content: '';
     height: 2px;
@@ -74,6 +74,7 @@ export default {
     padding-left: 4px;
     color: $FONT_WHITE;
     position: relative;
+    width: 240px;
 
     &:focus {
       outline: none;
@@ -91,7 +92,7 @@ export default {
   }
 
   &.focused > i {
-    color: $COLOR_ACCENT;
+    color: $COLOR_BLUE;
   }
 }
 </style>

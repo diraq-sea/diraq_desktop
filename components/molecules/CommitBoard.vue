@@ -1,25 +1,24 @@
 <template>
-  <div>
-    <div v-for="commit in commits" :key="commit.id" class="commit-container">
+  <div class="commit-container">
+    <div v-for="commit in commits" :key="commit.id">
       <div class="commit-graph">
-        <div class="commit-circle" :style="circleStyle(commit.user)">
-          <div>
-            <div class="commit-circle-name">
-              <span>{{ user(commit.user).name }}</span>
-              <span>{{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}</span>
-            </div>
-            <div class="commit-circle-message">{{ commit.message }}</div>
-          </div>
-        </div>
+        <div class="commit-circle" :style="circleStyle(commit.user)" />
         <div v-if="hasChild(commit.id)" class="commit-line" />
       </div>
       <div class="comments-panel">
-        <div v-for="comment in commit.comments" :key="comment.id">
-          <div>
-            <img :src="user(comment.user).icon" /><span>{{ user(comment.user).name }}</span>
-            <span>{{ $moment(comment.date).format('YY/MM/DD HH:mm:ss') }}</span>
+        <span class="committer-name">{{ user(commit.user).name }}</span>
+        <span class="committer-date">{{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}</span>
+        <div class="committer-message">{{ commit.message }}</div>
+
+        <div v-for="comment in commit.comments" :key="comment.id" class="comment">
+          <div class="comment-circle" :style="circleStyle(comment.user)" />
+          <div class="comment-body">
+            <span class="comment-username">{{ user(comment.user).name }}</span>
+            <span class="comment-date">
+              {{ $moment(comment.date).format('YY/MM/DD HH:mm:ss') }}
+            </span>
+            <div class="comment-message">{{ comment.comment }}</div>
           </div>
-          <div>{{ comment.comment }}</div>
         </div>
       </div>
     </div>
@@ -57,16 +56,26 @@ export default {
 
 $GRAPH_WIDTH: 100px;
 $CIRCLE_SIZE: 40px;
-$LINE_COLOR: #569cb3;
+$CIRCLE_SIZE2: 32px;
 
 .commit-container {
-  position: relative;
+  user-select: text;
+  padding-top: 20px;
+  background: $COLOR_GRAY2;
+
+  & > div {
+    position: relative;
+  }
+
+  img {
+    user-select: none;
+  }
 }
 
 .commit-graph {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 15px;
   bottom: 0;
   width: $GRAPH_WIDTH;
 }
@@ -77,15 +86,6 @@ $LINE_COLOR: #569cb3;
   border-radius: 50%;
   background: center/cover no-repeat;
   margin: 0 auto;
-  position: relative;
-
-  & > div {
-    position: absolute;
-    left: $CIRCLE_SIZE;
-    top: 0;
-    width: 500px;
-    padding-left: 15px;
-  }
 }
 
 .commit-line {
@@ -95,16 +95,48 @@ $LINE_COLOR: #569cb3;
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  background: $LINE_COLOR;
+  background: $COLOR_BLUE;
 }
 
 .comments-panel {
   margin-left: $GRAPH_WIDTH;
-  padding-top: $CIRCLE_SIZE;
   padding-bottom: 40px;
 
-  & > div:first-child {
-    padding-top: 25px;
+  .comment {
+    position: relative;
+    margin-top: 12px;
+  }
+
+  .comment-circle {
+    width: $CIRCLE_SIZE2;
+    height: $CIRCLE_SIZE2;
+    border-radius: 50%;
+    background: center/cover no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .comment-body {
+    margin-left: $CIRCLE_SIZE2;
+    padding-left: 15px;
+  }
+
+  .committer-name,
+  .comment-username {
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .committer-date,
+  .comment-date {
+    font-size: 12px;
+    color: $FONT_GRAY;
+  }
+
+  .committer-message {
+    padding: 2px 0 15px;
   }
 }
 </style>

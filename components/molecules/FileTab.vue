@@ -47,7 +47,7 @@ export default {
     height: $TAB_HEIGHT;
     background: $COLOR_GRAY;
     margin-right: 1px;
-    color: rgb(109, 109, 109);
+    color: $FONT_GRAY;
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
