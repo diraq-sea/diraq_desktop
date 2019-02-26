@@ -7,7 +7,6 @@ const {
   CHANGE,
   ERROR,
 } = require('../../../common/watcherTypes')
-const configStore = require('../../store/config.store')
 
 module.exports = type =>
   ({
