@@ -3,7 +3,7 @@ const watcherService = require('./watcher.service')
 const watcherTypes = require('../../../common/watcherTypes')
 const mkdirIfNotExists = require('../../utils/mkdirIfNotExists')
 const { TMP_FILES_DIR } = require('../../const')
-var watcher = chokidar.watch(TMP_FILES_DIR, {
+const watcher = chokidar.watch(TMP_FILES_DIR, {
   persistent: true, //監視を継続するかどうか
 })
 
