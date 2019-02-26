@@ -7,20 +7,24 @@
       class="ft-tab"
       @click="$store.dispatch('tab/changeCurrentTab', tab.id)"
     >
-      <span>{{ tab.name }}</span
+      <span>{{ tabLabel(tab.id) }}</span
       ><i class="fas fa-times" title="Close" @click.stop="$store.commit('tab/removeTab', tab.id)" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   computed: {
     ...mapState('tab', ['tabs', 'currentTab']),
+    ...mapGetters('file', ['file']),
     itemClass() {
       return id => ({ current: this.currentTab.id === id })
+    },
+    tabLabel() {
+      return id => `${this.file(id).name}${this.file(id).deleted ? ' (deleted)' : ''}`
     },
   },
 }
@@ -43,7 +47,7 @@ export default {
     height: $TAB_HEIGHT;
     background: $COLOR_GRAY;
     margin-right: 1px;
-    color: rgb(109, 109, 109);
+    color: $FONT_GRAY;
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
