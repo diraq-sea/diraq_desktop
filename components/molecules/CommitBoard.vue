@@ -54,14 +54,12 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-$GRAPH_WIDTH: 100px;
 $CIRCLE_SIZE: 40px;
 $CIRCLE_SIZE2: 32px;
 
 .commit-container {
   user-select: text;
-  padding-top: 20px;
-  background: $COLOR_GRAY2;
+  padding-top: 30px;
 
   & > div {
     position: relative;
@@ -75,9 +73,8 @@ $CIRCLE_SIZE2: 32px;
 .commit-graph {
   position: absolute;
   top: 0;
-  left: 15px;
+  left: 35px;
   bottom: 0;
-  width: $GRAPH_WIDTH;
 }
 
 .commit-circle {
@@ -85,7 +82,6 @@ $CIRCLE_SIZE2: 32px;
   height: $CIRCLE_SIZE;
   border-radius: 50%;
   background: center/cover no-repeat;
-  margin: 0 auto;
 }
 
 .commit-line {
@@ -99,7 +95,7 @@ $CIRCLE_SIZE2: 32px;
 }
 
 .comments-panel {
-  margin-left: $GRAPH_WIDTH;
+  margin-left: 90px;
   padding-bottom: 40px;
 
   .comment {
@@ -136,7 +132,7 @@ $CIRCLE_SIZE2: 32px;
   }
 
   .committer-message {
-    padding: 2px 0 15px;
+    padding: 2px 0 10px;
   }
 }
 </style>
