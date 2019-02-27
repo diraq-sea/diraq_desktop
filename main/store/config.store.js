@@ -7,7 +7,6 @@ let config = {
     width: 1000,
     height: 750,
   },
-  workingDirectory: '',
 }
 let isInit = false
 

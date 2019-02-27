@@ -16,7 +16,7 @@ import SideMenu from '~/components/molecules/SideMenu'
 import FileTab from '~/components/molecules/FileTab'
 
 export default {
-  middleware: ['isLogin', 'hasWorkingDir', 'fetchData'],
+  middleware: ['isLogin', 'fetchData'],
   components: {
     Navbar,
     SideMenu,
