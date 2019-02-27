@@ -20,6 +20,15 @@
             <div class="comment-message">{{ comment.comment }}</div>
           </div>
         </div>
+
+        <form class="comment-input" @submit.prevent="submitComment(commit.id)">
+          <input
+            :value="value(commit.id)"
+            type="text"
+            placeholder="Input comment..."
+            @input="inputComment(commit.id, $event)"
+          />
+        </form>
       </div>
     </div>
   </div>
@@ -46,6 +55,29 @@ export default {
     },
     circleStyle() {
       return id => ({ backgroundImage: `url(${this.user(id).icon})` })
+    },
+    value() {
+      return id => this.values[this.commits.findIndex(commit => commit.id === id)]
+    },
+  },
+  data() {
+    return { values: [] }
+  },
+  methods: {
+    inputComment(id, e) {
+      this.values = [...this.values]
+      const index = this.commits.findIndex(commit => commit.id === id)
+      this.values[index] = e.target.value
+    },
+    submitComment(id) {
+      const index = this.commits.findIndex(commit => commit.id === id)
+      const value = this.values[index]
+
+      if (value) {
+        this.$emit('addComment', { id, value })
+        this.values = [...this.values]
+        this.values[index] = ''
+      }
     },
   },
 }
@@ -133,6 +165,25 @@ $CIRCLE_SIZE2: 32px;
 
   .committer-message {
     padding: 2px 0 10px;
+  }
+
+  .comment-input {
+    margin-top: 25px;
+    margin-right: 30px;
+
+    input {
+      border: none;
+      background: $COLOR_GRAY3;
+      font-size: 16px;
+      padding: 10px;
+      width: 100%;
+      color: $FONT_WHITE;
+      border-radius: 5px;
+
+      &:focus {
+        outline: none;
+      }
+    }
   }
 }
 </style>

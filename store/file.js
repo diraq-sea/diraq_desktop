@@ -158,6 +158,30 @@ export const mutations = {
   addFile(state, file) {
     state.files = [...state.files, file]
   },
+  addComment(state, { id, value }) {
+    const file = state.files.find(file => file.commits.find(commit => commit.id === id))
+    const commit = file.commits.find(commit => commit.id === id)
+    const newFile = {
+      ...file,
+      commits: [...file.commits],
+    }
+
+    newFile.commits[newFile.commits.indexOf(commit)] = {
+      ...commit,
+      comments: [
+        ...commit.comments,
+        {
+          id: Date.now(),
+          user: 1,
+          date: Date.now() - 3 * 24 * 3600 * 1000,
+          comment: value,
+        },
+      ],
+    }
+
+    state.files = [...state.files]
+    state.files[state.files.indexOf(file)] = newFile
+  },
 }
 
 export const actions = {

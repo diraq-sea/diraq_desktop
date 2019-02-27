@@ -6,7 +6,12 @@
         class="viewer"
       />
     </div>
-    <commit-board :commits="commits" :users="users" class="commit-board" />
+    <commit-board
+      :commits="commits"
+      :users="users"
+      class="commit-board"
+      @addComment="$store.commit('file/addComment', $event)"
+    />
   </div>
 </template>
 
