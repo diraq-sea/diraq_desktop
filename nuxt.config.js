@@ -56,4 +56,11 @@ module.exports = {
       config.target = 'electron-renderer'
     },
   },
+
+  /*
+   ** Generate configuration
+   */
+  generate: {
+    dir: 'dist/renderer',
+  },
 }
