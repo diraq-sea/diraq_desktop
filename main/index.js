@@ -18,7 +18,11 @@ async function createWindow() {
 
   const { width, height } = configStore.get('windowSize')
 
-  mainWindow = new BrowserWindow({ width, height })
+  mainWindow = new BrowserWindow({
+    width,
+    height,
+    frame: false,
+  })
 
   await installExtension(VUEJS_DEVTOOLS)
   mainWindow.loadURL(WINDOW_ORIGIN)

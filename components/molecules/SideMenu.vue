@@ -74,13 +74,13 @@ export default {
 
 .side-menu {
   width: $SIDEMENU_WIDTH;
-  top: $NAVBAR_HEIGHT;
+  position: absolute;
+  top: 0;
   left: 0;
   display: block;
   min-height: 100%;
   background: $COLOR_GRAY2;
   height: 100%;
-  position: fixed;
   overflow: hidden;
   color: $FONT_WHITE;
 }

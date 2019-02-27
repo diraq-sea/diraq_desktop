@@ -20,6 +20,15 @@
             <div class="comment-message">{{ comment.comment }}</div>
           </div>
         </div>
+
+        <form class="comment-input" @submit.prevent="submitComment(commit.id)">
+          <input
+            :value="value(commit.id)"
+            type="text"
+            placeholder="Input comment..."
+            @input="inputComment(commit.id, $event)"
+          />
+        </form>
       </div>
     </div>
   </div>
@@ -47,6 +56,29 @@ export default {
     circleStyle() {
       return id => ({ backgroundImage: `url(${this.user(id).icon})` })
     },
+    value() {
+      return id => this.values[this.commits.findIndex(commit => commit.id === id)]
+    },
+  },
+  data() {
+    return { values: [] }
+  },
+  methods: {
+    inputComment(id, e) {
+      this.values = [...this.values]
+      const index = this.commits.findIndex(commit => commit.id === id)
+      this.values[index] = e.target.value
+    },
+    submitComment(id) {
+      const index = this.commits.findIndex(commit => commit.id === id)
+      const value = this.values[index]
+
+      if (value) {
+        this.$emit('addComment', { id, value })
+        this.values = [...this.values]
+        this.values[index] = ''
+      }
+    },
   },
 }
 </script>
@@ -54,14 +86,12 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-$GRAPH_WIDTH: 100px;
 $CIRCLE_SIZE: 40px;
 $CIRCLE_SIZE2: 32px;
 
 .commit-container {
   user-select: text;
-  padding-top: 20px;
-  background: $COLOR_GRAY2;
+  padding-top: 30px;
 
   & > div {
     position: relative;
@@ -75,9 +105,8 @@ $CIRCLE_SIZE2: 32px;
 .commit-graph {
   position: absolute;
   top: 0;
-  left: 15px;
+  left: 35px;
   bottom: 0;
-  width: $GRAPH_WIDTH;
 }
 
 .commit-circle {
@@ -85,7 +114,6 @@ $CIRCLE_SIZE2: 32px;
   height: $CIRCLE_SIZE;
   border-radius: 50%;
   background: center/cover no-repeat;
-  margin: 0 auto;
 }
 
 .commit-line {
@@ -99,7 +127,7 @@ $CIRCLE_SIZE2: 32px;
 }
 
 .comments-panel {
-  margin-left: $GRAPH_WIDTH;
+  margin-left: 90px;
   padding-bottom: 40px;
 
   .comment {
@@ -136,7 +164,26 @@ $CIRCLE_SIZE2: 32px;
   }
 
   .committer-message {
-    padding: 2px 0 15px;
+    padding: 2px 0 10px;
+  }
+
+  .comment-input {
+    margin-top: 25px;
+    margin-right: 30px;
+
+    input {
+      border: none;
+      background: $COLOR_GRAY3;
+      font-size: 16px;
+      padding: 10px;
+      width: 100%;
+      color: $FONT_WHITE;
+      border-radius: 5px;
+
+      &:focus {
+        outline: none;
+      }
+    }
   }
 }
 </style>

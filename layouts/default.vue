@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <navbar :isLoggedIn="true" :name="name" @logout="logout" />
+  <div class="root">
+    <title-bar />
     <div class="page">
       <div class="nuxt"><nuxt /></div>
-      <file-tab />
+      <file-tab @logout="logout" />
     </div>
     <side-menu />
   </div>
@@ -11,19 +11,16 @@
 
 <script>
 import { mapState } from 'vuex'
-import Navbar from '~/components/atoms/Navbar'
+import TitleBar from '~/components/molecules/TitleBar'
 import SideMenu from '~/components/molecules/SideMenu'
 import FileTab from '~/components/molecules/FileTab'
 
 export default {
-  middleware: ['isLogin', 'hasWorkingDir', 'fetchData'],
+  middleware: ['isLogin', 'fetchData'],
   components: {
-    Navbar,
+    TitleBar,
     SideMenu,
     FileTab,
-  },
-  computed: {
-    ...mapState('user', ['name']),
   },
   methods: {
     async logout() {
@@ -41,9 +38,17 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-.page {
+.root {
   position: fixed;
-  top: $NAVBAR_HEIGHT;
+  top: $TITLEBAR_HEIGHT;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.page {
+  position: absolute;
+  top: 0;
   left: $SIDEMENU_WIDTH;
   right: 0;
   bottom: 0;
