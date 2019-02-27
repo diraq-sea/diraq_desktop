@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="root">
+    <title-bar />
     <div class="page">
       <div class="nuxt"><nuxt /></div>
       <file-tab @logout="logout" />
@@ -10,12 +11,14 @@
 
 <script>
 import { mapState } from 'vuex'
+import TitleBar from '~/components/molecules/TitleBar'
 import SideMenu from '~/components/molecules/SideMenu'
 import FileTab from '~/components/molecules/FileTab'
 
 export default {
   middleware: ['isLogin', 'fetchData'],
   components: {
+    TitleBar,
     SideMenu,
     FileTab,
   },
@@ -35,8 +38,16 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-.page {
+.root {
   position: fixed;
+  top: $TITLEBAR_HEIGHT;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.page {
+  position: absolute;
   top: 0;
   left: $SIDEMENU_WIDTH;
   right: 0;
