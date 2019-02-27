@@ -7,7 +7,7 @@ let mainConfig = {
     main: path.join(__dirname, '../main/index.js'),
   },
   externals: [...Object.keys(dependencies || {})],
-  node: { __dirname: true },
+  node: { __dirname: process.env.NODE_ENV !== 'production' },
   module: {
     rules: [
       {
