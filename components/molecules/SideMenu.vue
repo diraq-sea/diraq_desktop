@@ -16,19 +16,19 @@
     </div>
 
     <el-dialog :visible.sync="dialogVisible" :append-to-body="true" title="Create new">
-      <span>This is a message</span>
-      <upload-dialog-footer slot="footer" @close="toggleDialog" />
+      <upload-dialog />
+      <el-button slot="footer" @click="toggleDialog">Cancel</el-button>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import UploadDialogFooter from '~/components/atoms/UploadDialogFooter'
+import UploadDialog from '~/components/atoms/UploadDialog'
 
 export default {
   components: {
-    UploadDialogFooter,
+    UploadDialog,
   },
   computed: {
     ...mapState('room', ['rooms', 'currentRoom']),
