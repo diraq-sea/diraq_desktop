@@ -6,12 +6,11 @@
   "main": "main/index.js",
   "private": true,
   "scripts": {
-    "start": "electron .",
     "dev": "npm-run-all --parallel dev:renderer dev:main",
     "dev:renderer": "nuxt",
     "dev:main": "npm-run-all --serial dev:util dev:app",
     "dev:util": "wait-on http://localhost:3000/",
-    "dev:app": "nodemon --watch main  --watch common --exec npm start",
+    "dev:app": "nodemon",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
@@ -30,8 +29,13 @@
     "electron-devtools-installer": "2.2.4",
     "eslint": "5.11.1",
     "eslint-config-prettier": "3.3.0",
+    "eslint-config-standard": "12.0.0",
     "eslint-loader": "2.1.1",
+    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-node": "8.0.1",
     "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-promise": "4.0.1",
+    "eslint-plugin-standard": "4.0.0",
     "eslint-plugin-vue": "5.0.0",
     "husky": "1.3.1",
     "lint-staged": "8.1.0",
@@ -49,6 +53,17 @@
     "*.{js,vue}": [
       "eslint --format codeframe --fix",
       "git add"
+    ]
+  },
+  "nodemonConfig": {
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "exec": "node .electron/dev-runner.js",
+    "watch": [
+      ".electron/",
+      "common/",
+      "main/"
     ]
   }
 }

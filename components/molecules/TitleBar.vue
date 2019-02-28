@@ -1,0 +1,88 @@
+<template>
+  <div class="title-bar">
+    <div :class="draggableClass" class="draggable" />
+    <div v-if="isNotMac" class="win-controls">
+      <div class="controls-icon" @click="$ipc(MIN_WIN)"><i class="fas fa-minus" /></div>
+      <div class="controls-icon" @click="$ipc(MAX_WIN)"><i class="far fa-square" /></div>
+      <div class="controls-icon red" @click="$ipc(CLOSE_WIN)"><i class="fas fa-times" /></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { CLOSE_WIN, MAX_WIN, MIN_WIN } from '~/common/ipcTypes'
+
+export default {
+  computed: {
+    CLOSE_WIN: () => CLOSE_WIN,
+    MAX_WIN: () => MAX_WIN,
+    MIN_WIN: () => MIN_WIN,
+    isNotMac() {
+      return this.$platform !== 'mac'
+    },
+    draggableClass() {
+      return {
+        isNotMac: this.isNotMac,
+      }
+    },
+  },
+}
+</script>
+
+<style scoped lang="scss">
+@import '@/assets/css/admin.scss';
+
+$CONTROLS_WIDTH: 150px;
+
+.title-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $TITLEBAR_HEIGHT;
+  background: $COLOR_GRAY3;
+
+  .draggable {
+    position: absolute;
+    top: 3px; // for resizable
+    left: 3px;
+    right: 3px;
+    bottom: 0;
+    -webkit-app-region: drag;
+
+    &.isNotMac {
+      right: $CONTROLS_WIDTH;
+    }
+  }
+
+  .win-controls {
+    position: absolute;
+    top: 0;
+    width: $CONTROLS_WIDTH;
+    right: 0;
+    bottom: 0;
+    display: flex;
+
+    .controls-icon {
+      flex: 1;
+      height: 100%;
+      color: $FONT_GRAY;
+      line-height: $TITLEBAR_HEIGHT;
+      text-align: center;
+
+      &:hover {
+        color: $FONT_WHITE;
+        background: #ffffff22;
+      }
+
+      &.red {
+        font-size: 18px;
+
+        &:hover {
+          background: $COLOR_RED;
+        }
+      }
+    }
+  }
+}
+</style>

@@ -1,5 +1,5 @@
 const path = require('path')
-const HOME_DIR = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
+const HOME_DIR = require('os').homedir()
 const CONFIG_DIR = path.join(HOME_DIR, '.diraq_study')
 
 module.exports = {
@@ -9,4 +9,5 @@ module.exports = {
   TMP_FILES_DIR: path.join(CONFIG_DIR, 'tmpfiles'),
   WINDOW_ORIGIN: 'http://localhost:3000',
   API_BASE_URL: 'http://localhost:8080/v1',
+  PLATFORM: { win32: 'win', darwin: 'mac', linux: 'linux' }[process.platform],
 }

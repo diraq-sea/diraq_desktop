@@ -1,4 +1,4 @@
-import { CHECK_LOGIN, LOGOUT, PRELOGIN, LOGIN, GET_AUTH_EMAIL } from '../common/ipcTypes'
+import { CHECK_LOGIN, LOGOUT, PRELOGIN, LOGIN, GET_AUTH_EMAIL } from '~/common/ipcTypes'
 
 export const state = () => ({
   email: null,

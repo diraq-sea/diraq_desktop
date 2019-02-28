@@ -1,34 +1,42 @@
-const {
-  READY,
-  ADD,
-  ADDDIR,
-  UNLINK,
-  UNLINKDIR,
-  CHANGE,
-  ERROR,
-} = require('../../../common/watcherTypes')
+const { READY, ADD, ADDDIR, UNLINK, UNLINKDIR, CHANGE, ERROR } = require('./watcherTypes')
+const windowStore = require('../../store/window.store')
+const { TMPFILE_OBSERVING } = require('../../../common/ipcToWindowTypes')
 
+/* eslint-disable no-console */
 module.exports = type =>
   ({
     [READY]: () => {
-      console.log('監視開始') // eslint-disable-line
+      console.log('監視開始')
     },
     [ADD]: path => {
-      console.log('追加ファイル-> ' + path) // eslint-disable-line
+      const commentAdd = `追加ファイル-> ${path}`
+      console.log(commentAdd)
+      windowStore.send(TMPFILE_OBSERVING, commentAdd)
     },
     [ADDDIR]: path => {
-      console.log('追加ディレクトリ-> ' + path) // eslint-disable-line
+      const commentAddDir = `追加ディレクトリ-> ${path}`
+      console.log(commentAddDir)
+      windowStore.send(TMPFILE_OBSERVING, commentAddDir)
     },
     [UNLINK]: path => {
-      console.log('削除されました-> ' + path) // eslint-disable-line
+      const commentUnlink = `削除されました-> ${path}`
+      console.log(commentUnlink)
+      windowStore.send(TMPFILE_OBSERVING, commentUnlink)
     },
     [UNLINKDIR]: path => {
-      console.log('削除されました-> ' + path) // eslint-disable-line
+      const commentUnlinkDir = `削除されました-> ${path}`
+      console.log(commentUnlinkDir)
+      windowStore.send(TMPFILE_OBSERVING, commentUnlinkDir)
     },
     [CHANGE]: path => {
-      console.log('修正されました-> ' + path) // eslint-disable-line
+      const commentChange = `修正されました-> ${path}`
+      console.log(commentChange)
+      windowStore.send(TMPFILE_OBSERVING, commentChange)
     },
     [ERROR]: path => {
-      console.log('エラーです-> ' + path) // eslint-disable-line
+      const commentError = `エラーです-> ${path}`
+      console.log(commentError)
+      windowStore.send(TMPFILE_OBSERVING, commentError)
     },
   }[type])
+/* eslint-enable */

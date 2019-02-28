@@ -29,7 +29,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/element-ui', '@/plugins/ipc', '@/plugins/moment'],
+  plugins: ['@/plugins/element-ui', '@/plugins/ipc', '@/plugins/moment', '@/plugins/platform'],
 
   /*
    ** Nuxt.js modules
@@ -55,5 +55,12 @@ module.exports = {
       }
       config.target = 'electron-renderer'
     },
+  },
+
+  /*
+   ** Generate configuration
+   */
+  generate: {
+    dir: 'dist/renderer',
   },
 }

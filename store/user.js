@@ -1,8 +1,10 @@
 import { GET_USER_INFO } from '~/common/ipcTypes'
+import userIcon from '~/assets/imgs/user1.png'
 
 export const state = () => ({
   name: null,
   email: null,
+  icon: userIcon,
 })
 
 export const mutations = {

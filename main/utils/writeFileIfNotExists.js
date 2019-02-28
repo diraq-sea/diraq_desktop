@@ -1,7 +1,7 @@
 const fs = require('fs')
 
-module.exports = (file_path, content) => {
-  if (!fs.existsSync(file_path)) {
-    fs.writeFileSync(file_path, JSON.stringify(content))
+module.exports = (filePath, content) => {
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, JSON.stringify(content))
   }
 }

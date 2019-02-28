@@ -6,8 +6,27 @@
         <div v-if="hasChild(commit.id)" class="commit-line" />
       </div>
       <div class="comments-panel">
-        <span class="committer-name">{{ user(commit.user).name }}</span>
-        <span class="committer-date">{{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}</span>
+        <div class="committer-info">
+          <span class="committer-name">{{ user(commit.user).name }}</span>
+          <span class="committer-date">{{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}</span>
+          <div class="file-controls">
+            <div
+              class="file-controls-icon"
+              title="Edit file"
+              @click="$store.dispatch('file/editFile', commit)"
+            >
+              <i class="fas fa-edit" />
+            </div>
+            <a
+              :download="downloadingName"
+              :href="currentCommit.url"
+              class="file-controls-icon"
+              title="Download file"
+            >
+              <i class="fas fa-file-download" />
+            </a>
+          </div>
+        </div>
         <div class="committer-message">{{ commit.message }}</div>
 
         <div v-for="comment in commit.comments" :key="comment.id" class="comment">
@@ -20,6 +39,15 @@
             <div class="comment-message">{{ comment.comment }}</div>
           </div>
         </div>
+
+        <form class="comment-input" @submit.prevent="submitComment(commit.id)">
+          <input
+            :value="value(commit.id)"
+            type="text"
+            placeholder="Input comment..."
+            @input="inputComment(commit.id, $event)"
+          />
+        </form>
       </div>
     </div>
   </div>
@@ -30,6 +58,14 @@ export default {
   props: {
     commits: {
       type: Array,
+      required: true,
+    },
+    currentCommit: {
+      type: Object,
+      required: true,
+    },
+    filename: {
+      type: String,
       required: true,
     },
     users: {
@@ -47,6 +83,33 @@ export default {
     circleStyle() {
       return id => ({ backgroundImage: `url(${this.user(id).icon})` })
     },
+    value() {
+      return id => this.values[this.commits.findIndex(commit => commit.id === id)]
+    },
+    downloadingName() {
+      const nameParts = this.filename.split('.')
+      return `${nameParts.slice(0, -1).join('.')}_${this.currentCommit.id}.${nameParts.pop()}`
+    },
+  },
+  data() {
+    return { values: [] }
+  },
+  methods: {
+    inputComment(id, e) {
+      this.values = [...this.values]
+      const index = this.commits.findIndex(commit => commit.id === id)
+      this.values[index] = e.target.value
+    },
+    submitComment(id) {
+      const index = this.commits.findIndex(commit => commit.id === id)
+      const value = this.values[index]
+
+      if (value) {
+        this.$emit('addComment', { id, value })
+        this.values = [...this.values]
+        this.values[index] = ''
+      }
+    },
   },
 }
 </script>
@@ -54,14 +117,12 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-$GRAPH_WIDTH: 100px;
 $CIRCLE_SIZE: 40px;
 $CIRCLE_SIZE2: 32px;
 
 .commit-container {
   user-select: text;
-  padding-top: 20px;
-  background: $COLOR_GRAY2;
+  padding-top: 30px;
 
   & > div {
     position: relative;
@@ -75,9 +136,8 @@ $CIRCLE_SIZE2: 32px;
 .commit-graph {
   position: absolute;
   top: 0;
-  left: 15px;
+  left: 35px;
   bottom: 0;
-  width: $GRAPH_WIDTH;
 }
 
 .commit-circle {
@@ -85,7 +145,6 @@ $CIRCLE_SIZE2: 32px;
   height: $CIRCLE_SIZE;
   border-radius: 50%;
   background: center/cover no-repeat;
-  margin: 0 auto;
 }
 
 .commit-line {
@@ -99,7 +158,7 @@ $CIRCLE_SIZE2: 32px;
 }
 
 .comments-panel {
-  margin-left: $GRAPH_WIDTH;
+  margin-left: 90px;
   padding-bottom: 40px;
 
   .comment {
@@ -122,6 +181,31 @@ $CIRCLE_SIZE2: 32px;
     padding-left: 15px;
   }
 
+  .committer-info {
+    position: relative;
+    padding-right: 80px;
+
+    .file-controls {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      opacity: 0;
+
+      .file-controls-icon {
+        display: inline-block;
+        padding: 3px;
+        cursor: pointer;
+        margin-right: 5px;
+        margin-top: -4px;
+        font-size: 18px;
+      }
+    }
+  }
+
+  &:hover .file-controls {
+    opacity: 1;
+  }
+
   .committer-name,
   .comment-username {
     font-weight: bold;
@@ -136,7 +220,26 @@ $CIRCLE_SIZE2: 32px;
   }
 
   .committer-message {
-    padding: 2px 0 15px;
+    padding: 2px 15px 10px 0;
+  }
+
+  .comment-input {
+    margin-top: 25px;
+    margin-right: 30px;
+
+    input {
+      border: none;
+      background: $COLOR_GRAY3;
+      font-size: 16px;
+      padding: 10px;
+      width: 100%;
+      color: $FONT_WHITE;
+      border-radius: 5px;
+
+      &:focus {
+        outline: none;
+      }
+    }
   }
 }
 </style>
