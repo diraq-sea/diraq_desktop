@@ -29,8 +29,13 @@
     "electron-devtools-installer": "2.2.4",
     "eslint": "5.11.1",
     "eslint-config-prettier": "3.3.0",
+    "eslint-config-standard": "12.0.0",
     "eslint-loader": "2.1.1",
+    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-node": "8.0.1",
     "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-promise": "4.0.1",
+    "eslint-plugin-standard": "4.0.0",
     "eslint-plugin-vue": "5.0.0",
     "husky": "1.3.1",
     "lint-staged": "8.1.0",
@@ -51,6 +56,9 @@
     ]
   },
   "nodemonConfig": {
+    "env": {
+      "NODE_ENV": "development"
+    },
     "exec": "node .electron/dev-runner.js",
     "watch": [
       ".electron/",

@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import TitleBar from '~/components/molecules/TitleBar'
 import SideMenu from '~/components/molecules/SideMenu'
 import FileTab from '~/components/molecules/FileTab'
