@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { TMPFILE_OBSERVING } from '../common/ipcToWindowTypes'
+import { TMPFILE_OBSERVING } from '~/common/ipcToWindowTypes'
 
 export const plugins = [
   () => {

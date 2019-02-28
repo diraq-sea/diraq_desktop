@@ -6,8 +6,27 @@
         <div v-if="hasChild(commit.id)" class="commit-line" />
       </div>
       <div class="comments-panel">
-        <span class="committer-name">{{ user(commit.user).name }}</span>
-        <span class="committer-date">{{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}</span>
+        <div class="committer-info">
+          <span class="committer-name">{{ user(commit.user).name }}</span>
+          <span class="committer-date">{{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}</span>
+          <div class="file-controls">
+            <div
+              class="file-controls-icon"
+              title="Edit file"
+              @click="$store.dispatch('file/editFile', commit)"
+            >
+              <i class="fas fa-edit" />
+            </div>
+            <a
+              :download="downloadingName"
+              :href="currentCommit.url"
+              class="file-controls-icon"
+              title="Download file"
+            >
+              <i class="fas fa-file-download" />
+            </a>
+          </div>
+        </div>
         <div class="committer-message">{{ commit.message }}</div>
 
         <div v-for="comment in commit.comments" :key="comment.id" class="comment">
@@ -41,6 +60,14 @@ export default {
       type: Array,
       required: true,
     },
+    currentCommit: {
+      type: Object,
+      required: true,
+    },
+    filename: {
+      type: String,
+      required: true,
+    },
     users: {
       type: Array,
       required: true,
@@ -58,6 +85,10 @@ export default {
     },
     value() {
       return id => this.values[this.commits.findIndex(commit => commit.id === id)]
+    },
+    downloadingName() {
+      const nameParts = this.filename.split('.')
+      return `${nameParts.slice(0, -1).join('.')}_${this.currentCommit.id}.${nameParts.pop()}`
     },
   },
   data() {
@@ -150,6 +181,31 @@ $CIRCLE_SIZE2: 32px;
     padding-left: 15px;
   }
 
+  .committer-info {
+    position: relative;
+    padding-right: 80px;
+
+    .file-controls {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      opacity: 0;
+
+      .file-controls-icon {
+        display: inline-block;
+        padding: 3px;
+        cursor: pointer;
+        margin-right: 5px;
+        margin-top: -4px;
+        font-size: 18px;
+      }
+    }
+  }
+
+  &:hover .file-controls {
+    opacity: 1;
+  }
+
   .committer-name,
   .comment-username {
     font-weight: bold;
@@ -164,7 +220,7 @@ $CIRCLE_SIZE2: 32px;
   }
 
   .committer-message {
-    padding: 2px 0 10px;
+    padding: 2px 15px 10px 0;
   }
 
   .comment-input {

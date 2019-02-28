@@ -1,3 +1,6 @@
+const path = require('path')
+const fs = require('fs')
+
 const {
   PRELOGIN,
   CHECK_LOGIN,
@@ -8,9 +11,17 @@ const {
   INVITE,
   FETCH_ROOMS,
   CREATE_ROOM,
+  EDIT_FILE,
+  CLOSE_WIN,
+  MAX_WIN,
+  MIN_WIN,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios')
 const authStore = require('../../store/auth.store')
+const windowStore = require('../../store/window.store')
+const { TMP_FILES_DIR } = require('../../const')
+const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
+const open = require('../../utils/open')
 
 module.exports = {
   [PRELOGIN]: email => {
@@ -38,4 +49,16 @@ module.exports = {
   [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
 
   [CREATE_ROOM]: name => axios.post('/rooms', { name, published: false }),
+
+  [EDIT_FILE]: async ({ name, commit }) => {
+    const filepath = path.join(TMP_FILES_DIR, `${commit.id}${path.extname(name)}`)
+    if (!fs.existsSync(filepath)) await fetchAndSaveFile(commit.url, filepath)
+    await open(filepath)
+  },
+
+  [CLOSE_WIN]: () => windowStore.close(),
+
+  [MAX_WIN]: () => windowStore.maximize(),
+
+  [MIN_WIN]: () => windowStore.minimize(),
 }

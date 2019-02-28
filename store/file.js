@@ -1,34 +1,40 @@
-import { FETCH_FILE } from '~/common/ipcTypes'
+import { FETCH_FILE, EDIT_FILE } from '~/common/ipcTypes'
+
+const url = 'http://www.mech.tohoku-gakuin.ac.jp/rde/contents/kougakukai/files/template.docx'
+const currentCommit = {
+  id: 'hash1-1',
+  url,
+  message: 'first commit',
+  user: 1,
+  parents: [],
+  comments: [
+    {
+      id: 3,
+      user: 1,
+      date: Date.now() - 24 * 3600 * 1000,
+      comment: 'sample comment3',
+    },
+    {
+      id: 2,
+      user: 1,
+      date: Date.now() - 2 * 24 * 3600 * 1000,
+      comment: 'sample comment2',
+    },
+  ],
+}
 
 export const state = () => ({
+  currentCommit,
   files: [
     {
       id: 1,
-      name: 'file1.js',
+      name: 'file1.docx',
       deleted: false,
       commits: [
-        {
-          id: 'hash1-1',
-          message: 'first commit',
-          user: 1,
-          parents: [],
-          comments: [
-            {
-              id: 3,
-              user: 1,
-              date: Date.now() - 24 * 3600 * 1000,
-              comment: 'sample comment3',
-            },
-            {
-              id: 2,
-              user: 1,
-              date: Date.now() - 2 * 24 * 3600 * 1000,
-              comment: 'sample comment2',
-            },
-          ],
-        },
+        currentCommit,
         {
           id: 'hash1-2',
+          url,
           message: 'first commit - 2',
           user: 1,
           parents: ['hash1-1'],
@@ -55,6 +61,7 @@ export const state = () => ({
         },
         {
           id: 'hash1-3',
+          url,
           message: 'first commit - 3',
           user: 1,
           parents: ['hash1-2'],
@@ -71,11 +78,12 @@ export const state = () => ({
     },
     {
       id: 2,
-      name: 'file2.js',
+      name: 'file2.docx',
       deleted: false,
       commits: [
         {
           id: 'hash2',
+          url,
           message: 'second commit',
           user: 1,
           parents: [],
@@ -104,11 +112,12 @@ export const state = () => ({
     },
     {
       id: 3,
-      name: 'file3.js',
+      name: 'file3.docx',
       deleted: false,
       commits: [
         {
           id: 'hash3',
+          url,
           message: 'third commit',
           user: 1,
           parents: [],
@@ -137,12 +146,12 @@ export const state = () => ({
     },
     {
       id: 4,
-      name: 'file4.js',
+      name: 'file4.docx',
       deleted: true,
     },
     {
       id: 5,
-      name: 'file5.js',
+      name: 'file5.docx',
       deleted: true,
     },
   ],
@@ -187,6 +196,10 @@ export const mutations = {
 export const actions = {
   async fetchFile({ commit }, id) {
     const file = await this.$ipc(FETCH_FILE, id)
-    commit('setFile', file)
+    commit('addFile', file)
+  },
+  async editFile({ state }, commit) {
+    const file = state.files.find(file => file.commits.find(({ id }) => commit.id === id))
+    await this.$ipc(EDIT_FILE, { name: file.name, commit })
   },
 }
