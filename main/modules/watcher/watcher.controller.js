@@ -1,6 +1,6 @@
 const chokidar = require('chokidar')
 const watcherService = require('./watcher.service')
-const watcherTypes = require('../../../common/watcherTypes')
+const watcherTypes = require('./watcherTypes')
 const mkdirIfNotExists = require('../../utils/mkdirIfNotExists')
 const { TMP_FILES_DIR } = require('../../const')
 const watcher = chokidar.watch(TMP_FILES_DIR, {
@@ -8,10 +8,10 @@ const watcher = chokidar.watch(TMP_FILES_DIR, {
 })
 
 module.exports = {
-  init(mainWindow) {
+  init() {
     mkdirIfNotExists(TMP_FILES_DIR)
     Object.values(watcherTypes).forEach(type => {
-      watcher.on(type, watcherService(type, mainWindow))
+      watcher.on(type, watcherService(type))
     })
   },
 }
