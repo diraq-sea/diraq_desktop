@@ -51,6 +51,9 @@
     ]
   },
   "nodemonConfig": {
+    "env": {
+      "NODE_ENV": "development"
+    },
     "exec": "node .electron/dev-runner.js",
     "watch": [
       ".electron/",
