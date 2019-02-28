@@ -1,7 +1,10 @@
 const { exec } = require('child_process')
-const { PLATFORM } = require('../const')
+const platform = require('../../common/platform')
 
 module.exports = filepath =>
   new Promise(resolve =>
-    exec(`${{ win: 'start', mac: 'open', linux: 'xdg-open' }[PLATFORM]} ${filepath}`, resolve),
+    exec(
+      `${{ win: 'start', mac: 'open', linux: 'xdg-open' }[platform.default]} ${filepath}`,
+      resolve,
+    ),
   )

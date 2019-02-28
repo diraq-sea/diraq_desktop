@@ -12,9 +12,13 @@ const {
   FETCH_ROOMS,
   CREATE_ROOM,
   EDIT_FILE,
+  CLOSE_WIN,
+  MAX_WIN,
+  MIN_WIN,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios')
 const authStore = require('../../store/auth.store')
+const windowStore = require('../../store/window.store')
 const { TMP_FILES_DIR } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
@@ -51,4 +55,10 @@ module.exports = {
     if (!fs.existsSync(filepath)) await fetchAndSaveFile(commit.url, filepath)
     await open(filepath)
   },
+
+  [CLOSE_WIN]: () => windowStore.close(),
+
+  [MAX_WIN]: () => windowStore.maximize(),
+
+  [MIN_WIN]: () => windowStore.minimize(),
 }

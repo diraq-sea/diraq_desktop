@@ -5,6 +5,10 @@ const configStore = require('./config.store')
 
 let mainWindow = null
 
+function checkInit() {
+  if (!mainWindow) throw new Error('windowStore is not initialized')
+}
+
 async function init() {
   const { width, height } = configStore.get('windowSize')
 
@@ -12,7 +16,11 @@ async function init() {
     width,
     height,
     frame: false,
+    titleBarStyle: 'hidden',
   })
+
+  mainWindow.setAlwaysOnTop(true)
+  mainWindow.setAlwaysOnTop(false)
 
   await installExtension(VUEJS_DEVTOOLS)
   mainWindow.loadURL(WINDOW_ORIGIN)
@@ -36,5 +44,17 @@ module.exports = {
   send(type, value) {
     // chokidarのためにcheckInit使わない
     if (mainWindow) mainWindow.webContents.send(type, value)
+  },
+  close() {
+    checkInit()
+    mainWindow.close()
+  },
+  maximize() {
+    checkInit()
+    mainWindow.maximize()
+  },
+  minimize() {
+    checkInit()
+    mainWindow.minimize()
   },
 }
