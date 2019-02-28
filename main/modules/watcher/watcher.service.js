@@ -2,39 +2,41 @@ const { READY, ADD, ADDDIR, UNLINK, UNLINKDIR, CHANGE, ERROR } = require('./watc
 const windowStore = require('../../store/window.store')
 const { TMPFILE_OBSERVING } = require('../../../common/ipcToWindowTypes')
 
+/* eslint-disable no-console */
 module.exports = type =>
   ({
     [READY]: () => {
-      console.log('監視開始') // eslint-disable-line
+      console.log('監視開始')
     },
     [ADD]: path => {
-      const comment_add = `追加ファイル-> ${path}`
-      console.log(comment_add) // eslint-disable-line
-      windowStore.send(TMPFILE_OBSERVING, comment_add)
+      const commentAdd = `追加ファイル-> ${path}`
+      console.log(commentAdd)
+      windowStore.send(TMPFILE_OBSERVING, commentAdd)
     },
     [ADDDIR]: path => {
-      const comment_adddir = `追加ディレクトリ-> ${path}`
-      console.log(comment_adddir) // eslint-disable-line
-      windowStore.send(TMPFILE_OBSERVING, comment_adddir)
+      const commentAddDir = `追加ディレクトリ-> ${path}`
+      console.log(commentAddDir)
+      windowStore.send(TMPFILE_OBSERVING, commentAddDir)
     },
     [UNLINK]: path => {
-      const comment_unlink = `削除されました-> ${path}`
-      console.log(comment_unlink) // eslint-disable-line
-      windowStore.send(TMPFILE_OBSERVING, comment_unlink)
+      const commentUnlink = `削除されました-> ${path}`
+      console.log(commentUnlink)
+      windowStore.send(TMPFILE_OBSERVING, commentUnlink)
     },
     [UNLINKDIR]: path => {
-      const comment_unlinkdir = `削除されました-> ${path}`
-      console.log(comment_unlinkdir) // eslint-disable-line
-      windowStore.send(TMPFILE_OBSERVING, comment_unlinkdir)
+      const commentUnlinkDir = `削除されました-> ${path}`
+      console.log(commentUnlinkDir)
+      windowStore.send(TMPFILE_OBSERVING, commentUnlinkDir)
     },
     [CHANGE]: path => {
-      const comment_change = `修正されました-> ${path}`
-      console.log(comment_change) // eslint-disable-line
-      windowStore.send(TMPFILE_OBSERVING, comment_change)
+      const commentChange = `修正されました-> ${path}`
+      console.log(commentChange)
+      windowStore.send(TMPFILE_OBSERVING, commentChange)
     },
     [ERROR]: path => {
-      const comment_error = `エラーです-> ${path}`
-      console.log(comment_error) // eslint-disable-line
-      windowStore.send(TMPFILE_OBSERVING, comment_error)
+      const commentError = `エラーです-> ${path}`
+      console.log(commentError)
+      windowStore.send(TMPFILE_OBSERVING, commentError)
     },
   }[type])
+/* eslint-enable */

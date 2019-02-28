@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 import Card from '~/components/atoms/Card'
 
 export default {
@@ -36,6 +35,7 @@ export default {
   },
   computed: {
     notHaveEmail() {
+      // eslint-disable-next-line no-useless-escape
       return !/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
         this.email,
       )
