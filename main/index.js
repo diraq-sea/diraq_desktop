@@ -14,7 +14,6 @@ async function createWindow() {
   configStore.init()
   authStore.init()
   ipcController.init()
-  watcherController.init()
 
   const { width, height } = configStore.get('windowSize')
 
@@ -23,6 +22,8 @@ async function createWindow() {
     height,
     frame: false,
   })
+
+  watcherController.init(mainWindow)
 
   await installExtension(VUEJS_DEVTOOLS)
   mainWindow.loadURL(WINDOW_ORIGIN)

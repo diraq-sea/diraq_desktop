@@ -8,10 +8,10 @@ const watcher = chokidar.watch(TMP_FILES_DIR, {
 })
 
 module.exports = {
-  init() {
+  init(mainWindow) {
     mkdirIfNotExists(TMP_FILES_DIR)
     Object.values(watcherTypes).forEach(type => {
-      watcher.on(type, watcherService(type))
+      watcher.on(type, watcherService(type, mainWindow))
     })
   },
 }
