@@ -1,5 +1,5 @@
 const path = require('path')
-const HOME_DIR = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
+const HOME_DIR = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
 const CONFIG_DIR = path.join(HOME_DIR, '.diraq_study')
 
 module.exports = {
