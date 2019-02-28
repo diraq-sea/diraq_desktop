@@ -53,6 +53,7 @@
   "nodemonConfig": {
     "exec": "node .electron/dev-runner.js",
     "watch": [
+      ".electron/",
       "common/",
       "main/"
     ]

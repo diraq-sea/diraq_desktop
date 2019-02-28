@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')
 const webpack = require('webpack')
@@ -9,16 +10,49 @@ let electronProcess = null
 let manualRestart = false
 let args = ['--inspect=5858', path.join(__dirname, '../dist/electron/main.js')]
 
+function logStats(proc, data, color, isWebpack = false) {
+  let log = ''
+
+  log += `${chalk[color].bold(`┏ ${proc} ${[...Array(27 - proc.length)].join('-')}`)}\n\n`
+
+  if (typeof data === 'object' && isWebpack) {
+    data
+      .toString({
+        colors: true,
+        chunks: false,
+      })
+      .split(/\r?\n/)
+      .forEach(line => {
+        log += `  ${line}\n`
+      })
+    log += '\n'
+  } else if (typeof data === 'object') {
+    data
+      .toString()
+      .split(/\r?\n/)
+      .forEach(line => {
+        log += `  ${line}\n`
+      })
+  } else {
+    log += `  ${data}\n`
+  }
+
+  log += `${chalk[color].bold(`┗ ${[...Array(28)].join('-')}`)}\n`
+
+  console.log(log)
+}
+
 function startMain() {
   return new Promise(resolve => {
     mainConfig.mode = 'development'
-    const compiler = webpack(mainConfig)
 
-    compiler.watch({}, err => {
+    webpack(mainConfig, (err, stats) => {
       if (err) {
         console.log(err)
         return
       }
+
+      logStats('webpack', stats, 'yellow', true)
 
       if (electronProcess && electronProcess.kill) {
         manualRestart = true
@@ -42,10 +76,11 @@ function startElectron() {
   electronProcess = spawn(electron, args)
 
   electronProcess.stdout.on('data', data => {
-    electronLog(data)
+    logStats('Main Process', data, 'blue')
   })
+
   electronProcess.stderr.on('data', data => {
-    electronLog(data)
+    logStats('Electron', data, 'red')
   })
 
   electronProcess.on('close', () => {
@@ -53,18 +88,9 @@ function startElectron() {
   })
 }
 
-function electronLog(data) {
-  let log = ''
-  data = data.toString().split(/\r?\n/)
-  data.forEach(line => {
-    log += `  ${line}\n`
-  })
-  if (/[0-9A-z]+/.test(log)) {
-    console.log(log)
-  }
-}
-
 function init() {
+  console.log(`\n  ${chalk.blue.bold(`Getting ready for the ${process.env.npm_package_name}`)}\n`)
+
   startMain()
     .then(() => {
       startElectron()
