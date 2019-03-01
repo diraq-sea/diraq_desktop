@@ -3,19 +3,25 @@
     <div :class="draggableClass" class="draggable" />
     <div v-if="isNotMac" class="win-controls">
       <div class="controls-icon" @click="$ipc(MIN_WIN)"><i class="fas fa-minus" /></div>
-      <div class="controls-icon" @click="$ipc(MAX_WIN)"><i class="far fa-square" /></div>
+      <div v-if="isMaximized" class="controls-icon invert" @click="$ipc(UNMAX_WIN)">
+        <i class="far fa-clone" />
+      </div>
+      <div v-else class="controls-icon" @click="$ipc(MAX_WIN)"><i class="far fa-square" /></div>
       <div class="controls-icon red" @click="$ipc(CLOSE_WIN)"><i class="fas fa-times" /></div>
     </div>
   </div>
 </template>
 
 <script>
-import { CLOSE_WIN, MAX_WIN, MIN_WIN } from '~/common/ipcTypes'
+import { mapState } from 'vuex'
+import { CLOSE_WIN, MAX_WIN, UNMAX_WIN, MIN_WIN } from '~/common/ipcTypes'
 
 export default {
   computed: {
+    ...mapState(['isMaximized']),
     CLOSE_WIN: () => CLOSE_WIN,
     MAX_WIN: () => MAX_WIN,
+    UNMAX_WIN: () => UNMAX_WIN,
     MIN_WIN: () => MIN_WIN,
     isNotMac() {
       return this.$platform !== 'mac'
@@ -73,6 +79,10 @@ $CONTROLS_WIDTH: 150px;
       &:hover {
         color: $FONT_WHITE;
         background: #ffffff22;
+      }
+
+      &.invert {
+        transform: rotateZ(180deg);
       }
 
       &.red {
