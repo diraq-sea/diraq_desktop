@@ -28,8 +28,8 @@ export const state = () => ({
   files: [
     {
       id: 1,
+      roomId: 1,
       name: 'file1.docx',
-      deleted: false,
       commits: [
         currentCommit,
         {
@@ -78,8 +78,8 @@ export const state = () => ({
     },
     {
       id: 2,
+      roomId: 1,
       name: 'file2.docx',
-      deleted: false,
       commits: [
         {
           id: 'hash2',
@@ -112,8 +112,8 @@ export const state = () => ({
     },
     {
       id: 3,
+      roomId: 1,
       name: 'file3.docx',
-      deleted: false,
       commits: [
         {
           id: 'hash3',
@@ -143,16 +143,6 @@ export const state = () => ({
           ],
         },
       ],
-    },
-    {
-      id: 4,
-      name: 'file4.docx',
-      deleted: true,
-    },
-    {
-      id: 5,
-      name: 'file5.docx',
-      deleted: true,
     },
   ],
 })
