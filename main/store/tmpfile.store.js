@@ -26,14 +26,19 @@ module.exports = {
     const filemdate = fs.statSync(pathinfo).mtime
     const targetfile = jsonlist.find(json => {
       if (json.name === filename) {
-        json.birthdate = filebirthdate
-        json.mdate = filemdate
         return json
       } else {
         return null
       }
     })
-    if (!targetfile) {
+    if (targetfile) {
+      for (let json in jsonlist) {
+        if (jsonlist[json].name === filename) {
+          jsonlist[json].birthdate = filebirthdate
+          jsonlist[json].mdate = filemdate
+        }
+      }
+    } else {
       jsonlist.push({ name: filename, birthdate: filebirthdate, mdate: filemdate })
     }
     fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist))
