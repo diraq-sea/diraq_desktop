@@ -123,6 +123,7 @@ $CIRCLE_SIZE2: 32px;
 .commit-container {
   user-select: text;
   padding-top: 30px;
+  overflow: auto;
 
   & > div {
     position: relative;
@@ -235,6 +236,7 @@ $CIRCLE_SIZE2: 32px;
       width: 100%;
       color: $FONT_WHITE;
       border-radius: 5px;
+      user-select: none;
 
       &:focus {
         outline: none;

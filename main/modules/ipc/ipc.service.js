@@ -14,6 +14,7 @@ const {
   EDIT_FILE,
   CLOSE_WIN,
   MAX_WIN,
+  UNMAX_WIN,
   MIN_WIN,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios')
@@ -59,6 +60,8 @@ module.exports = {
   [CLOSE_WIN]: () => windowStore.close(),
 
   [MAX_WIN]: () => windowStore.maximize(),
+
+  [UNMAX_WIN]: () => windowStore.unmaximize(),
 
   [MIN_WIN]: () => windowStore.minimize(),
 }
