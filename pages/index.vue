@@ -7,10 +7,11 @@
         :currentCommit="currentCommit"
         :filename="file(currentTab.id).name"
         :users="users"
+        :selfIcon="icon"
         class="commit-board"
         @addComment="$store.commit('file/addComment', $event)"
+        @addCommit="$store.commit('file/addCommit', $event)"
       />
-      <commit-maker class="commit-maker" />
       <members class="members" />
     </div>
   </div>
@@ -19,19 +20,18 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import userIcon from '~/assets/imgs/user1.png'
-import CommitMaker from '~/components/molecules/CommitMaker'
 import CommitBoard from '~/components/molecules/CommitBoard'
 import Members from '~/components/molecules/Members'
 
 export default {
   components: {
-    CommitMaker,
     CommitBoard,
     Members,
   },
   computed: {
     ...mapState('tab', ['currentTab']),
     ...mapState('file', ['currentCommit']),
+    ...mapState('user', ['icon']),
     ...mapGetters('file', ['file']),
     commits() {
       return this.file(this.currentTab.id).commits
@@ -90,15 +90,7 @@ $COMMIT_MAKER_HEIGHT: 60px;
     top: 0;
     left: 0;
     right: $MEMBERS_WIDTH;
-    bottom: $COMMIT_MAKER_HEIGHT;
-  }
-
-  .commit-maker {
-    position: absolute;
-    left: 0;
-    right: $MEMBERS_WIDTH;
     bottom: 0;
-    height: $COMMIT_MAKER_HEIGHT;
   }
 }
 
