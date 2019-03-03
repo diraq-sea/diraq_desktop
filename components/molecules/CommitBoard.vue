@@ -1,55 +1,61 @@
 <template>
-  <div class="commit-container">
-    <div v-for="commit in commits" :key="commit.id">
-      <div class="commit-graph">
-        <div class="commit-circle" :style="circleStyle(commit.user)" />
-        <div v-if="hasChild(commit.id)" class="commit-line" />
-      </div>
-      <div class="comments-panel">
-        <div class="committer-info">
-          <span class="committer-name">{{ user(commit.user).name }}</span>
-          <span class="committer-date">{{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}</span>
-          <div class="file-controls">
-            <div
-              class="file-controls-icon"
-              title="Edit file"
-              @click="$store.dispatch('file/editFile', commit)"
-            >
-              <i class="fas fa-edit" />
-            </div>
-            <a
-              :download="downloadingName"
-              :href="currentCommit.url"
-              class="file-controls-icon"
-              title="Download file"
-            >
-              <i class="fas fa-file-download" />
-            </a>
-          </div>
+  <div>
+    <div class="commit-container">
+      <div v-for="commit in commits" :key="commit.id">
+        <div class="commit-graph">
+          <div class="commit-circle" :style="circleStyle(commit.user)" />
+          <div v-if="hasChild(commit.id)" class="commit-line" />
         </div>
-        <div class="committer-message">{{ commit.message }}</div>
-
-        <div v-for="comment in commit.comments" :key="comment.id" class="comment">
-          <div class="comment-circle" :style="circleStyle(comment.user)" />
-          <div class="comment-body">
-            <span class="comment-username">{{ user(comment.user).name }}</span>
-            <span class="comment-date">
-              {{ $moment(comment.date).format('YY/MM/DD HH:mm:ss') }}
+        <div class="comments-panel">
+          <div class="committer-info">
+            <span class="committer-name">{{ user(commit.user).name }}</span>
+            <span class="committer-date">
+              {{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}
             </span>
-            <div class="comment-message">{{ comment.comment }}</div>
+            <div class="file-controls">
+              <div
+                class="file-controls-icon"
+                title="Edit file"
+                @click="$store.dispatch('file/editFile', commit)"
+              >
+                <i class="fas fa-edit" />
+              </div>
+              <a
+                :download="downloadingName"
+                :href="currentCommit.url"
+                class="file-controls-icon"
+                title="Download file"
+              >
+                <i class="fas fa-file-download" />
+              </a>
+            </div>
           </div>
-        </div>
+          <div class="committer-message">{{ commit.message }}</div>
 
-        <form class="comment-input" @submit.prevent="submitComment(commit.id)">
-          <input
-            :value="value(commit.id)"
-            type="text"
-            placeholder="Input comment..."
-            @input="inputComment(commit.id, $event)"
-          />
-        </form>
+          <div v-for="comment in commit.comments" :key="comment.id" class="comment">
+            <div class="comment-circle" :style="circleStyle(comment.user)" />
+            <div class="comment-body">
+              <span class="comment-username">{{ user(comment.user).name }}</span>
+              <span class="comment-date">
+                {{ $moment(comment.date).format('YY/MM/DD HH:mm:ss') }}
+              </span>
+              <div class="comment-message">{{ comment.comment }}</div>
+            </div>
+          </div>
+
+          <form class="comment-input" @submit.prevent="submitComment(commit.id)">
+            <input
+              :value="value(commit.id)"
+              type="text"
+              placeholder="Input comment..."
+              @input="inputComment(commit.id, $event)"
+            />
+          </form>
+        </div>
       </div>
     </div>
+
+    <div class="commit-maker" />
   </div>
 </template>
 
@@ -117,12 +123,13 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-$CIRCLE_SIZE: 40px;
-$CIRCLE_SIZE2: 32px;
+$COMMENT_CIRCLE_SIZE: 32px;
+$COMMIT_MAKER_HEIGHT: 60px;
 
 .commit-container {
   user-select: text;
   padding-top: 30px;
+  height: calc(100% - #{$COMMIT_MAKER_HEIGHT});
   overflow: auto;
 
   & > div {
@@ -142,8 +149,8 @@ $CIRCLE_SIZE2: 32px;
 }
 
 .commit-circle {
-  width: $CIRCLE_SIZE;
-  height: $CIRCLE_SIZE;
+  width: $COMMIT_CIRCLE_SIZE;
+  height: $COMMIT_CIRCLE_SIZE;
   border-radius: 50%;
   background: center/cover no-repeat;
 }
@@ -151,7 +158,7 @@ $CIRCLE_SIZE2: 32px;
 .commit-line {
   width: 5px;
   position: absolute;
-  top: $CIRCLE_SIZE;
+  top: $COMMIT_CIRCLE_SIZE;
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
@@ -168,8 +175,8 @@ $CIRCLE_SIZE2: 32px;
   }
 
   .comment-circle {
-    width: $CIRCLE_SIZE2;
-    height: $CIRCLE_SIZE2;
+    width: $COMMENT_CIRCLE_SIZE;
+    height: $COMMENT_CIRCLE_SIZE;
     border-radius: 50%;
     background: center/cover no-repeat;
     position: absolute;
@@ -178,7 +185,7 @@ $CIRCLE_SIZE2: 32px;
   }
 
   .comment-body {
-    margin-left: $CIRCLE_SIZE2;
+    margin-left: $COMMENT_CIRCLE_SIZE;
     padding-left: 15px;
   }
 
@@ -243,5 +250,10 @@ $CIRCLE_SIZE2: 32px;
       }
     }
   }
+}
+
+.commit-maker {
+  height: $COMMIT_MAKER_HEIGHT;
+  border-top: 1px solid $COLOR_GRAY3;
 }
 </style>

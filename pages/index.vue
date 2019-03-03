@@ -10,7 +10,6 @@
         class="commit-board"
         @addComment="$store.commit('file/addComment', $event)"
       />
-      <commit-maker class="commit-maker" />
       <members class="members" />
     </div>
   </div>
@@ -19,13 +18,11 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import userIcon from '~/assets/imgs/user1.png'
-import CommitMaker from '~/components/molecules/CommitMaker'
 import CommitBoard from '~/components/molecules/CommitBoard'
 import Members from '~/components/molecules/Members'
 
 export default {
   components: {
-    CommitMaker,
     CommitBoard,
     Members,
   },
@@ -90,15 +87,7 @@ $COMMIT_MAKER_HEIGHT: 60px;
     top: 0;
     left: 0;
     right: $MEMBERS_WIDTH;
-    bottom: $COMMIT_MAKER_HEIGHT;
-  }
-
-  .commit-maker {
-    position: absolute;
-    left: 0;
-    right: $MEMBERS_WIDTH;
     bottom: 0;
-    height: $COMMIT_MAKER_HEIGHT;
   }
 }
 
