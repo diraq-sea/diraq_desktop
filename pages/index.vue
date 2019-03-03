@@ -7,8 +7,10 @@
         :currentCommit="currentCommit"
         :filename="file(currentTab.id).name"
         :users="users"
+        :selfIcon="icon"
         class="commit-board"
         @addComment="$store.commit('file/addComment', $event)"
+        @addCommit="$store.commit('file/addCommit', $event)"
       />
       <members class="members" />
     </div>
@@ -29,6 +31,7 @@ export default {
   computed: {
     ...mapState('tab', ['currentTab']),
     ...mapState('file', ['currentCommit']),
+    ...mapState('user', ['icon']),
     ...mapGetters('file', ['file']),
     commits() {
       return this.file(this.currentTab.id).commits

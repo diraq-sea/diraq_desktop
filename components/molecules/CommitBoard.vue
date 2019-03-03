@@ -3,7 +3,7 @@
     <div class="commit-container">
       <div v-for="commit in commits" :key="commit.id">
         <div class="commit-graph">
-          <div class="commit-circle" :style="circleStyle(commit.user)" />
+          <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
           <div v-if="hasChild(commit.id)" class="commit-line" />
         </div>
         <div class="comments-panel">
@@ -33,7 +33,7 @@
           <div class="committer-message">{{ commit.message }}</div>
 
           <div v-for="comment in commit.comments" :key="comment.id" class="comment">
-            <div class="comment-circle" :style="circleStyle(comment.user)" />
+            <div class="comment-circle" :style="circleStyle(user(commit.user).icon)" />
             <div class="comment-body">
               <span class="comment-username">{{ user(comment.user).name }}</span>
               <span class="comment-date">
@@ -55,7 +55,39 @@
       </div>
     </div>
 
-    <div class="commit-maker" />
+    <div class="commit-maker">
+      <div class="commit-maker-graph">
+        <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
+      </div>
+      <div class="comments-panel">
+        <div class="committer-info">
+          <span class="comment-maker-text">
+            File editting based on "{{ currentCommit.message }}"
+          </span>
+          <div class="file-controls">
+            <div
+              class="file-controls-icon"
+              title="Edit file"
+              @click="$store.dispatch('file/editFile', currentCommit)"
+            >
+              <i class="fas fa-edit" />
+            </div>
+            <a
+              :download="downloadingName"
+              :href="currentCommit.url"
+              class="file-controls-icon"
+              title="Trash editting file"
+            >
+              <i class="far fa-trash-alt" />
+            </a>
+          </div>
+        </div>
+
+        <form class="comment-input" @submit.prevent="submitCommit">
+          <input v-model="commitComment" type="text" placeholder="Input comment for commit..." />
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -78,6 +110,10 @@ export default {
       type: Array,
       required: true,
     },
+    selfIcon: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
     user() {
@@ -87,7 +123,7 @@ export default {
       return id => this.commits.find(commit => commit.parents.includes(id))
     },
     circleStyle() {
-      return id => ({ backgroundImage: `url(${this.user(id).icon})` })
+      return icon => ({ backgroundImage: `url(${icon})` })
     },
     value() {
       return id => this.values[this.commits.findIndex(commit => commit.id === id)]
@@ -98,7 +134,10 @@ export default {
     },
   },
   data() {
-    return { values: [] }
+    return {
+      values: [],
+      commitComment: '',
+    }
   },
   methods: {
     inputComment(id, e) {
@@ -116,6 +155,12 @@ export default {
         this.values[index] = ''
       }
     },
+    submitCommit() {
+      if (this.commitComment) {
+        this.$emit('addCommit', this.commitComment)
+        this.commitComment = ''
+      }
+    },
   },
 }
 </script>
@@ -124,7 +169,8 @@ export default {
 @import '@/assets/css/admin.scss';
 
 $COMMENT_CIRCLE_SIZE: 32px;
-$COMMIT_MAKER_HEIGHT: 60px;
+$COMMIT_MAKER_HEIGHT: 102px;
+$COMMIT_GRAPH_LEFT: 35px;
 
 .commit-container {
   user-select: text;
@@ -139,12 +185,22 @@ $COMMIT_MAKER_HEIGHT: 60px;
   img {
     user-select: none;
   }
+
+  .comments-panel {
+    .file-controls {
+      opacity: 0;
+    }
+
+    &:hover .file-controls {
+      opacity: 1;
+    }
+  }
 }
 
 .commit-graph {
   position: absolute;
   top: 0;
-  left: 35px;
+  left: $COMMIT_GRAPH_LEFT;
   bottom: 0;
 }
 
@@ -167,6 +223,7 @@ $COMMIT_MAKER_HEIGHT: 60px;
 
 .comments-panel {
   margin-left: 90px;
+  margin-right: 30px;
   padding-bottom: 40px;
 
   .comment {
@@ -191,27 +248,22 @@ $COMMIT_MAKER_HEIGHT: 60px;
 
   .committer-info {
     position: relative;
-    padding-right: 80px;
+    padding-right: 70px;
 
     .file-controls {
       position: absolute;
       top: 0;
-      right: 10px;
-      opacity: 0;
+      right: 0;
 
       .file-controls-icon {
         display: inline-block;
         padding: 3px;
         cursor: pointer;
-        margin-right: 5px;
+        margin-left: 5px;
         margin-top: -4px;
         font-size: 18px;
       }
     }
-  }
-
-  &:hover .file-controls {
-    opacity: 1;
   }
 
   .committer-name,
@@ -233,7 +285,6 @@ $COMMIT_MAKER_HEIGHT: 60px;
 
   .comment-input {
     margin-top: 25px;
-    margin-right: 30px;
 
     input {
       border: none;
@@ -255,5 +306,39 @@ $COMMIT_MAKER_HEIGHT: 60px;
 .commit-maker {
   height: $COMMIT_MAKER_HEIGHT;
   border-top: 1px solid $COLOR_GRAY3;
+  position: relative;
+
+  .comments-panel {
+    padding-top: 12px;
+  }
+
+  .commit-maker-graph {
+    position: absolute;
+    top: 18px;
+    left: $COMMIT_GRAPH_LEFT;
+  }
+
+  .comment-maker-text {
+    font-size: 12px;
+    color: $FONT_WHITE;
+  }
+
+  .comment-input {
+    margin-top: 12px;
+  }
+}
+
+.blink {
+  animation: blinkAnime 0.8s infinite alternate;
+}
+
+@keyframes blinkAnime {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 </style>
