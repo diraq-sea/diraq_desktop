@@ -2,6 +2,7 @@ const { BrowserWindow } = require('electron')
 const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
 const { WINDOW_ORIGIN } = require('../const')
 const configStore = require('./config.store')
+const { ON_MAXIMIZE, ON_UNMAXIMIZE } = require('../../common/ipcToWindowTypes')
 
 let mainWindow = null
 
@@ -31,6 +32,14 @@ async function init() {
     configStore.set('windowSize', { width, height })
   })
 
+  mainWindow.on('maximize', () => {
+    mainWindow.webContents.send(ON_MAXIMIZE)
+  })
+
+  mainWindow.on('unmaximize', () => {
+    mainWindow.webContents.send(ON_UNMAXIMIZE)
+  })
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -52,6 +61,10 @@ module.exports = {
   maximize() {
     checkInit()
     mainWindow.maximize()
+  },
+  unmaximize() {
+    checkInit()
+    mainWindow.unmaximize()
   },
   minimize() {
     checkInit()

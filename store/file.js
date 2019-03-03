@@ -28,8 +28,8 @@ export const state = () => ({
   files: [
     {
       id: 1,
+      roomId: 1,
       name: 'file1.docx',
-      deleted: false,
       commits: [
         currentCommit,
         {
@@ -78,8 +78,8 @@ export const state = () => ({
     },
     {
       id: 2,
+      roomId: 1,
       name: 'file2.docx',
-      deleted: false,
       commits: [
         {
           id: 'hash2',
@@ -112,8 +112,8 @@ export const state = () => ({
     },
     {
       id: 3,
+      roomId: 1,
       name: 'file3.docx',
-      deleted: false,
       commits: [
         {
           id: 'hash3',
@@ -143,16 +143,6 @@ export const state = () => ({
           ],
         },
       ],
-    },
-    {
-      id: 4,
-      name: 'file4.docx',
-      deleted: true,
-    },
-    {
-      id: 5,
-      name: 'file5.docx',
-      deleted: true,
     },
   ],
 })
@@ -184,6 +174,29 @@ export const mutations = {
           user: 1,
           date: Date.now() - 3 * 24 * 3600 * 1000,
           comment: value,
+        },
+      ],
+    }
+
+    state.files = [...state.files]
+    state.files[state.files.indexOf(file)] = newFile
+  },
+  addCommit(state, message) {
+    const file = state.files.find(file =>
+      file.commits.find(commit => commit.id === state.currentCommit.id),
+    )
+
+    const newFile = {
+      ...file,
+      commits: [
+        ...file.commits,
+        {
+          id: `hash${Date.now()}`,
+          url,
+          message,
+          user: 1,
+          parents: [file.commits[file.commits.length - 1].id],
+          comments: [],
         },
       ],
     }

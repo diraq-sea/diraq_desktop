@@ -1,5 +1,6 @@
 const currentTab = { id: 1 }
 
+// Todo: ファイル削除に合わせてタブも消す
 export const state = () => ({
   tabs: [currentTab, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
   currentTab,

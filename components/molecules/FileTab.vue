@@ -2,13 +2,13 @@
   <div class="ft-container">
     <div class="tab-container">
       <div
-        v-for="tab in tabs"
+        v-for="tab in filteredTab"
         :key="tab.id"
         :class="itemClass(tab.id)"
         class="ft-tab"
         @click="$store.dispatch('tab/changeCurrentTab', tab.id)"
       >
-        <span>{{ tabLabel(tab.id) }}</span>
+        <span>{{ file(tab.id).name }}</span>
         <i
           class="fas fa-times"
           title="Close"
@@ -17,25 +17,18 @@
       </div>
     </div>
 
-    <div class="user">
-      <el-tooltip placement="bottom-end" effect="light" :manual="true" :value="isOpeningUser">
-        <div slot="content">
-          <div class="user-name">{{ name }}</div>
-          <div class="user-item" @click="$emit('logout')">
-            <i class="fas fa-power-off" /><span>Logout</span>
-          </div>
-        </div>
-
-        <div :style="userStyle" class="user-button" @click.stop="toggleOpenUser" />
-      </el-tooltip>
-    </div>
+    <user :name="name" :icon="icon" @logout="$emit('logout')" />
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import User from '~/components/atoms/User'
 
 export default {
+  components: {
+    User,
+  },
   computed: {
     ...mapState('tab', ['tabs', 'currentTab']),
     ...mapState('user', ['name', 'icon']),
@@ -43,30 +36,8 @@ export default {
     itemClass() {
       return id => ({ current: this.currentTab.id === id })
     },
-    tabLabel() {
-      return id => `${this.file(id).name}${this.file(id).deleted ? ' (deleted)' : ''}`
-    },
-    userStyle() {
-      return { backgroundImage: `url(${this.icon})` }
-    },
-  },
-  data() {
-    return {
-      isOpeningUser: false,
-    }
-  },
-  mounted() {
-    window.addEventListener('click', this.closeOpenUser, false)
-  },
-  destroyed() {
-    window.removeEventListener('click', this.closeOpenUser, false)
-  },
-  methods: {
-    toggleOpenUser() {
-      this.isOpeningUser = !this.isOpeningUser
-    },
-    closeOpenUser() {
-      this.isOpeningUser = false
+    filteredTab() {
+      return this.tabs.filter(({ id }) => this.file(id))
     },
   },
 }
@@ -79,13 +50,11 @@ export default {
   position: relative;
   height: $TAB_HEIGHT;
   background: $COLOR_GRAY2;
+  display: flex;
 }
 
 .tab-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 55px;
+  flex: 1;
   overflow-x: auto;
   white-space: nowrap;
 
@@ -127,42 +96,6 @@ export default {
       display: block;
       padding: 8px 5px;
     }
-  }
-}
-
-.user {
-  position: absolute;
-  top: 50%;
-  right: 15px;
-  transform: translateY(-50%);
-}
-
-.user-button {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: center/cover no-repeat;
-  cursor: pointer;
-}
-
-.user-name {
-  font-weight: bold;
-  border-bottom: 1px solid #bbb;
-  text-align: center;
-  font-size: 12px;
-  padding-bottom: 3px;
-  margin-bottom: 8px;
-}
-
-.user-item {
-  padding: 2px 8px 2px 5px;
-  font-size: 14px;
-  display: block;
-  cursor: pointer;
-  color: #333;
-
-  i {
-    margin-right: 8px;
   }
 }
 </style>
