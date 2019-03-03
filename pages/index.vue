@@ -1,25 +1,33 @@
 <template>
   <div class="index-container">
     <div class="index-left"><webview :src="viewerSrc" class="viewer" /></div>
-    <commit-board
-      :commits="commits"
-      :currentCommit="currentCommit"
-      :filename="file(currentTab.id).name"
-      :users="users"
-      class="commit-board"
-      @addComment="$store.commit('file/addComment', $event)"
-    />
+    <div class="index-right">
+      <commit-board
+        :commits="commits"
+        :currentCommit="currentCommit"
+        :filename="file(currentTab.id).name"
+        :users="users"
+        class="commit-board"
+        @addComment="$store.commit('file/addComment', $event)"
+      />
+      <commit-maker class="commit-maker" />
+      <members class="members" />
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
 import userIcon from '~/assets/imgs/user1.png'
+import CommitMaker from '~/components/molecules/CommitMaker'
 import CommitBoard from '~/components/molecules/CommitBoard'
+import Members from '~/components/molecules/Members'
 
 export default {
   components: {
+    CommitMaker,
     CommitBoard,
+    Members,
   },
   computed: {
     ...mapState('tab', ['currentTab']),
@@ -46,6 +54,7 @@ export default {
 
 $TOP_BAR_HEIGHT: 70px;
 $VIEWER_WIDTH: 650px;
+$COMMIT_MAKER_HEIGHT: 60px;
 
 .index-container {
   color: $FONT_WHITE;
@@ -64,10 +73,33 @@ $VIEWER_WIDTH: 650px;
   height: $TOP_BAR_HEIGHT;
 }
 
-.commit-board {
+.index-right {
   flex: 2;
   height: 100%;
-  overflow: auto;
+  position: relative;
+
+  .members {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .commit-board {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: $MEMBERS_WIDTH;
+    bottom: $COMMIT_MAKER_HEIGHT;
+  }
+
+  .commit-maker {
+    position: absolute;
+    left: 0;
+    right: $MEMBERS_WIDTH;
+    bottom: 0;
+    height: $COMMIT_MAKER_HEIGHT;
+  }
 }
 
 .viewer {
