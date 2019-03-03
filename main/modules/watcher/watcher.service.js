@@ -1,6 +1,7 @@
 const { READY, ADD, ADDDIR, UNLINK, UNLINKDIR, CHANGE, ERROR } = require('./watcherTypes')
 const windowStore = require('../../store/window.store')
 const { TMPFILE_OBSERVING } = require('../../../common/ipcToWindowTypes')
+const tmpStore = require('./../../store/tmpfile.store')
 
 /* eslint-disable no-console */
 module.exports = type =>
@@ -10,6 +11,7 @@ module.exports = type =>
     },
     [ADD]: path => {
       const commentAdd = `追加ファイル-> ${path}`
+      tmpStore.writeFileInfo(path)
       console.log(commentAdd)
       windowStore.send(TMPFILE_OBSERVING, commentAdd)
     },
