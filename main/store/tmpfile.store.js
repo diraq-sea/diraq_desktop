@@ -3,12 +3,7 @@ const path = require('path')
 const mkdirIfNotExists = require('../utils/mkdirIfNotExists')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
 const { CONFIG_DIR, TMP_FILE } = require('../const')
-let config = [
-  {
-    name: '',
-    data: '',
-  },
-]
+let config = []
 let isInit = false
 
 function checkInit() {
@@ -28,21 +23,9 @@ module.exports = {
   write_file_info(pathinfo) {
     checkInit()
     let filename = path.basename(pathinfo)
-    let today = new Date()
-    let filedata =
-      today.getFullYear() +
-      '/' +
-      today.getMonth() +
-      1 +
-      '/' +
-      today.getDate() +
-      '/' +
-      today.getDay()
+    let filedate = fs.statSync(pathinfo).mtime
     let json = JSON.parse(fs.readFileSync(TMP_FILE))
-    json.push({ name: filename, data: filedata })
+    json.push({ name: filename, data: filedate })
     fs.writeFileSync(TMP_FILE, JSON.stringify(json))
-    // console.log(json)
-    // console.log(filedata)
-    // console.log(filename)
   },
 }
