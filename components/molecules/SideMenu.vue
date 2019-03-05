@@ -15,9 +15,8 @@
       <i class="fas fa-plus plus" title="Create new file or folder" @click.stop="toggleDialog" />
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :append-to-body="true" title="Create new">
+    <el-dialog :visible.sync="dialogVisible" :append-to-body="true" class="dialog">
       <upload-dialog />
-      <el-button slot="footer" @click="toggleDialog">Cancel</el-button>
     </el-dialog>
   </div>
 </template>
@@ -133,5 +132,9 @@ export default {
   right: 10px;
   transform: translateY(-50%);
   opacity: 0;
+}
+
+.dialog /deep/ .el-dialog__body {
+  padding: 20px 40px 50px;
 }
 </style>
