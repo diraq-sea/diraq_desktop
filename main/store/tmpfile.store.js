@@ -9,6 +9,12 @@ let isInit = false
 function checkInit() {
   if (!isInit) throw new Error('tmpStore is not initialized')
 }
+
+function compareFileDate(date1, date2) {
+  if (Date.parse(date1) - Date.parse(date2) > 10000) {
+    return true
+  }
+}
 module.exports = {
   init() {
     mkdirIfNotExists(CONFIG_DIR)
@@ -22,25 +28,18 @@ module.exports = {
 
     const jsonlist = JSON.parse(fs.readFileSync(TMP_FILE))
     const filename = path.basename(pathinfo)
-    const filebirthdate = fs.statSync(pathinfo).birthtime
-    const filemdate = fs.statSync(pathinfo).mtime
-    const targetfile = jsonlist.find(json => {
-      if (json.name === filename) {
-        return json
-      } else {
-        return null
-      }
-    })
-    if (targetfile) {
-      for (let json in jsonlist) {
-        if (jsonlist[json].name === filename) {
-          jsonlist[json].birthdate = filebirthdate
-          jsonlist[json].mdate = filemdate
-        }
-      }
+    const { birthtime, mtime } = fs.statSync(pathinfo)
+    const currentdate = new Date().toISOString()
+    const targetfile = jsonlist.find(json => json.name === filename)
+    if (!targetfile) {
+      jsonlist.push({ name: filename, birthdate: birthtime, mdate: mtime })
+    } else if (!compareFileDate(currentdate, targetfile.birthdate)) {
+      targetfile.birthdate = birthtime
+      targetfile.mdate = mtime
     } else {
-      jsonlist.push({ name: filename, birthdate: filebirthdate, mdate: filemdate })
+      targetfile.mdate = null
     }
-    fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist))
+    const jsonlist2 = jsonlist.filter(obj => obj.mdate !== null)
+    fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist2))
   },
 }
