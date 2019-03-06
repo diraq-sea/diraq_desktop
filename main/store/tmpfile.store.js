@@ -10,9 +10,10 @@ function checkInit() {
   if (!isInit) throw new Error('tmpStore is not initialized')
 }
 
-function compareFileDate(date1, date2) {
-  if (Date.parse(date1) - Date.parse(date2) > 10000) {
-    return true
+function confirmFileLimit(date) {
+  const currentdate = new Date().toISOString()
+  if (Date.parse(currentdate) - Date.parse(date) < 10000000) {
+    return Date.parse(currentdate) - Date.parse(date) < 10000000
   }
 }
 module.exports = {
@@ -29,13 +30,11 @@ module.exports = {
     const jsonlist = JSON.parse(fs.readFileSync(TMP_FILE))
     const filename = path.basename(pathinfo)
     const { birthtime, mtime } = fs.statSync(pathinfo)
-    const currentdate = new Date().toISOString()
     const targetfile = jsonlist.find(json => json.name === filename)
     if (!targetfile) {
       jsonlist.push({ name: filename, birthdate: birthtime, mdate: mtime })
-    } else if (!compareFileDate(currentdate, targetfile.birthdate)) {
+    } else if (confirmFileLimit(targetfile.mdate)) {
       targetfile.birthdate = birthtime
-      targetfile.mdate = mtime
     } else {
       targetfile.mdate = null
     }
