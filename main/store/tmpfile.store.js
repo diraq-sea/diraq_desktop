@@ -9,6 +9,9 @@ let isInit = false
 function checkInit() {
   if (!isInit) throw new Error('tmpStore is not initialized')
 }
+
+const confirmFileLimit = date => Date.now() - Date.parse(date) < 1000000
+
 module.exports = {
   init() {
     mkdirIfNotExists(CONFIG_DIR)
@@ -22,14 +25,16 @@ module.exports = {
 
     const jsonlist = JSON.parse(fs.readFileSync(TMP_FILE))
     const filename = path.basename(pathinfo)
-    const filedate = fs.statSync(pathinfo).mtime
-    if (
-      !jsonlist.find(json => {
-        return json.name === filename
-      })
-    ) {
-      jsonlist.push({ name: filename, data: filedate })
-      fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist))
+    const { birthtime, mtime } = fs.statSync(pathinfo)
+    const targetfile = jsonlist.find(json => json.name === filename)
+    if (!targetfile) {
+      jsonlist.push({ name: filename, birthdate: birthtime, mdate: mtime })
+    } else if (confirmFileLimit(targetfile.mdate)) {
+      targetfile.birthdate = birthtime
+    } else {
+      targetfile.mdate = null
     }
+    const jsonlist2 = jsonlist.filter(obj => obj.mdate !== null)
+    fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist2))
   },
 }
