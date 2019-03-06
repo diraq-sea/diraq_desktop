@@ -10,12 +10,8 @@ function checkInit() {
   if (!isInit) throw new Error('tmpStore is not initialized')
 }
 
-function confirmFileLimit(date) {
-  const currentdate = new Date().toISOString()
-  if (Date.parse(currentdate) - Date.parse(date) < 10000000) {
-    return Date.parse(currentdate) - Date.parse(date) < 10000000
-  }
-}
+const confirmFileLimit = date => Date.now() - Date.parse(date) < 1000000
+
 module.exports = {
   init() {
     mkdirIfNotExists(CONFIG_DIR)
