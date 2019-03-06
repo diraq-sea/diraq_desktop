@@ -2,12 +2,12 @@
   <div class="dialog-container">
     <div class="create-new">
       <p class="title">Create new</p>
-      <el-radio-group class="radio3" v-model="radio3">
+      <el-radio-group class="radio1" v-model="radio1">
         <el-radio-button class="new new-file" :label="1">file</el-radio-button>
         <el-radio-button :label="2" class="new new-folder">folder</el-radio-button>
       </el-radio-group>
       <transition name="fade">
-        <el-radio-group v-if="radio3 === 1" class="radio2" v-model="radio2">
+        <el-radio-group v-if="radio1 === 1" class="radio2" v-model="radio2">
           <div class="select-file">
             <div class="files">
               <el-radio class="radio2group" :label="1">Word</el-radio>
@@ -21,7 +21,7 @@
         </el-radio-group>
       </transition>
       <div class="inputbox">
-        <el-input :placeholder="select + ' name'" v-model="input1" class="input-with-select">
+        <el-input :placeholder="type" v-model="input1" class="input-with-select">
           <el-button slot="append">Create</el-button>
         </el-input>
       </div>
@@ -50,20 +50,16 @@
 <script>
 export default {
   data() {
-    const fileList = []
-    let radio3 = 1
-    let radio2 = 1
-    let input1 = ''
     return {
-      fileList,
-      radio3,
-      radio2,
-      input1,
+      fileList: [],
+      radio1: 1,
+      radio2: 1,
+      input1: '',
     }
   },
   computed: {
-    select() {
-      return this.radio3 === 1 ? 'file' : 'folder'
+    type() {
+      return this.radio1 === 1 ? 'file name' : 'folder name'
     },
   },
   methods: {
@@ -74,11 +70,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
 .dialog-container {
   display: flex;
   justify-content: space-between;
+}
+
+.create-new {
+  position: relative;
+  width: 100%;
 }
 
 .title {
@@ -88,34 +87,31 @@ export default {
   margin-bottom: 30px;
 }
 
-.create-new {
-  position: relative;
-  width: 300px;
-}
-
 .el-radio-group {
   display: block;
 }
 
-.el-radio-button /deep/ .el-radio-button__inner {
+.radio1 {
   margin-bottom: 10px;
-  width: 129px;
-}
-.files {
-  margin-right: 15px;
-}
-.el-radio {
-  margin: 0px 20px 15px 0px;
-  display: block;
 }
 
-.radio3 {
+.el-radio-button /deep/ .el-radio-button__inner {
   margin-bottom: 10px;
+  width: 100px;
 }
 
 .select-file {
   margin-bottom: 10px;
   display: flex;
+}
+
+.files {
+  margin-right: 15px;
+}
+
+.el-radio {
+  margin: 0px 20px 15px 0px;
+  display: block;
 }
 
 .inputbox {
@@ -129,15 +125,21 @@ export default {
   margin: 25px 40px 10px;
 }
 
+.upload-new {
+  width: 100%;
+}
+
 .upload-demo /deep/ .el-upload-dragger {
-  width: 300px;
+  width: 135%;
 }
 
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
