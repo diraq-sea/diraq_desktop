@@ -1,6 +1,7 @@
 const { app } = require('electron')
 const configStore = require('./store/config.store')
 const authStore = require('./store/auth.store')
+const tmpStore = require('./store/tmpfile.store')
 const windowStore = require('./store/window.store')
 const ipcController = require('./modules/ipc/ipc.controller')
 const watcherController = require('./modules/watcher/watcher.controller')
@@ -8,6 +9,7 @@ const watcherController = require('./modules/watcher/watcher.controller')
 async function createWindow() {
   configStore.init()
   authStore.init()
+  tmpStore.init()
   await windowStore.init()
 
   ipcController.init()

@@ -4,6 +4,7 @@ const watcherTypes = require('./watcherTypes')
 const mkdirIfNotExists = require('../../utils/mkdirIfNotExists')
 const { TMP_FILES_DIR } = require('../../const')
 const watcher = chokidar.watch(TMP_FILES_DIR, {
+  ignored: /(^|[\\])\../,
   persistent: true, // 監視を継続するかどうか
 })
 
