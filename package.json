@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "axios": "0.18.0",
+    "axios-mock-adapter": "1.16.0",
     "chokidar": "2.1.2",
     "element-ui": "2.4.11",
     "moment-timezone": "0.5.23",

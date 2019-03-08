@@ -17,7 +17,7 @@ const {
   UNMAX_WIN,
   MIN_WIN,
 } = require('../../../common/ipcTypes')
-const axios = require('../../utils/axios')
+const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
 const windowStore = require('../../store/window.store')
 const { TMP_FILES_DIR } = require('../../const')
