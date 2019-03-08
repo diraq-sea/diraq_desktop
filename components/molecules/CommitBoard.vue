@@ -84,7 +84,7 @@
         </div>
 
         <form class="comment-input" @submit.prevent="submitCommit">
-          <input v-model="commitComment" type="text" placeholder="Input comment for commit..." />
+          <input v-model="commitComment" type="text" placeholder="Input comment for uploading..." />
         </form>
       </div>
     </div>

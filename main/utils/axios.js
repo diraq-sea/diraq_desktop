@@ -1,14 +1,19 @@
-const { API_BASE_URL } = require('../const')
-const axios = require('axios').create({
+import axios from 'axios'
+import { API_BASE_URL } from '../const'
+import authStore from '../store/auth.store'
+import setupMock from '../mocks/setup'
+
+const client = axios.create({
   baseURL: API_BASE_URL,
 })
-const authStore = require('../store/auth.store')
 
-axios.interceptors.request.use(config => {
+client.interceptors.request.use(config => {
   if (authStore.isLogin) {
     config.headers.Authorization = `Bearer ${authStore.token}`
   }
   return config
 })
 
-module.exports = axios
+if (process.env.NODE_ENV === 'development') setupMock(client)
+
+export default client

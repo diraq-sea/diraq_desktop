@@ -19,9 +19,10 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import userIcon from '~/assets/imgs/user1.png'
 import CommitBoard from '~/components/molecules/CommitBoard'
 import Members from '~/components/molecules/Members'
+
+const userIcon = '/imgs/user1.png'
 
 export default {
   components: {

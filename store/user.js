@@ -1,20 +1,21 @@
 import { GET_USER_INFO } from '~/common/ipcTypes'
-import userIcon from '~/assets/imgs/user1.png'
 
 export const state = () => ({
   name: null,
   email: null,
-  icon: userIcon,
+  icon: null,
 })
 
 export const mutations = {
-  setUserInfo(state, { name, email }) {
+  setUserInfo(state, { name, email, icon }) {
     state.name = name
     state.email = email
+    state.icon = icon
   },
   clearUserInfo(state) {
     state.name = null
     state.email = null
+    state.icon = null
   },
 }
 
