@@ -15,20 +15,19 @@
       <i class="fas fa-plus plus" title="Create new file or folder" @click.stop="toggleDialog" />
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :append-to-body="true" title="Create new">
-      <span>This is a message</span>
-      <upload-dialog-footer slot="footer" @close="toggleDialog" />
+    <el-dialog :visible.sync="dialogVisible" :append-to-body="true" class="dialog">
+      <upload-dialog />
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import UploadDialogFooter from '~/components/atoms/UploadDialogFooter'
+import UploadDialog from '~/components/atoms/UploadDialog'
 
 export default {
   components: {
-    UploadDialogFooter,
+    UploadDialog,
   },
   computed: {
     ...mapState('room', ['rooms', 'currentRoom']),
@@ -133,5 +132,9 @@ export default {
   right: 10px;
   transform: translateY(-50%);
   opacity: 0;
+}
+
+.dialog /deep/ .el-dialog__body {
+  padding: 20px 40px 50px;
 }
 </style>
