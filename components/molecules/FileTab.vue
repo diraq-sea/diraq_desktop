@@ -49,7 +49,7 @@ export default {
 .ft-container {
   position: relative;
   height: $TAB_HEIGHT;
-  background: $COLOR_GRAY2;
+  background: $COLOR_SUB;
   display: flex;
 }
 
@@ -60,10 +60,10 @@ export default {
 
   .ft-tab {
     display: inline-block;
-    height: $TAB_HEIGHT;
-    background: $COLOR_GRAY;
-    margin-right: 1px;
-    color: $FONT_GRAY;
+    height: 100%;
+    background: $COLOR_SUB;
+    border-right: 1px solid #{$FONT_SUB}55;
+    color: $FONT_SUB;
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
@@ -71,10 +71,11 @@ export default {
     padding: 0 36px;
     text-align: center;
     position: relative;
+    border-radius: 12px 12px 0 0;
 
     &.current {
-      background: $COLOR_BLACK;
-      color: $FONT_WHITE;
+      background: $COLOR_PAGE;
+      color: $FONT_BASE;
 
       i {
         opacity: 1;
@@ -92,7 +93,7 @@ export default {
       transform: translateY(-50%);
       font-size: 12px;
       opacity: 0;
-      color: $FONT_WHITE;
+      color: $FONT_BASE;
       display: block;
       padding: 8px 5px;
     }

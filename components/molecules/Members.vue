@@ -66,10 +66,11 @@ $OPENING_WIDTH: 300px;
 $OPEN_ICON_HEIGHT: 50px;
 
 .members-container {
-  border-left: 1px solid $COLOR_GRAY3;
-  background: $COLOR_GRAY2;
+  border-left: 1px solid $COLOR_SUB;
+  background: $COLOR_FRAME;
   transition: 0.3s;
   width: $MEMBERS_WIDTH;
+  color: $FONT_REVERSE;
 
   &.opening {
     width: $OPENING_WIDTH;
@@ -133,7 +134,7 @@ $OPEN_ICON_HEIGHT: 50px;
             width: 50%;
             height: 50%;
             background: #43b581;
-            border: $COLOR_GRAY2 solid 2px;
+            border: $COLOR_FRAME solid 2px;
             border-radius: 50%;
           }
         }
@@ -142,7 +143,7 @@ $OPEN_ICON_HEIGHT: 50px;
 
     .member-name {
       flex: 1;
-      border-bottom: $COLOR_GRAY3 solid 1px;
+      border-bottom: $COLOR_SUB solid 1px;
       font-weight: bold;
       display: flex;
       align-items: center;
@@ -151,7 +152,7 @@ $OPEN_ICON_HEIGHT: 50px;
 
     .member-role {
       width: 60px;
-      border-bottom: $COLOR_GRAY3 solid 1px;
+      border-bottom: $COLOR_SUB solid 1px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -169,7 +170,7 @@ $OPEN_ICON_HEIGHT: 50px;
     line-height: $OPEN_ICON_HEIGHT;
     text-align: center;
     font-size: 24px;
-    background: $COLOR_GRAY2;
+    background: $COLOR_FRAME;
 
     i {
       cursor: pointer;

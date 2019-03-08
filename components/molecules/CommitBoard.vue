@@ -276,7 +276,7 @@ $COMMIT_GRAPH_LEFT: 35px;
   .committer-date,
   .comment-date {
     font-size: 12px;
-    color: $FONT_GRAY;
+    color: $FONT_SUB;
   }
 
   .committer-message {
@@ -288,11 +288,11 @@ $COMMIT_GRAPH_LEFT: 35px;
 
     input {
       border: none;
-      background: $COLOR_GRAY3;
+      background: $COLOR_SUB;
       font-size: 16px;
       padding: 10px;
       width: 100%;
-      color: $FONT_WHITE;
+      color: $FONT_BASE;
       border-radius: 5px;
       user-select: none;
 
@@ -305,7 +305,7 @@ $COMMIT_GRAPH_LEFT: 35px;
 
 .commit-maker {
   height: $COMMIT_MAKER_HEIGHT;
-  border-top: 1px solid $COLOR_GRAY3;
+  border-top: 1px solid $COLOR_SUB;
   position: relative;
 
   .comments-panel {
@@ -320,7 +320,7 @@ $COMMIT_GRAPH_LEFT: 35px;
 
   .comment-maker-text {
     font-size: 12px;
-    color: $FONT_WHITE;
+    color: $FONT_BASE;
   }
 
   .comment-input {

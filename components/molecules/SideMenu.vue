@@ -78,10 +78,10 @@ export default {
   left: 0;
   display: block;
   min-height: 100%;
-  background: $COLOR_GRAY2;
+  background: $COLOR_FRAME;
   height: 100%;
   overflow: hidden;
-  color: $FONT_WHITE;
+  color: $FONT_REVERSE;
 }
 
 .controls {

@@ -58,7 +58,7 @@ $VIEWER_WIDTH: 650px;
 $COMMIT_MAKER_HEIGHT: 60px;
 
 .index-container {
-  color: $FONT_WHITE;
+  color: $FONT_BASE;
   display: flex;
   height: 100%;
 }
@@ -97,9 +97,9 @@ $COMMIT_MAKER_HEIGHT: 60px;
 
 .viewer {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -1px;
+  left: -1px;
   right: 0;
-  bottom: -20px;
+  bottom: -22px;
 }
 </style>

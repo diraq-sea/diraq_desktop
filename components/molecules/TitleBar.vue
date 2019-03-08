@@ -46,7 +46,7 @@ $CONTROLS_WIDTH: 150px;
   left: 0;
   right: 0;
   height: $TITLEBAR_HEIGHT;
-  background: $COLOR_GRAY3;
+  background: $COLOR_DARK;
 
   .draggable {
     position: absolute;
@@ -72,12 +72,12 @@ $CONTROLS_WIDTH: 150px;
     .controls-icon {
       flex: 1;
       height: 100%;
-      color: $FONT_GRAY;
+      color: $FONT_SUB;
       line-height: $TITLEBAR_HEIGHT;
       text-align: center;
 
       &:hover {
-        color: $FONT_WHITE;
+        color: $FONT_REVERSE;
         background: #ffffff22;
       }
 
