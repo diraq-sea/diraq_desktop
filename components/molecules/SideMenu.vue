@@ -78,7 +78,7 @@ export default {
   left: 0;
   display: block;
   min-height: 100%;
-  background: $COLOR_FRAME;
+  background: $COLOR_PAGE;
   height: 100%;
   overflow: hidden;
   color: $FONT_REVERSE;

@@ -1,23 +1,26 @@
 <template>
   <div class="ft-container">
+    <user :name="name" :icon="icon" @logout="$emit('logout')" />
+
     <div class="tab-container">
       <div
         v-for="tab in filteredTab"
         :key="tab.id"
         :class="itemClass(tab.id)"
         class="ft-tab"
-        @click="$store.dispatch('tab/changeCurrentTab', tab.id)"
+        @mousedown="$store.dispatch('tab/changeCurrentTab', tab.id)"
       >
-        <span>{{ file(tab.id).name }}</span>
-        <i
-          class="fas fa-times"
-          title="Close"
-          @click.stop="$store.commit('tab/removeTab', tab.id)"
-        />
+        <div class="tab-content">
+          <span>{{ file(tab.id).name }}</span>
+          <i
+            class="fas fa-times"
+            title="Close"
+            @mousedown.stop="$store.commit('tab/removeTab', tab.id)"
+          />
+        </div>
+        <div class="tab-dragarea" />
       </div>
     </div>
-
-    <user :name="name" :icon="icon" @logout="$emit('logout')" />
   </div>
 </template>
 
@@ -48,8 +51,9 @@ export default {
 
 .ft-container {
   position: relative;
+  margin-top: calc(#{$TITLEBAR_HEIGHT} - #{$TAB_HEIGHT});
+  margin-right: $CONTROLS_WIDTH;
   height: $TAB_HEIGHT;
-  background: $COLOR_SUB;
   display: flex;
 }
 
@@ -61,41 +65,78 @@ export default {
   .ft-tab {
     display: inline-block;
     height: 100%;
-    background: $COLOR_SUB;
     border-right: 1px solid $COLOR_BORDER;
     color: $FONT_SUB;
-    font-size: 16px;
-    cursor: pointer;
+    font-size: 14px;
     vertical-align: middle;
     line-height: $TAB_HEIGHT;
-    padding: 0 36px;
     text-align: center;
     position: relative;
-    border-radius: 12px 12px 0 0;
+    transition: 0.2s background;
+
+    .tab-dragarea {
+      -webkit-app-region: drag;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: $COLOR_TITLE_BAR;
+    }
+
+    .tab-content {
+      -webkit-app-region: no-drag;
+      height: 100%;
+      padding: 0 36px;
+      border-radius: 8px 8px 0 0;
+
+      &:hover {
+        background: $COLOR_TITLE_HOVER;
+
+        & + .tab-dragarea {
+          opacity: 0;
+        }
+
+        i {
+          opacity: 1;
+        }
+      }
+    }
 
     &.current {
-      background: $COLOR_PAGE;
       color: $FONT_BASE;
+      border-right: none;
+
+      .tab-dragarea {
+        display: none;
+      }
+
+      .tab-content {
+        background: $COLOR_PAGE;
+      }
 
       i {
         opacity: 1;
       }
     }
 
-    &:hover > i {
-      opacity: 1;
-    }
-
     i {
       position: absolute;
       top: 50%;
-      right: 12px;
+      right: 8px;
       transform: translateY(-50%);
       font-size: 12px;
+      line-height: 18px;
+      height: 18px;
+      width: 18px;
       opacity: 0;
-      color: $FONT_BASE;
+      color: $FONT_SUB;
       display: block;
-      padding: 8px 5px;
+      border-radius: 50%;
+
+      &:hover {
+        background: $COLOR_BORDER;
+      }
     }
   }
 }

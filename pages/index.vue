@@ -68,6 +68,7 @@ $COMMIT_MAKER_HEIGHT: 60px;
   flex: 3;
   height: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 .top-bar {

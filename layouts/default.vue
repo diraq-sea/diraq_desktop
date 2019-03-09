@@ -1,10 +1,7 @@
 <template>
   <div class="root">
-    <title-bar />
-    <div class="page">
-      <div class="nuxt"><nuxt /></div>
-      <file-tab @logout="logout" />
-    </div>
+    <title-bar><file-tab @logout="logout"/></title-bar>
+    <div class="nuxt"><nuxt /></div>
   </div>
 </template>
 
@@ -42,17 +39,9 @@ export default {
   bottom: 0;
 }
 
-.page {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
 .nuxt {
   position: absolute;
-  top: $TAB_HEIGHT;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;

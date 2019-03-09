@@ -1,5 +1,5 @@
 <template>
-  <div :class="containerClass" class="members-container" @click.stop>
+  <div :class="containerClass" class="members-container" @mousedown.stop>
     <div class="members">
       <div class="member-item">
         <div class="member-add"><i class="fas fa-user-plus" title="ルームにメンバーを追加" /></div>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="members-container-open">
-      <i :class="containerClass" class="fas fa-angle-left" @click="toggleOpening" />
+      <i :class="containerClass" class="fas fa-angle-left" @mousedown="toggleOpening" />
     </div>
   </div>
 </template>
@@ -43,10 +43,10 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('click', this.close, false)
+    window.addEventListener('mousedown', this.close, false)
   },
   destroyed() {
-    window.removeEventListener('click', this.closer, false)
+    window.removeEventListener('mousedown', this.close, false)
   },
   methods: {
     toggleOpening() {
