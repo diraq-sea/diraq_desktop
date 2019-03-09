@@ -43,14 +43,19 @@
             </div>
           </div>
 
-          <form class="comment-input" @submit.prevent="submitComment(commit.id)">
-            <input
-              :value="value(commit.id)"
-              type="text"
-              placeholder="Input comment..."
-              @input="inputComment(commit.id, $event)"
-            />
-          </form>
+          <div class="comment">
+            <div class="comment-circle" :style="circleStyle(selfIcon)" />
+            <div class="comment-body">
+              <form class="comment-input" @submit.prevent="submitComment(commit.id)">
+                <input
+                  :value="value(commit.id)"
+                  type="text"
+                  placeholder="Input comment..."
+                  @input="inputComment(commit.id, $event)"
+                />
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -237,7 +242,7 @@ $COMMIT_GRAPH_LEFT: 35px;
     border-radius: 50%;
     background: center/cover no-repeat;
     position: absolute;
-    top: 0;
+    top: 3px;
     left: 0;
   }
 
@@ -262,6 +267,12 @@ $COMMIT_GRAPH_LEFT: 35px;
         margin-left: 5px;
         margin-top: -4px;
         font-size: 18px;
+        color: $COLOR_BORDER;
+        transition: 0.2s;
+
+        &:hover {
+          color: unset;
+        }
       }
     }
   }
@@ -270,13 +281,12 @@ $COMMIT_GRAPH_LEFT: 35px;
   .comment-username {
     font-weight: bold;
     display: inline-block;
-    margin-right: 5px;
   }
 
   .committer-date,
   .comment-date {
     font-size: 12px;
-    color: $FONT_SUB;
+    color: $COLOR_DATE;
   }
 
   .committer-message {
@@ -296,6 +306,11 @@ $COMMIT_GRAPH_LEFT: 35px;
       border-radius: 5px;
       user-select: none;
 
+      &::placeholder {
+        color: $COLOR_DATE;
+        font-size: 14px;
+      }
+
       &:focus {
         outline: none;
       }
@@ -305,7 +320,7 @@ $COMMIT_GRAPH_LEFT: 35px;
 
 .commit-maker {
   height: $COMMIT_MAKER_HEIGHT;
-  border-top: 1px solid $COLOR_SUB;
+  border-top: 1px solid $COLOR_BORDER;
   position: relative;
 
   .comments-panel {

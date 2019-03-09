@@ -78,6 +78,7 @@ $COMMIT_MAKER_HEIGHT: 60px;
   flex: 2;
   height: 100%;
   position: relative;
+  border-left: 1px solid $COLOR_BORDER;
 
   .members {
     position: absolute;

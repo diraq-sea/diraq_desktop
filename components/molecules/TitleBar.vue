@@ -77,7 +77,7 @@ $CONTROLS_WIDTH: 150px;
       text-align: center;
 
       &:hover {
-        color: $FONT_REVERSE;
+        color: $COLOR_SUB;
         background: #ffffff22;
       }
 

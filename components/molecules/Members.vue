@@ -66,11 +66,10 @@ $OPENING_WIDTH: 300px;
 $OPEN_ICON_HEIGHT: 50px;
 
 .members-container {
-  border-left: 1px solid $COLOR_SUB;
-  background: $COLOR_FRAME;
+  border-left: 1px solid $COLOR_BORDER;
+  background: $COLOR_PAGE;
   transition: 0.3s;
   width: $MEMBERS_WIDTH;
-  color: $FONT_REVERSE;
 
   &.opening {
     width: $OPENING_WIDTH;
@@ -96,6 +95,12 @@ $OPEN_ICON_HEIGHT: 50px;
 
         i {
           cursor: pointer;
+          color: $COLOR_BORDER;
+          transition: 0.2s;
+
+          &:hover {
+            color: unset;
+          }
         }
       }
 
@@ -134,7 +139,7 @@ $OPEN_ICON_HEIGHT: 50px;
             width: 50%;
             height: 50%;
             background: #43b581;
-            border: $COLOR_FRAME solid 2px;
+            border: $COLOR_PAGE solid 2px;
             border-radius: 50%;
           }
         }
@@ -143,7 +148,7 @@ $OPEN_ICON_HEIGHT: 50px;
 
     .member-name {
       flex: 1;
-      border-bottom: $COLOR_SUB solid 1px;
+      border-bottom: $COLOR_BORDER solid 1px;
       font-weight: bold;
       display: flex;
       align-items: center;
@@ -152,7 +157,7 @@ $OPEN_ICON_HEIGHT: 50px;
 
     .member-role {
       width: 60px;
-      border-bottom: $COLOR_SUB solid 1px;
+      border-bottom: $COLOR_BORDER solid 1px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -170,7 +175,12 @@ $OPEN_ICON_HEIGHT: 50px;
     line-height: $OPEN_ICON_HEIGHT;
     text-align: center;
     font-size: 24px;
-    background: $COLOR_FRAME;
+    background: $COLOR_PAGE;
+    color: $COLOR_BORDER;
+
+    &:hover {
+      color: unset;
+    }
 
     i {
       cursor: pointer;

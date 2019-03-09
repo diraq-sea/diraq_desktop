@@ -62,7 +62,7 @@ export default {
     display: inline-block;
     height: 100%;
     background: $COLOR_SUB;
-    border-right: 1px solid #{$FONT_SUB}55;
+    border-right: 1px solid $COLOR_BORDER;
     color: $FONT_SUB;
     font-size: 16px;
     cursor: pointer;
