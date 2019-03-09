@@ -11,15 +11,18 @@
         @mousedown="$store.dispatch('tab/changeCurrentTab', tab.id)"
       >
         <div class="tab-content">
+          <img class="file-icon" :src="$fileIcon(file(tab.id).extname)" />
           <span>{{ file(tab.id).name }}</span>
           <i
             class="fas fa-times"
-            title="Close"
+            title="Close tab"
             @mousedown.stop="$store.commit('tab/removeTab', tab.id)"
           />
         </div>
         <div class="tab-dragarea" />
       </div>
+
+      <div class="tab-plus"><i class="fas fa-plus" title="Open new tab" /></div>
     </div>
   </div>
 </template>
@@ -90,6 +93,14 @@ export default {
       padding: 0 36px;
       border-radius: 8px 8px 0 0;
 
+      .file-icon {
+        height: 18px;
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+      }
+
       &:hover {
         background: $COLOR_TITLE_HOVER;
 
@@ -132,6 +143,27 @@ export default {
       opacity: 0;
       color: $FONT_SUB;
       display: block;
+      border-radius: 50%;
+
+      &:hover {
+        background: $COLOR_BORDER;
+      }
+    }
+  }
+
+  .tab-plus {
+    display: inline-block;
+    color: $FONT_SUB;
+    font-size: 14px;
+    text-align: center;
+    width: 30px;
+
+    i {
+      -webkit-app-region: no-drag;
+      display: inline-block;
+      height: 24px;
+      width: 24px;
+      line-height: 24px;
       border-radius: 50%;
 
       &:hover {

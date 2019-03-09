@@ -29,7 +29,8 @@ export const state = () => ({
     {
       id: 1,
       roomId: 1,
-      name: 'file1.docx',
+      name: 'file1',
+      extname: 'docx',
       commits: [
         currentCommit,
         {
@@ -79,7 +80,8 @@ export const state = () => ({
     {
       id: 2,
       roomId: 1,
-      name: 'file2.docx',
+      name: 'file2',
+      extname: 'docx',
       commits: [
         {
           id: 'hash2',
@@ -113,7 +115,8 @@ export const state = () => ({
     {
       id: 3,
       roomId: 1,
-      name: 'file3.docx',
+      name: 'file3',
+      extname: 'docx',
       commits: [
         {
           id: 'hash3',
