@@ -1,6 +1,6 @@
 <template>
   <div class="ft-container">
-    <user :name="name" :icon="icon" @logout="$emit('logout')" />
+    <user :name="name" :icon="icon" @logout="logout" />
 
     <div class="tab-container">
       <div
@@ -8,21 +8,28 @@
         :key="tab.id"
         :class="itemClass(tab.id)"
         class="ft-tab"
-        @mousedown="$store.dispatch('tab/changeCurrentTab', tab.id)"
+        @mousedown="changeCurrentTab(tab.id)"
       >
         <div class="tab-content">
-          <img class="file-icon" :src="$fileIcon(file(tab.id).extname)" />
-          <span>{{ file(tab.id).name }}</span>
+          <template v-if="isFileTab(tab)">
+            <img class="file-icon" :src="$fileIcon(file(tab.fileId).extname)" />
+            <div class="file-name">{{ file(tab.fileId).name }}</div>
+          </template>
+          <div v-else class="newtab-name">New Tab</div>
+
           <i
+            v-if="isCloseBtnVisible(tab)"
             class="fas fa-times"
             title="Close tab"
-            @mousedown.stop="$store.commit('tab/removeTab', tab.id)"
+            @mousedown.stop="removeTab(tab.id)"
           />
         </div>
         <div class="tab-dragarea" />
       </div>
 
-      <div class="tab-plus"><i class="fas fa-plus" title="Open new tab" /></div>
+      <div class="tab-plus">
+        <i class="fas fa-plus" title="Open new tab" @mousedown="addNewTab" />
+      </div>
     </div>
   </div>
 </template>
@@ -36,14 +43,36 @@ export default {
     User,
   },
   computed: {
-    ...mapState('tab', ['tabs', 'currentTab']),
+    ...mapState('tab', ['tabs', 'currentTabId']),
     ...mapState('user', ['name', 'icon']),
+    ...mapGetters('tab', ['isFileTab', 'filteredTab']),
     ...mapGetters('file', ['file']),
     itemClass() {
-      return id => ({ current: this.currentTab.id === id })
+      return id => ({ current: this.currentTabId === id })
     },
-    filteredTab() {
-      return this.tabs.filter(({ id }) => this.file(id))
+    isCloseBtnVisible() {
+      return tab => this.tabs.length > 1 || this.isFileTab(tab)
+    },
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('login/logout')
+      this.$router.push('/login')
+    },
+
+    async changeCurrentTab(id) {
+      await this.$store.dispatch('tab/changeCurrentTab', id)
+      this.$router.push('/')
+    },
+
+    async addNewTab() {
+      await this.$store.dispatch('tab/addNewTab')
+      this.$router.push('/')
+    },
+
+    async removeTab(id) {
+      await this.$store.dispatch('tab/removeTab', id)
+      this.$router.push('/')
     },
   },
 }
@@ -82,7 +111,7 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
+      right: -1px;
       height: 6px;
       background: $COLOR_TITLE_BAR;
     }
@@ -90,8 +119,9 @@ export default {
     .tab-content {
       -webkit-app-region: no-drag;
       height: 100%;
-      padding: 0 36px;
+      padding-right: 36px;
       border-radius: 8px 8px 0 0;
+      transition: 0.2s background;
 
       .file-icon {
         height: 18px;
@@ -99,6 +129,14 @@ export default {
         top: 50%;
         left: 10px;
         transform: translateY(-50%);
+      }
+
+      .file-name {
+        padding-left: 36px;
+      }
+
+      .newtab-name {
+        padding-left: 15px;
       }
 
       &:hover {
@@ -114,9 +152,13 @@ export default {
       }
     }
 
+    &:hover {
+      border-right-color: transparent;
+    }
+
     &.current {
       color: $FONT_BASE;
-      border-right: none;
+      border-right-color: transparent;
 
       .tab-dragarea {
         display: none;
@@ -144,6 +186,7 @@ export default {
       color: $FONT_SUB;
       display: block;
       border-radius: 50%;
+      transition: 0.2s opacity;
 
       &:hover {
         background: $COLOR_BORDER;

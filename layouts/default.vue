@@ -1,25 +1,19 @@
 <template>
   <div class="root">
-    <title-bar><file-tab @logout="logout"/></title-bar>
-    <div class="nuxt"><nuxt /></div>
+    <title-bar><file-tab /></title-bar>
+    <nuxt class="nuxt" />
   </div>
 </template>
 
 <script>
 import TitleBar from '~/components/molecules/TitleBar'
-import FileTab from '~/components/molecules/FileTab'
+import FileTab from '~/components/organisms/FileTab'
 
 export default {
   middleware: ['isLogin', 'fetchData'],
   components: {
     TitleBar,
     FileTab,
-  },
-  methods: {
-    async logout() {
-      await this.$store.dispatch('login/logout')
-      this.$router.push('/login')
-    },
   },
 }
 </script>
@@ -37,6 +31,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+  color: $FONT_BASE;
 }
 
 .nuxt {

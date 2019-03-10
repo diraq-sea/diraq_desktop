@@ -1,32 +1,62 @@
-const currentTab = { id: 1 }
+import { TAB_TYPES } from '~/utils/const'
+import {
+  GET_TABS,
+  CHANGE_CURRENT_TAB,
+  ADD_NEW_TAB,
+  REMOVE_TAB,
+  CHANGE_TAB_TYPE,
+} from '~/common/ipcTypes'
 
-// Todo: ファイル削除に合わせてタブも消す
 export const state = () => ({
-  tabs: [currentTab, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
-  currentTab,
+  tabs: [],
+  currentTabId: null,
 })
 
+export const getters = {
+  isRoomTab: () => tab => tab.type === TAB_TYPES.ROOM,
+  isFolderTab: () => tab => tab.type === TAB_TYPES.FOLDER,
+  isFileTab: () => tab => tab.type === TAB_TYPES.FILE,
+  currentTab: state => state.tabs.find(tab => tab.id === state.currentTabId),
+  filteredTab: (state, getters, rootState, rootGetters) =>
+    state.tabs.filter(
+      ({ type, fileId }) => type !== TAB_TYPES.FILE || rootGetters['file/file'](fileId),
+    ),
+}
+
 export const mutations = {
-  setCurrentTab(state, id) {
-    state.currentTab = state.tabs.find(tab => tab.id === id)
-  },
-  removeTab(state, id) {
-    if (state.currentTab.id === id) {
-      const index = state.tabs.indexOf(state.currentTab)
-
-      if (state.tabs.length === 1) {
-        state.currentTab = null
-      } else {
-        state.currentTab = state.tabs[index === 0 ? 1 : index - 1]
-      }
-    }
-
-    state.tabs = state.tabs.filter(tab => tab.id !== id)
+  setTabs(state, { tabs, currentTabId }) {
+    state.tabs = tabs
+    state.currentTabId = currentTabId
   },
 }
 
 export const actions = {
-  async changeCurrentTab({ commit }, id) {
-    commit('setCurrentTab', id)
+  async getTabs({ commit, dispatch }) {
+    const tabsInfo = await this.$ipc(GET_TABS)
+    if (tabsInfo.tabs.length) {
+      commit('setTabs', tabsInfo)
+    } else {
+      await dispatch('addNewTab')
+    }
+  },
+
+  async changeCurrentTab({ dispatch }, id) {
+    await this.$ipc(CHANGE_CURRENT_TAB, id)
+    await dispatch('getTabs')
+  },
+
+  async addNewTab({ dispatch }) {
+    await this.$ipc(ADD_NEW_TAB, TAB_TYPES.ROOM)
+    await dispatch('getTabs')
+  },
+
+  async removeTab({ dispatch }, id) {
+    await this.$ipc(REMOVE_TAB, id)
+    await dispatch('getTabs')
+  },
+
+  async changeTabType({ dispatch }, params) {
+    await this.$ipc(CHANGE_TAB_TYPE, params)
+    await dispatch('getTabs')
   },
 }
