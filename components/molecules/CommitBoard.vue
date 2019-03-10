@@ -9,9 +9,7 @@
         <div class="comments-panel">
           <div class="committer-info">
             <span class="committer-name">{{ user(commit.user).name }}</span>
-            <span class="committer-date">
-              {{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}
-            </span>
+            <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
               <div
                 class="file-controls-icon"
