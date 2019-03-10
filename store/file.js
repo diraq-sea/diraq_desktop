@@ -18,9 +18,6 @@ export const mutations = {
   setCurrentCommitId(state, id) {
     state.currentCommitId = id
   },
-  addFile(state, file) {
-    state.files = [...state.files, file]
-  },
   addComment(state, { id, value }) {
     const file = state.files.find(file => file.commits.find(commit => commit.id === id))
     const commit = file.commits.find(commit => commit.id === id)
@@ -80,7 +77,6 @@ export const actions = {
     }
   },
   async editFile({ state }, commit) {
-    const file = state.files.find(file => file.commits.find(({ id }) => commit.id === id))
-    await this.$ipc(EDIT_FILE, { name: file.name, commit })
+    await this.$ipc(EDIT_FILE, { extname: state.file.extname, commit })
   },
 }
