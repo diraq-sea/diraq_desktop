@@ -13,6 +13,7 @@ const {
   FETCH_ROOM_INFO,
   FETCH_MEMBERS,
   CREATE_ROOM,
+  FETCH_FILE,
   EDIT_FILE,
   CLOSE_WIN,
   MAX_WIN,
@@ -62,6 +63,8 @@ module.exports = {
   [FETCH_MEMBERS]: async roomId => (await axios.get(`/members/${roomId}`)).data,
 
   [CREATE_ROOM]: name => axios.post('/rooms', { name, published: false }),
+
+  [FETCH_FILE]: async fileId => (await axios.get(`/files/${fileId}`)).data,
 
   [EDIT_FILE]: async ({ name, commit }) => {
     const filepath = path.join(TMP_FILES_DIR, `${commit.id}${path.extname(name)}`)

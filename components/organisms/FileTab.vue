@@ -4,7 +4,7 @@
 
     <div class="tab-container">
       <div
-        v-for="tab in filteredTab"
+        v-for="tab in tabs"
         :key="tab.id"
         :class="itemClass(tab.id)"
         class="ft-tab"
@@ -12,8 +12,8 @@
       >
         <div class="tab-content">
           <template v-if="isFileTab(tab)">
-            <img class="file-icon" :src="$fileIcon(file(tab.fileId).extname)" />
-            <div class="file-name">{{ file(tab.fileId).name }}</div>
+            <img class="file-icon" :src="$fileIcon(tab.values.extname)" />
+            <div class="file-name">{{ tab.values.name }}</div>
           </template>
           <div v-else class="newtab-name">New Tab</div>
 
@@ -45,8 +45,7 @@ export default {
   computed: {
     ...mapState('tab', ['tabs', 'currentTabId']),
     ...mapState('user', ['name', 'icon']),
-    ...mapGetters('tab', ['isFileTab', 'filteredTab']),
-    ...mapGetters('file', ['file']),
+    ...mapGetters('tab', ['isFileTab']),
     itemClass() {
       return id => ({ current: this.currentTabId === id })
     },

@@ -3,10 +3,10 @@
     <div class="fp-left"><webview :src="viewerSrc" class="viewer" /></div>
     <div class="fp-right">
       <commit-board
-        :commits="commits"
+        :commits="file.commits"
         :currentCommit="currentCommit"
-        :filename="file(currentTab.fileId).name"
-        :users="users"
+        :filename="file.name"
+        :users="members"
         :selfIcon="icon"
         class="commit-board"
         @addComment="$store.commit('file/addComment', $event)"
@@ -22,27 +22,24 @@ import { mapState, mapGetters } from 'vuex'
 import CommitBoard from '~/components/molecules/CommitBoard'
 import Members from '~/components/molecules/Members'
 
-const userIcon = '/imgs/user1.png'
-
 export default {
   components: {
     CommitBoard,
     Members,
   },
+  async fetch({ store }) {
+    await store.dispatch('file/fetchFile', store.getters['tab/currentTab'].values.fileId)
+    const { roomId } = store.state.file.file
+    await Promise.all([
+      store.dispatch('room/fetchRoomInfo', roomId),
+      store.dispatch('member/fetchMembers', roomId),
+    ])
+  },
   computed: {
-    ...mapState('file', ['currentCommit']),
+    ...mapState('file', ['file']),
     ...mapState('user', ['icon']),
-    ...mapGetters('tab', ['currentTab']),
-    ...mapGetters('file', ['file']),
-    commits() {
-      return this.file(this.currentTab.fileId).commits
-    },
-    users() {
-      return [
-        { id: 1, name: 'master1', icon: userIcon },
-        { id: 2, name: 'master2', icon: userIcon },
-      ]
-    },
+    ...mapState('member', ['members']),
+    ...mapGetters('file', ['currentCommit']),
     viewerSrc() {
       return `https://view.officeapps.live.com/op/embed.aspx?src=${this.currentCommit.url}`
     },

@@ -33,12 +33,10 @@
           <div class="committer-message">{{ commit.message }}</div>
 
           <div v-for="comment in commit.comments" :key="comment.id" class="comment">
-            <div class="comment-circle" :style="circleStyle(user(commit.user).icon)" />
+            <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
             <div class="comment-body">
               <span class="comment-username">{{ user(comment.user).name }}</span>
-              <span class="comment-date">
-                {{ $moment(comment.date).format('YY/MM/DD HH:mm:ss') }}
-              </span>
+              <span class="comment-date">{{ formattedDate(comment.date) }}</span>
               <div class="comment-message">{{ comment.comment }}</div>
             </div>
           </div>
@@ -97,6 +95,8 @@
 </template>
 
 <script>
+import { DATE_FORMAT_TYPE } from '~/utils/const'
+
 export default {
   props: {
     commits: {
@@ -136,6 +136,9 @@ export default {
     downloadingName() {
       const nameParts = this.filename.split('.')
       return `${nameParts.slice(0, -1).join('.')}_${this.currentCommit.id}.${nameParts.pop()}`
+    },
+    formattedDate() {
+      return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
   },
   data() {

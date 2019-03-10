@@ -17,10 +17,6 @@ export const getters = {
   isFolderTab: () => tab => tab.type === TAB_TYPES.FOLDER,
   isFileTab: () => tab => tab.type === TAB_TYPES.FILE,
   currentTab: state => state.tabs.find(tab => tab.id === state.currentTabId),
-  filteredTab: (state, getters, rootState, rootGetters) =>
-    state.tabs.filter(
-      ({ type, fileId }) => type !== TAB_TYPES.FILE || rootGetters['file/file'](fileId),
-    ),
 }
 
 export const mutations = {

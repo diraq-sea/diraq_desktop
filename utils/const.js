@@ -3,3 +3,5 @@ export const TAB_TYPES = {
   FOLDER: 1,
   FILE: 2,
 }
+
+export const DATE_FORMAT_TYPE = 'YY/MM/DD HH:mm:ss'

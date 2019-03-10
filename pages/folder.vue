@@ -25,7 +25,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { TAB_TYPES } from '~/utils/const'
+import { TAB_TYPES, DATE_FORMAT_TYPE } from '~/utils/const'
 import folderIcon from '~/assets/imgs/folder.png'
 import MembersItem from '~/components/molecules/MembersItem'
 import UploadDialog from '~/components/atoms/UploadDialog'
@@ -44,15 +44,16 @@ export default {
   },
   computed: {
     ...mapState('room', ['roomInfo']),
+    ...mapState('tab', ['tabs']),
     ...mapGetters('tab', ['currentTab']),
     iconSrc() {
       return item => (item.extname ? this.$fileIcon(item.extname) : folderIcon)
     },
     birthTime() {
-      return item => new Date(item.birthtime).toLocaleString()
+      return item => this.$moment(item.birthtime).format(DATE_FORMAT_TYPE)
     },
     mTime() {
-      return item => new Date(item.mtime).toLocaleString()
+      return item => this.$moment(item.mtime).format(DATE_FORMAT_TYPE)
     },
   },
   data() {
@@ -62,11 +63,19 @@ export default {
   },
   methods: {
     async open(item) {
-      await this.$store.dispatch('tab/changeTabType', {
-        id: this.currentTab.id,
-        type: TAB_TYPES.FILE,
-        values: { fileId: item.id },
-      })
+      const targetTab = this.tabs.find(
+        tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === item.id,
+      )
+
+      if (targetTab) {
+        await this.$store.dispatch('tab/changeCurrentTab', targetTab.id)
+      } else {
+        await this.$store.dispatch('tab/changeTabType', {
+          id: this.currentTab.id,
+          type: TAB_TYPES.FILE,
+          values: { fileId: item.id, name: item.name, extname: item.extname },
+        })
+      }
 
       this.$router.push('/')
     },
