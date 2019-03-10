@@ -7,6 +7,8 @@ let config = {
     width: 1000,
     height: 750,
   },
+  tabs: [],
+  currentTabId: null,
 }
 let isInit = false
 

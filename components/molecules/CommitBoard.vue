@@ -33,24 +33,27 @@
           <div class="committer-message">{{ commit.message }}</div>
 
           <div v-for="comment in commit.comments" :key="comment.id" class="comment">
-            <div class="comment-circle" :style="circleStyle(user(commit.user).icon)" />
+            <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
             <div class="comment-body">
               <span class="comment-username">{{ user(comment.user).name }}</span>
-              <span class="comment-date">
-                {{ $moment(comment.date).format('YY/MM/DD HH:mm:ss') }}
-              </span>
+              <span class="comment-date">{{ formattedDate(comment.date) }}</span>
               <div class="comment-message">{{ comment.comment }}</div>
             </div>
           </div>
 
-          <form class="comment-input" @submit.prevent="submitComment(commit.id)">
-            <input
-              :value="value(commit.id)"
-              type="text"
-              placeholder="Input comment..."
-              @input="inputComment(commit.id, $event)"
-            />
-          </form>
+          <div class="comment">
+            <div class="comment-circle" :style="circleStyle(selfIcon)" />
+            <div class="comment-body">
+              <form class="comment-input" @submit.prevent="submitComment(commit.id)">
+                <input
+                  :value="value(commit.id)"
+                  type="text"
+                  placeholder="Input comment..."
+                  @input="inputComment(commit.id, $event)"
+                />
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -92,6 +95,8 @@
 </template>
 
 <script>
+import { DATE_FORMAT_TYPE } from '~/utils/const'
+
 export default {
   props: {
     commits: {
@@ -131,6 +136,9 @@ export default {
     downloadingName() {
       const nameParts = this.filename.split('.')
       return `${nameParts.slice(0, -1).join('.')}_${this.currentCommit.id}.${nameParts.pop()}`
+    },
+    formattedDate() {
+      return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
   },
   data() {
@@ -237,7 +245,7 @@ $COMMIT_GRAPH_LEFT: 35px;
     border-radius: 50%;
     background: center/cover no-repeat;
     position: absolute;
-    top: 0;
+    top: 3px;
     left: 0;
   }
 
@@ -262,6 +270,12 @@ $COMMIT_GRAPH_LEFT: 35px;
         margin-left: 5px;
         margin-top: -4px;
         font-size: 18px;
+        color: $COLOR_BORDER;
+        transition: 0.2s;
+
+        &:hover {
+          color: unset;
+        }
       }
     }
   }
@@ -270,13 +284,12 @@ $COMMIT_GRAPH_LEFT: 35px;
   .comment-username {
     font-weight: bold;
     display: inline-block;
-    margin-right: 5px;
   }
 
   .committer-date,
   .comment-date {
     font-size: 12px;
-    color: $FONT_GRAY;
+    color: $COLOR_DATE;
   }
 
   .committer-message {
@@ -288,13 +301,18 @@ $COMMIT_GRAPH_LEFT: 35px;
 
     input {
       border: none;
-      background: $COLOR_GRAY3;
+      background: $COLOR_SUB;
       font-size: 16px;
       padding: 10px;
       width: 100%;
-      color: $FONT_WHITE;
+      color: $FONT_BASE;
       border-radius: 5px;
       user-select: none;
+
+      &::placeholder {
+        color: $COLOR_DATE;
+        font-size: 14px;
+      }
 
       &:focus {
         outline: none;
@@ -305,7 +323,7 @@ $COMMIT_GRAPH_LEFT: 35px;
 
 .commit-maker {
   height: $COMMIT_MAKER_HEIGHT;
-  border-top: 1px solid $COLOR_GRAY3;
+  border-top: 1px solid $COLOR_BORDER;
   position: relative;
 
   .comments-panel {
@@ -320,7 +338,7 @@ $COMMIT_GRAPH_LEFT: 35px;
 
   .comment-maker-text {
     font-size: 12px;
-    color: $FONT_WHITE;
+    color: $FONT_BASE;
   }
 
   .comment-input {

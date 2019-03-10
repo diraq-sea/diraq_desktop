@@ -1,31 +1,19 @@
 <template>
   <div class="root">
-    <title-bar />
-    <div class="page">
-      <div class="nuxt"><nuxt /></div>
-      <file-tab @logout="logout" />
-    </div>
-    <side-menu />
+    <title-bar><file-tab /></title-bar>
+    <nuxt class="nuxt" />
   </div>
 </template>
 
 <script>
 import TitleBar from '~/components/molecules/TitleBar'
-import SideMenu from '~/components/molecules/SideMenu'
-import FileTab from '~/components/molecules/FileTab'
+import FileTab from '~/components/organisms/FileTab'
 
 export default {
   middleware: ['isLogin', 'fetchData'],
   components: {
     TitleBar,
-    SideMenu,
     FileTab,
-  },
-  methods: {
-    async logout() {
-      await this.$store.dispatch('login/logout')
-      this.$router.push('/login')
-    },
   },
 }
 </script>
@@ -43,22 +31,15 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.page {
-  position: absolute;
-  top: 0;
-  left: $SIDEMENU_WIDTH;
-  right: 0;
-  bottom: 0;
+  color: $FONT_BASE;
 }
 
 .nuxt {
   position: absolute;
-  top: $TAB_HEIGHT;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: $COLOR_BLACK;
+  background: $COLOR_PAGE;
 }
 </style>
