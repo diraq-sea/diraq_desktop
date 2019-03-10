@@ -1,32 +1,77 @@
 <template>
   <div class="folder-container">
-    <div class="folder-contents">
-      <h1>Room: {{ roomInfo.name }}</h1>
+    <h1>Room: {{ roomInfo.name }}</h1>
+    <div class="folder-main">
+      <div class="folder-list">
+        <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
+
+        <div v-for="item in roomInfo.items" :key="item.id" class="folder-item" @click="open(item)">
+          <img class="folder-icon" :src="iconSrc(item)" />
+          <div class="folder-name">{{ item.name }}</div>
+          <div class="folder-date">
+            <div>Created: {{ birthTime(item) }}</div>
+            <div>Modified: {{ mTime(item) }}</div>
+          </div>
+        </div>
+      </div>
+      <members-item class="folder-members" />
     </div>
+
+    <el-dialog :visible.sync="dialogVisible" :append-to-body="true" class="dialog">
+      <upload-dialog />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { TAB_TYPES } from '~/utils/const'
+import folderIcon from '~/assets/imgs/folder.png'
+import MembersItem from '~/components/molecules/MembersItem'
+import UploadDialog from '~/components/atoms/UploadDialog'
 
 export default {
+  components: {
+    MembersItem,
+    UploadDialog,
+  },
   async fetch({ store }) {
-    await store.dispatch('room/fetchRoomInfo', store.getters['tab/currentTab'].values.roomId)
+    const { roomId } = store.getters['tab/currentTab'].values
+    await Promise.all([
+      store.dispatch('room/fetchRoomInfo', roomId),
+      store.dispatch('member/fetchMembers', roomId),
+    ])
   },
   computed: {
     ...mapState('room', ['roomInfo']),
     ...mapGetters('tab', ['currentTab']),
+    iconSrc() {
+      return item => (item.extname ? this.$fileIcon(item.extname) : folderIcon)
+    },
+    birthTime() {
+      return item => new Date(item.birthtime).toLocaleString()
+    },
+    mTime() {
+      return item => new Date(item.mtime).toLocaleString()
+    },
+  },
+  data() {
+    return {
+      dialogVisible: false,
+    }
   },
   methods: {
-    async open(roomId) {
+    async open(item) {
       await this.$store.dispatch('tab/changeTabType', {
-        id: this.currentTabId,
-        type: TAB_TYPES.FOLDER,
-        values: { roomId },
+        id: this.currentTab.id,
+        type: TAB_TYPES.FILE,
+        values: { fileId: item.id },
       })
 
       this.$router.push('/')
+    },
+    openDialog() {
+      this.dialogVisible = !this.dialogVisible
     },
   },
 }
@@ -35,19 +80,82 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
+$HERDER_HEIGHT: 100px;
+
 .folder-container {
   height: 100%;
-  overflow: auto;
   color: $FONT_SUB;
-}
-
-.folder-contents {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 30px;
+  position: relative;
+}
 
-  h1 {
-    margin: 0 1.666%;
+h1 {
+  height: $HERDER_HEIGHT;
+  line-height: $HERDER_HEIGHT;
+}
+
+.folder-main {
+  display: flex;
+  position: absolute;
+  top: $HERDER_HEIGHT;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .folder-list {
+    flex: 1;
+    max-height: 100%;
+    overflow: auto;
+    padding-right: 30px;
+
+    $ITEM_HEIGHT: 40px;
+
+    .folder-item {
+      margin-top: 20px;
+      height: calc(#{$ITEM_HEIGHT} + 10px);
+      padding: 5px 10px;
+      border-bottom: 1px solid $COLOR_BORDER;
+      display: flex;
+      transition: 0.2s;
+      cursor: pointer;
+
+      &:hover {
+        background: $COLOR_LIGHT_BLUE;
+      }
+
+      .folder-icon {
+        height: 80%;
+        margin-top: calc(#{$ITEM_HEIGHT} * 0.12);
+      }
+
+      .folder-name {
+        height: 100%;
+        line-height: $ITEM_HEIGHT;
+        margin-left: 15px;
+        font-size: 18px;
+      }
+
+      .folder-date {
+        font-size: 12px;
+        margin-left: auto;
+
+        & > div {
+          height: calc(#{$ITEM_HEIGHT} / 2);
+          line-height: calc(#{$ITEM_HEIGHT} / 2);
+        }
+      }
+    }
   }
+
+  .folder-members {
+    width: $MEMBERS_OPENING_WIDTH;
+    max-height: 100%;
+    overflow: auto;
+  }
+}
+
+.dialog /deep/ .el-dialog__body {
+  padding: 20px 40px 50px;
 }
 </style>

@@ -11,6 +11,7 @@ const {
   INVITE,
   FETCH_ROOMS,
   FETCH_ROOM_INFO,
+  FETCH_MEMBERS,
   CREATE_ROOM,
   EDIT_FILE,
   CLOSE_WIN,
@@ -57,6 +58,8 @@ module.exports = {
   [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
 
   [FETCH_ROOM_INFO]: async roomId => (await axios.get(`/rooms/${roomId}`)).data,
+
+  [FETCH_MEMBERS]: async roomId => (await axios.get(`/members/${roomId}`)).data,
 
   [CREATE_ROOM]: name => axios.post('/rooms', { name, published: false }),
 

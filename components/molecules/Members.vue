@@ -3,7 +3,7 @@
     <div class="members">
       <div class="member-item">
         <div class="member-add"><i class="fas fa-user-plus" title="ルームにメンバーを追加" /></div>
-        <div class="member-room">room: {{ currentRoom.name }}</div>
+        <div class="member-room">room: {{ roomInfo.name }}</div>
       </div>
       <div v-for="member in members" :key="member.id" class="member-item">
         <div class="member-icon">
@@ -25,7 +25,7 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   computed: {
-    ...mapState('room', ['currentRoom']),
+    ...mapState('room', ['roomInfo']),
     ...mapGetters('member', ['members', 'roleLabel']),
     containerClass() {
       return { opening: this.isOpening }
@@ -62,7 +62,6 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-$OPENING_WIDTH: 300px;
 $OPEN_ICON_HEIGHT: 50px;
 
 .members-container {
@@ -72,7 +71,7 @@ $OPEN_ICON_HEIGHT: 50px;
   width: $MEMBERS_WIDTH;
 
   &.opening {
-    width: $OPENING_WIDTH;
+    width: $MEMBERS_OPENING_WIDTH;
   }
 
   .members {
@@ -83,7 +82,7 @@ $OPEN_ICON_HEIGHT: 50px;
     padding-bottom: $OPEN_ICON_HEIGHT;
 
     .member-item {
-      width: $OPENING_WIDTH;
+      width: $MEMBERS_OPENING_WIDTH;
       display: flex;
       padding-right: 20px;
 
