@@ -8,7 +8,7 @@
         </div>
       </div>
 
-      <div :style="userStyle" class="user-button" @click.stop="toggleOpenUser" />
+      <div :style="userStyle" class="user-button" @mousedown.stop="toggleOpenUser" />
     </el-tooltip>
   </div>
 </template>
@@ -36,10 +36,10 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('click', this.closeOpenUser, false)
+    window.addEventListener('mousedown', this.closeOpenUser, false)
   },
   destroyed() {
-    window.removeEventListener('click', this.closeOpenUser, false)
+    window.removeEventListener('mousedown', this.closeOpenUser, false)
   },
   methods: {
     toggleOpenUser() {
@@ -69,6 +69,7 @@ export default {
   border-radius: 50%;
   background: center/cover no-repeat;
   cursor: pointer;
+  -webkit-app-region: no-drag;
 }
 
 .user-name {

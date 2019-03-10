@@ -1,6 +1,6 @@
 <template>
   <div class="title-bar">
-    <div :class="draggableClass" class="draggable" />
+    <div class="draggable" />
     <div v-if="isNotMac" class="win-controls">
       <div class="controls-icon" @click="$ipc(MIN_WIN)"><i class="fas fa-minus" /></div>
       <div v-if="isMaximized" class="controls-icon invert" @click="$ipc(UNMAX_WIN)">
@@ -9,6 +9,7 @@
       <div v-else class="controls-icon" @click="$ipc(MAX_WIN)"><i class="far fa-square" /></div>
       <div class="controls-icon red" @click="$ipc(CLOSE_WIN)"><i class="fas fa-times" /></div>
     </div>
+    <slot />
   </div>
 </template>
 
@@ -26,11 +27,6 @@ export default {
     isNotMac() {
       return this.$platform !== 'mac'
     },
-    draggableClass() {
-      return {
-        isNotMac: this.isNotMac,
-      }
-    },
   },
 }
 </script>
@@ -38,15 +34,13 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/css/admin.scss';
 
-$CONTROLS_WIDTH: 150px;
-
 .title-bar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: $TITLEBAR_HEIGHT;
-  background: $COLOR_GRAY3;
+  background: $COLOR_TITLE_BAR;
 
   .draggable {
     position: absolute;
@@ -55,30 +49,28 @@ $CONTROLS_WIDTH: 150px;
     right: 3px;
     bottom: 0;
     -webkit-app-region: drag;
-
-    &.isNotMac {
-      right: $CONTROLS_WIDTH;
-    }
   }
 
   .win-controls {
     position: absolute;
     top: 0;
     width: $CONTROLS_WIDTH;
+    height: 30px;
     right: 0;
-    bottom: 0;
     display: flex;
+    -webkit-app-region: no-drag;
 
     .controls-icon {
       flex: 1;
       height: 100%;
-      color: $FONT_GRAY;
-      line-height: $TITLEBAR_HEIGHT;
+      color: $COLOR_DATE;
+      line-height: 30px;
       text-align: center;
+      font-size: 12px;
 
       &:hover {
-        color: $FONT_WHITE;
-        background: #ffffff22;
+        background: $COLOR_BORDER;
+        color: $FONT_SUB;
       }
 
       &.invert {
@@ -86,9 +78,10 @@ $CONTROLS_WIDTH: 150px;
       }
 
       &.red {
-        font-size: 18px;
+        font-size: 16px;
 
         &:hover {
+          color: #fff;
           background: $COLOR_RED;
         }
       }

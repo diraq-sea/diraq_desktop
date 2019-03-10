@@ -20,9 +20,7 @@ async function init() {
     titleBarStyle: 'hidden',
   })
 
-  mainWindow.setAlwaysOnTop(true)
-  mainWindow.setAlwaysOnTop(false)
-
+  mainWindow.focus()
   await installExtension(VUEJS_DEVTOOLS)
   mainWindow.loadURL(WINDOW_ORIGIN)
   mainWindow.webContents.openDevTools()
