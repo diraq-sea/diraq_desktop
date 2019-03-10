@@ -25,7 +25,8 @@ export const actions = {
   },
 
   async createRoom({ dispatch }, name) {
-    await this.$ipc(CREATE_ROOM, name)
+    const room = await this.$ipc(CREATE_ROOM, name)
     await dispatch('fetchRooms')
+    return room
   },
 }

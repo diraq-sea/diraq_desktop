@@ -62,7 +62,7 @@ module.exports = {
 
   [FETCH_MEMBERS]: async roomId => (await axios.get(`/members/${roomId}`)).data,
 
-  [CREATE_ROOM]: name => axios.post('/rooms', { name, published: false }),
+  [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
 
   [FETCH_FILE]: async fileId => (await axios.get(`/files/${fileId}`)).data,
 

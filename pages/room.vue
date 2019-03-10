@@ -42,7 +42,8 @@ export default {
 
       if (!value) return
 
-      await this.$store.dispatch('room/createRoom', value)
+      const room = await this.$store.dispatch('room/createRoom', value)
+      await this.enterRoom(room.id)
     },
     async enterRoom(roomId) {
       await this.$store.dispatch('tab/changeTabType', {

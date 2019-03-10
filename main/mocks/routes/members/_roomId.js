@@ -8,15 +8,17 @@ const userIcons = [
   '/imgs/user5.png',
 ]
 
+const owner = {
+  id: 0,
+  name: 'mitsuhide',
+  icon: userIcons[0],
+  role: ROLE_TYPES[0].id,
+  online: true,
+}
+
 const membersList = {
   0: [
-    {
-      id: 0,
-      name: 'mitsuhide',
-      icon: userIcons[0],
-      role: ROLE_TYPES[0].id,
-      online: true,
-    },
+    owner,
     {
       id: 1,
       name: 'kento',
@@ -50,7 +52,7 @@ const membersList = {
 
 export default {
   get({ roomId }) {
-    if (!membersList[roomId]) membersList[roomId] = []
+    if (!membersList[roomId]) membersList[roomId] = [owner]
 
     return membersList[roomId]
   },
