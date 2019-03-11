@@ -1,6 +1,7 @@
 <template>
   <div class="room-container">
-    <div class="room-contents">
+    <loading-panel v-if="loading" />
+    <div v-else class="room-contents">
       <h1>Rooms</h1>
       <div class="room-card-container">
         <div class="room-card" @click="openRoomNamePrompt">
@@ -22,14 +23,26 @@
 <script>
 import { mapState } from 'vuex'
 import { TAB_TYPES } from '~/utils/const'
+import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
-  async fetch({ store }) {
-    await store.dispatch('room/fetchRooms')
+  components: {
+    LoadingPanel,
+  },
+  props: {
+    tab: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     ...mapState('room', ['rooms']),
     ...mapState('tab', ['currentTabId']),
+  },
+  data: () => ({ loading: true }),
+  async created() {
+    await this.$store.dispatch('room/fetchRooms')
+    this.loading = false
   },
   methods: {
     async openRoomNamePrompt() {
@@ -51,8 +64,6 @@ export default {
         type: TAB_TYPES.FOLDER,
         values: { roomId, folder: [] },
       })
-
-      this.$router.push('/')
     },
   },
 }

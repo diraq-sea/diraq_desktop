@@ -29,7 +29,7 @@ const createParams = (relativePath, dirPath) => {
 }
 
 export default client => {
-  const mock = new MockAdapter(client, { delayResponse: 150 })
+  const mock = new MockAdapter(client, { delayResponse: 200 })
   mockStore.init()
 
   listFiles(path.join(__dirname, 'routes')).forEach(filePath => {

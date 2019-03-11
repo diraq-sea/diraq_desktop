@@ -4,7 +4,7 @@
       <div class="member-add"><i class="fas fa-user-plus" title="ルームにメンバーを追加" /></div>
       <div v-if="roomName" class="member-room">Room: {{ roomName }}</div>
     </div>
-    <div v-for="member in sortedMembers" :key="member.id" class="member-item">
+    <div v-for="member in sortedMembers(roomId)" :key="member.id" class="member-item">
       <div class="member-icon">
         <div :class="memberIconClass(member.online)" :style="memberIconStyle(member.icon)" />
       </div>
@@ -19,6 +19,10 @@ import { mapGetters } from 'vuex'
 
 export default {
   props: {
+    roomId: {
+      type: Number,
+      required: true,
+    },
     roomName: {
       type: String,
       required: false,

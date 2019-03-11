@@ -1,25 +1,33 @@
 <template>
   <div class="folder-container">
-    <h1>Room: {{ roomInfo.name }}</h1>
-    <div class="folder-main">
-      <div class="folder-list">
-        <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
+    <loading-panel v-if="loading" />
+    <template v-else>
+      <h1>Room: {{ roomInfo(roomId).name }}</h1>
+      <div class="folder-main">
+        <div class="folder-list">
+          <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
 
-        <div v-for="item in roomInfo.items" :key="item.id" class="folder-item" @click="open(item)">
-          <img class="folder-icon" :src="iconSrc(item)" />
-          <div class="folder-name">{{ item.name }}</div>
-          <div class="folder-date">
-            <div>Created: {{ birthTime(item) }}</div>
-            <div>Modified: {{ mTime(item) }}</div>
+          <div
+            v-for="item in roomInfo(roomId).items"
+            :key="item.id"
+            class="folder-item"
+            @click="open(item)"
+          >
+            <img class="folder-icon" :src="iconSrc(item)" />
+            <div class="folder-name">{{ item.name }}</div>
+            <div class="folder-date">
+              <div>Created: {{ birthTime(item) }}</div>
+              <div>Modified: {{ mTime(item) }}</div>
+            </div>
           </div>
         </div>
+        <members-item :roomId="roomId" class="folder-members" />
       </div>
-      <members-item class="folder-members" />
-    </div>
 
-    <el-dialog :visible.sync="dialogVisible" :append-to-body="true" class="dialog">
-      <upload-dialog />
-    </el-dialog>
+      <el-dialog :visible.sync="dialogVisible" :append-to-body="true" class="dialog">
+        <upload-dialog />
+      </el-dialog>
+    </template>
   </div>
 </template>
 
@@ -29,22 +37,23 @@ import { TAB_TYPES, DATE_FORMAT_TYPE } from '~/utils/const'
 import folderIcon from '~/assets/imgs/folder.png'
 import MembersItem from '~/components/molecules/MembersItem'
 import UploadDialog from '~/components/atoms/UploadDialog'
+import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
   components: {
+    LoadingPanel,
     MembersItem,
     UploadDialog,
   },
-  async fetch({ store }) {
-    const { roomId } = store.getters['tab/currentTab'].values
-    await Promise.all([
-      store.dispatch('room/fetchRoomInfo', roomId),
-      store.dispatch('member/fetchMembers', roomId),
-    ])
+  props: {
+    tab: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
-    ...mapState('room', ['roomInfo']),
     ...mapState('tab', ['tabs']),
+    ...mapGetters('room', ['roomInfo']),
     ...mapGetters('tab', ['currentTab']),
     iconSrc() {
       return item => (item.extname ? this.$fileIcon(item.extname) : folderIcon)
@@ -55,11 +64,22 @@ export default {
     mTime() {
       return item => this.$moment(item.mtime).format(DATE_FORMAT_TYPE)
     },
+    roomId() {
+      return this.tab.values.roomId
+    },
   },
-  data() {
-    return {
-      dialogVisible: false,
-    }
+  data: () => ({
+    loading: true,
+    dialogVisible: false,
+  }),
+  async created() {
+    const { roomId } = this.currentTab.values
+    await Promise.all([
+      this.$store.dispatch('room/fetchRoomInfo', roomId),
+      this.$store.dispatch('member/fetchMembers', roomId),
+    ])
+
+    this.loading = false
   },
   methods: {
     async open(item) {
@@ -76,8 +96,6 @@ export default {
           values: { fileId: item.id, name: item.name, extname: item.extname },
         })
       }
-
-      this.$router.push('/')
     },
     openDialog() {
       this.dialogVisible = !this.dialogVisible
