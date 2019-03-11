@@ -71,10 +71,7 @@ export const actions = {
   async fetchFile({ commit }, id) {
     const file = await this.$ipc(FETCH_FILE, id)
     commit('setFile', file)
-
-    if (file.commits.length) {
-      commit('setCurrentCommitId', file.commits[file.commits.length - 1].id)
-    }
+    commit('setCurrentCommitId', file.commits[file.commits.length - 1].id)
   },
   async editFile({ state }, commit) {
     await this.$ipc(EDIT_FILE, { extname: state.file.extname, commit })

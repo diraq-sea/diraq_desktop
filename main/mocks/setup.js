@@ -1,6 +1,7 @@
 import MockAdapter from 'axios-mock-adapter'
 import fs from 'fs'
 import path from 'path'
+import mockStore from '../store/mock.store'
 
 const listFiles = dirpath => {
   const list = []
@@ -29,6 +30,8 @@ const createParams = (relativePath, dirPath) => {
 
 export default client => {
   const mock = new MockAdapter(client, { delayResponse: 150 })
+  mockStore.init()
+
   listFiles(path.join(__dirname, 'routes')).forEach(filePath => {
     const relativePath = filePath.replace(/\\/g, '/').match(/^main\/mocks\/routes\/(.+?)\.js$/)[1]
     const route = require(`./routes/${relativePath}`).default
@@ -46,19 +49,28 @@ export default client => {
       }
 
       if (route.post) {
-        mock
-          .onPost(regPath)
-          .reply(({ url, baseURL, data }) => [
-            204,
-            route.post(JSON.parse(data), createParams(relativePath, url.replace(baseURL, ''))),
-          ])
+        mock.onPost(regPath).reply(({ url, baseURL, data }) => {
+          const value = route.post(
+            JSON.parse(data),
+            createParams(relativePath, url.replace(baseURL, '')),
+          )
+          if (route.getAll) mockStore.set(relativePath, route.getAll())
+          return [204, value]
+        })
       }
     } else {
       if (route.get) mock.onGet(relativePath).reply(() => [200, route.get()])
       if (route.post) {
-        mock.onPost(relativePath).reply(({ data }) => [204, route.post(JSON.parse(data))])
+        mock.onPost(relativePath).reply(({ data }) => {
+          const value = route.post(JSON.parse(data))
+          if (route.getAll) mockStore.set(relativePath, route.getAll())
+          return [204, value]
+        })
       }
     }
+
+    const savedData = mockStore.get(relativePath)
+    if (route.setAll && savedData) route.setAll(savedData)
   })
 
   mock.onAny().passThrough()
