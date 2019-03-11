@@ -5,9 +5,8 @@
       <div class="fp-left"><webview :src="viewerSrc" class="viewer" /></div>
       <div class="fp-right">
         <commit-board
-          :commits="file(fileId).commits"
+          :file="file(fileId)"
           :currentCommit="currentCommit(fileId)"
-          :filename="file(fileId).name"
           :users="members(roomId)"
           :selfIcon="icon"
           class="commit-board"

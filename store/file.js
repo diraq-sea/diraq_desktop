@@ -85,7 +85,7 @@ export const actions = {
       id: file.commits[file.commits.length - 1].id,
     })
   },
-  async editFile({ state }, commit) {
-    await this.$ipc(EDIT_FILE, { extname: state.file.extname, commit })
+  async editFile(store, params) {
+    await this.$ipc(EDIT_FILE, params)
   },
 }
