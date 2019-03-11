@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="commit-container">
-      <div v-for="commit in commits" :key="commit.id">
+      <div v-for="commit in file.commits" :key="commit.id">
         <div class="commit-graph">
           <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
           <div v-if="hasChild(commit.id)" class="commit-line" />
@@ -11,11 +11,7 @@
             <span class="committer-name">{{ user(commit.user).name }}</span>
             <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
-              <div
-                class="file-controls-icon"
-                title="Edit file"
-                @click="$store.dispatch('file/editFile', commit)"
-              >
+              <div class="file-controls-icon" title="Edit file" @click="editFile(commit)">
                 <i class="fas fa-edit" />
               </div>
               <a
@@ -66,11 +62,7 @@
             File editting based on "{{ currentCommit.message }}"
           </span>
           <div class="file-controls">
-            <div
-              class="file-controls-icon"
-              title="Edit file"
-              @click="$store.dispatch('file/editFile', currentCommit)"
-            >
+            <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
               <i class="fas fa-edit" />
             </div>
             <a
@@ -97,16 +89,12 @@ import { DATE_FORMAT_TYPE } from '~/utils/const'
 
 export default {
   props: {
-    commits: {
-      type: Array,
+    file: {
+      type: Object,
       required: true,
     },
     currentCommit: {
       type: Object,
-      required: true,
-    },
-    filename: {
-      type: String,
       required: true,
     },
     users: {
@@ -123,17 +111,16 @@ export default {
       return id => this.users.find(user => user.id === id)
     },
     hasChild() {
-      return id => this.commits.find(commit => commit.parents.includes(id))
+      return id => this.file.commits.find(commit => commit.parents.includes(id))
     },
     circleStyle() {
       return icon => ({ backgroundImage: `url(${icon})` })
     },
     value() {
-      return id => this.values[this.commits.findIndex(commit => commit.id === id)]
+      return id => this.values[this.file.commits.findIndex(commit => commit.id === id)]
     },
     downloadingName() {
-      const nameParts = this.filename.split('.')
-      return `${nameParts.slice(0, -1).join('.')}_${this.currentCommit.id}.${nameParts.pop()}`
+      return `${this.file.name}_${this.currentCommit.id}.${this.file.extname}`
     },
     formattedDate() {
       return date => this.$moment(date).format(DATE_FORMAT_TYPE)
@@ -148,11 +135,11 @@ export default {
   methods: {
     inputComment(id, e) {
       this.values = [...this.values]
-      const index = this.commits.findIndex(commit => commit.id === id)
+      const index = this.file.commits.findIndex(commit => commit.id === id)
       this.values[index] = e.target.value
     },
     submitComment(id) {
-      const index = this.commits.findIndex(commit => commit.id === id)
+      const index = this.file.commits.findIndex(commit => commit.id === id)
       const value = this.values[index]
 
       if (value) {
@@ -166,6 +153,12 @@ export default {
         this.$emit('addCommit', this.commitComment)
         this.commitComment = ''
       }
+    },
+    async editFile(commit) {
+      await this.$store.dispatch('file/editFile', {
+        extname: this.file.extname,
+        commit,
+      })
     },
   },
 }
