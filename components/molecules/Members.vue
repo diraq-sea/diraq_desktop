@@ -1,6 +1,6 @@
 <template>
   <div :class="containerClass" class="members-container" @mousedown.stop>
-    <members-item :roomName="roomInfo.name" class="members" />
+    <members-item :roomId="roomId" :roomName="roomInfo(roomId).name" class="members" />
 
     <div class="members-container-open">
       <i :class="containerClass" class="fas fa-angle-left" @mousedown="toggleOpening" />
@@ -9,15 +9,21 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import MembersItem from '~/components/molecules/MembersItem'
 
 export default {
   components: {
     MembersItem,
   },
+  props: {
+    roomId: {
+      type: Number,
+      required: true,
+    },
+  },
   computed: {
-    ...mapState('room', ['roomInfo']),
+    ...mapGetters('room', ['roomInfo']),
     containerClass() {
       return { opening: this.isOpening }
     },

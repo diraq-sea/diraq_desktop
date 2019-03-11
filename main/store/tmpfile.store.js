@@ -1,8 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-const mkdirIfNotExists = require('../utils/mkdirIfNotExists')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
-const { CONFIG_DIR, TMP_FILE } = require('../const')
+const { TMP_FILE } = require('../const')
 let tmpfiles = []
 let isInit = false
 
@@ -14,7 +13,6 @@ const confirmFileLimit = date => Date.now() - Date.parse(date) < 1000000
 
 module.exports = {
   init() {
-    mkdirIfNotExists(CONFIG_DIR)
     writeFileIfNotExists(TMP_FILE, tmpfiles)
     tmpfiles = JSON.parse(fs.readFileSync(TMP_FILE))
 

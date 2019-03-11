@@ -1,20 +1,52 @@
 <template>
-  <div />
+  <div>
+    <room-view v-for="tab in roomTabs" v-show="isTabVisible(tab)" :key="tab.id" :tab="tab" />
+    <folder-view v-for="tab in folderTabs" v-show="isTabVisible(tab)" :key="tab.id" :tab="tab" />
+    <file-view v-for="tab in fileTabs" v-show="isTabVisible(tab)" :key="tab.id" :tab="tab" />
+  </div>
 </template>
 
 <script>
-export default {
-  mounted() {
-    // 元々fetch+redirectだったがタブ切り替え時エラー回避のため暫定でmounted使用
-    const currentTab = this.$store.getters['tab/currentTab']
+import { mapState, mapGetters } from 'vuex'
+import RoomView from '~/components/organisms/RoomView'
+import FolderView from '~/components/organisms/FolderView'
+import FileView from '~/components/organisms/FileView'
 
-    if (this.$store.getters['tab/isRoomTab'](currentTab)) {
-      this.$router.push('/room')
-    } else if (this.$store.getters['tab/isFolderTab'](currentTab)) {
-      this.$router.push('/folder')
-    } else {
-      this.$router.push('/file')
+export default {
+  components: {
+    RoomView,
+    FolderView,
+    FileView,
+  },
+  data() {
+    return {
+      hadOpenedTabIds: [this.$store.state.tab.currentTabId],
     }
+  },
+  computed: {
+    ...mapState('tab', ['tabs', 'currentTabId']),
+    ...mapGetters('tab', ['isRoomTab', 'isFolderTab', 'isFileTab']),
+    filteredTabs() {
+      return this.tabs.filter(tab => this.hadOpenedTabIds.indexOf(tab.id) > -1)
+    },
+    roomTabs() {
+      return this.filteredTabs.filter(tab => this.isRoomTab(tab))
+    },
+    folderTabs() {
+      return this.filteredTabs.filter(tab => this.isFolderTab(tab))
+    },
+    fileTabs() {
+      return this.filteredTabs.filter(tab => this.isFileTab(tab))
+    },
+    isTabVisible() {
+      return tab => tab.id === this.currentTabId
+    },
+  },
+  watch: {
+    currentTabId(id) {
+      if (this.hadOpenedTabIds.indexOf(id) > -1) return
+      this.hadOpenedTabIds = [...this.hadOpenedTabIds, id]
+    },
   },
 }
 </script>

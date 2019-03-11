@@ -2,15 +2,22 @@ import { FETCH_ROOMS, FETCH_ROOM_INFO, CREATE_ROOM } from '~/common/ipcTypes'
 
 export const state = () => ({
   rooms: null,
-  roomInfo: null,
+  roomInfoList: {},
 })
+
+export const getters = {
+  roomInfo: state => roomId => state.roomInfoList[roomId],
+}
 
 export const mutations = {
   setRooms(state, rooms) {
     state.rooms = rooms
   },
   setRoomInfo(state, roomInfo) {
-    state.roomInfo = roomInfo
+    state.roomInfoList = {
+      ...state.roomInfoList,
+      [roomInfo.id]: roomInfo,
+    }
   },
 }
 

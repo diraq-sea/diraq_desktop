@@ -21,14 +21,14 @@
             v-if="isCloseBtnVisible(tab)"
             class="fas fa-times"
             title="Close tab"
-            @mousedown.stop="removeTab(tab.id)"
+            @mousedown.stop="$store.dispatch('tab/removeTab', tab.id)"
           />
         </div>
         <div class="tab-dragarea" />
       </div>
 
       <div class="tab-plus">
-        <i class="fas fa-plus" title="Open new tab" @mousedown="addNewTab" />
+        <i class="fas fa-plus" title="Open new tab" @mousedown="$store.dispatch('tab/addNewTab')" />
       </div>
     </div>
   </div>
@@ -60,18 +60,9 @@ export default {
     },
 
     async changeCurrentTab(id) {
+      if (this.currentTabId === id) return
+
       await this.$store.dispatch('tab/changeCurrentTab', id)
-      this.$router.push('/')
-    },
-
-    async addNewTab() {
-      await this.$store.dispatch('tab/addNewTab')
-      this.$router.push('/')
-    },
-
-    async removeTab(id) {
-      await this.$store.dispatch('tab/removeTab', id)
-      this.$router.push('/')
     },
   },
 }

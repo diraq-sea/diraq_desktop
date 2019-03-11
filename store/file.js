@@ -3,20 +3,29 @@ import { FETCH_FILE, EDIT_FILE } from '~/common/ipcTypes'
 const url = 'http://www.mech.tohoku-gakuin.ac.jp/rde/contents/kougakukai/files/template.docx'
 
 export const state = () => ({
-  file: null,
-  currentCommitId: null,
+  fileList: {},
+  currentCommitIdList: {},
 })
 
 export const getters = {
-  currentCommit: state => state.file.commits.find(commit => commit.id === state.currentCommitId),
+  file: state => fileId => state.fileList[fileId],
+  currentCommitId: state => fileId => state.currentCommitIdList[fileId],
+  currentCommit: (state, getters) => fileId =>
+    getters.file(fileId).commits.find(commit => commit.id === getters.currentCommitId(fileId)),
 }
 
 export const mutations = {
   setFile(state, file) {
-    state.file = file
+    state.fileList = {
+      ...state.fileList,
+      [file.id]: file,
+    }
   },
-  setCurrentCommitId(state, id) {
-    state.currentCommitId = id
+  setCurrentCommitId(state, { fileId, id }) {
+    state.currentCommitIdList = {
+      ...state.currentCommitIdList,
+      [fileId]: id,
+    }
   },
   addComment(state, { id, value }) {
     const file = state.files.find(file => file.commits.find(commit => commit.id === id))
@@ -71,10 +80,10 @@ export const actions = {
   async fetchFile({ commit }, id) {
     const file = await this.$ipc(FETCH_FILE, id)
     commit('setFile', file)
-
-    if (file.commits.length) {
-      commit('setCurrentCommitId', file.commits[file.commits.length - 1].id)
-    }
+    commit('setCurrentCommitId', {
+      fileId: file.id,
+      id: file.commits[file.commits.length - 1].id,
+    })
   },
   async editFile({ state }, commit) {
     await this.$ipc(EDIT_FILE, { extname: state.file.extname, commit })

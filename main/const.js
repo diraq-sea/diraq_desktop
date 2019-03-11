@@ -7,6 +7,7 @@ module.exports = {
   AUTH_FILE: path.join(CONFIG_DIR, 'auth.json'),
   CONFIG_FILE: path.join(CONFIG_DIR, 'config.json'),
   TMP_FILE: path.join(CONFIG_DIR, 'tmp.json'),
+  MOCK_FILE: path.join(CONFIG_DIR, 'mock.json'),
   TMP_FILES_DIR: path.join(CONFIG_DIR, 'tmpfiles'),
   WINDOW_ORIGIN: 'http://localhost:3000',
   API_BASE_URL: 'http://localhost:8080/v1',
