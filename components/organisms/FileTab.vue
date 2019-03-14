@@ -1,5 +1,5 @@
 <template>
-  <div class="ft-container">
+  <div :class="containerClass" class="ft-container">
     <user :name="name" :icon="icon" @logout="logout" />
 
     <div class="tab-container">
@@ -46,6 +46,9 @@ export default {
     ...mapState('tab', ['tabs', 'currentTabId']),
     ...mapState('user', ['name', 'icon']),
     ...mapGetters('tab', ['isFileTab']),
+    containerClass() {
+      return { isMac: this.$platform === 'mac' }
+    },
     itemClass() {
       return id => ({ current: this.currentTabId === id })
     },
@@ -77,6 +80,11 @@ export default {
   margin-right: $CONTROLS_WIDTH;
   height: $TAB_HEIGHT;
   display: flex;
+
+  &.isMac {
+    margin-right: 5px;
+    margin-left: 64px;
+  }
 }
 
 .tab-container {
