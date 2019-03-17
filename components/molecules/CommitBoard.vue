@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="commit-container">
-      <div v-for="commit in commits" :key="commit.id">
+      <div v-for="commit in file.commits" :key="commit.id">
         <div class="commit-graph">
           <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
           <div v-if="hasChild(commit.id)" class="commit-line" />
@@ -9,15 +9,9 @@
         <div class="comments-panel">
           <div class="committer-info">
             <span class="committer-name">{{ user(commit.user).name }}</span>
-            <span class="committer-date">
-              {{ $moment(commit.date).format('YY/MM/DD HH:mm:ss') }}
-            </span>
+            <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
-              <div
-                class="file-controls-icon"
-                title="Edit file"
-                @click="$store.dispatch('file/editFile', commit)"
-              >
+              <div class="file-controls-icon" title="Edit file" @click="editFile(commit)">
                 <i class="fas fa-edit" />
               </div>
               <a
@@ -33,24 +27,27 @@
           <div class="committer-message">{{ commit.message }}</div>
 
           <div v-for="comment in commit.comments" :key="comment.id" class="comment">
-            <div class="comment-circle" :style="circleStyle(user(commit.user).icon)" />
+            <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
             <div class="comment-body">
               <span class="comment-username">{{ user(comment.user).name }}</span>
-              <span class="comment-date">
-                {{ $moment(comment.date).format('YY/MM/DD HH:mm:ss') }}
-              </span>
+              <span class="comment-date">{{ formattedDate(comment.date) }}</span>
               <div class="comment-message">{{ comment.comment }}</div>
             </div>
           </div>
 
-          <form class="comment-input" @submit.prevent="submitComment(commit.id)">
-            <input
-              :value="value(commit.id)"
-              type="text"
-              placeholder="Input comment..."
-              @input="inputComment(commit.id, $event)"
-            />
-          </form>
+          <div class="comment">
+            <div class="comment-circle" :style="circleStyle(selfIcon)" />
+            <div class="comment-body">
+              <form class="comment-input" @submit.prevent="submitComment(commit.id)">
+                <input
+                  :value="value(commit.id)"
+                  type="text"
+                  placeholder="Input comment..."
+                  @input="inputComment(commit.id, $event)"
+                />
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -65,11 +62,7 @@
             File editting based on "{{ currentCommit.message }}"
           </span>
           <div class="file-controls">
-            <div
-              class="file-controls-icon"
-              title="Edit file"
-              @click="$store.dispatch('file/editFile', currentCommit)"
-            >
+            <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
               <i class="fas fa-edit" />
             </div>
             <a
@@ -84,7 +77,7 @@
         </div>
 
         <form class="comment-input" @submit.prevent="submitCommit">
-          <input v-model="commitComment" type="text" placeholder="Input comment for commit..." />
+          <input v-model="commitComment" type="text" placeholder="Input comment for uploading..." />
         </form>
       </div>
     </div>
@@ -92,18 +85,16 @@
 </template>
 
 <script>
+import { DATE_FORMAT_TYPE } from '~/utils/const'
+
 export default {
   props: {
-    commits: {
-      type: Array,
+    file: {
+      type: Object,
       required: true,
     },
     currentCommit: {
       type: Object,
-      required: true,
-    },
-    filename: {
-      type: String,
       required: true,
     },
     users: {
@@ -120,17 +111,19 @@ export default {
       return id => this.users.find(user => user.id === id)
     },
     hasChild() {
-      return id => this.commits.find(commit => commit.parents.includes(id))
+      return id => this.file.commits.find(commit => commit.parents.includes(id))
     },
     circleStyle() {
       return icon => ({ backgroundImage: `url(${icon})` })
     },
     value() {
-      return id => this.values[this.commits.findIndex(commit => commit.id === id)]
+      return id => this.values[this.file.commits.findIndex(commit => commit.id === id)]
     },
     downloadingName() {
-      const nameParts = this.filename.split('.')
-      return `${nameParts.slice(0, -1).join('.')}_${this.currentCommit.id}.${nameParts.pop()}`
+      return `${this.file.name}_${this.currentCommit.id}.${this.file.extname}`
+    },
+    formattedDate() {
+      return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
   },
   data() {
@@ -142,11 +135,11 @@ export default {
   methods: {
     inputComment(id, e) {
       this.values = [...this.values]
-      const index = this.commits.findIndex(commit => commit.id === id)
+      const index = this.file.commits.findIndex(commit => commit.id === id)
       this.values[index] = e.target.value
     },
     submitComment(id) {
-      const index = this.commits.findIndex(commit => commit.id === id)
+      const index = this.file.commits.findIndex(commit => commit.id === id)
       const value = this.values[index]
 
       if (value) {
@@ -160,6 +153,12 @@ export default {
         this.$emit('addCommit', this.commitComment)
         this.commitComment = ''
       }
+    },
+    async editFile(commit) {
+      await this.$store.dispatch('file/editFile', {
+        extname: this.file.extname,
+        commit,
+      })
     },
   },
 }
@@ -237,7 +236,7 @@ $COMMIT_GRAPH_LEFT: 35px;
     border-radius: 50%;
     background: center/cover no-repeat;
     position: absolute;
-    top: 0;
+    top: 3px;
     left: 0;
   }
 
@@ -262,6 +261,12 @@ $COMMIT_GRAPH_LEFT: 35px;
         margin-left: 5px;
         margin-top: -4px;
         font-size: 18px;
+        color: $COLOR_BORDER;
+        transition: 0.2s;
+
+        &:hover {
+          color: unset;
+        }
       }
     }
   }
@@ -270,13 +275,12 @@ $COMMIT_GRAPH_LEFT: 35px;
   .comment-username {
     font-weight: bold;
     display: inline-block;
-    margin-right: 5px;
   }
 
   .committer-date,
   .comment-date {
     font-size: 12px;
-    color: $FONT_GRAY;
+    color: $COLOR_DATE;
   }
 
   .committer-message {
@@ -288,13 +292,18 @@ $COMMIT_GRAPH_LEFT: 35px;
 
     input {
       border: none;
-      background: $COLOR_GRAY3;
+      background: $COLOR_SUB;
       font-size: 16px;
       padding: 10px;
       width: 100%;
-      color: $FONT_WHITE;
+      color: $FONT_BASE;
       border-radius: 5px;
       user-select: none;
+
+      &::placeholder {
+        color: $COLOR_DATE;
+        font-size: 14px;
+      }
 
       &:focus {
         outline: none;
@@ -305,7 +314,7 @@ $COMMIT_GRAPH_LEFT: 35px;
 
 .commit-maker {
   height: $COMMIT_MAKER_HEIGHT;
-  border-top: 1px solid $COLOR_GRAY3;
+  border-top: 1px solid $COLOR_BORDER;
   position: relative;
 
   .comments-panel {
@@ -320,7 +329,7 @@ $COMMIT_GRAPH_LEFT: 35px;
 
   .comment-maker-text {
     font-size: 12px;
-    color: $FONT_WHITE;
+    color: $FONT_BASE;
   }
 
   .comment-input {

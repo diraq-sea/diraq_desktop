@@ -3,8 +3,13 @@ const configStore = require('./store/config.store')
 const authStore = require('./store/auth.store')
 const tmpStore = require('./store/tmpfile.store')
 const windowStore = require('./store/window.store')
-const ipcController = require('./modules/ipc/ipc.controller')
 const watcherController = require('./modules/watcher/watcher.controller')
+const { CONFIG_DIR } = require('./const')
+const mkdirIfNotExists = require('./utils/mkdirIfNotExists')
+mkdirIfNotExists(CONFIG_DIR)
+
+// ipcServiceのaxios-mockがCONFIG_DIRを必要とするので注意
+const ipcController = require('./modules/ipc/ipc.controller')
 
 async function createWindow() {
   configStore.init()

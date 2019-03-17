@@ -12,7 +12,7 @@ module.exports = type =>
     [ADD]: path => {
       const commentAdd = `追加ファイル-> ${path}`
       tmpStore.writeFileInfo(path)
-      tmpStore.saveFile(path)
+      // tmpStore.saveFile(path)
       console.log(commentAdd)
       windowStore.send(TMPFILE_OBSERVING, commentAdd)
     },

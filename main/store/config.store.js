@@ -1,12 +1,13 @@
 const fs = require('fs')
-const mkdirIfNotExists = require('../utils/mkdirIfNotExists')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
-const { CONFIG_DIR, CONFIG_FILE } = require('../const')
+const { CONFIG_FILE } = require('../const')
 let config = {
   windowSize: {
     width: 1000,
     height: 750,
   },
+  tabs: [],
+  currentTabId: null,
 }
 let isInit = false
 
@@ -16,7 +17,6 @@ function checkInit() {
 
 module.exports = {
   init() {
-    mkdirIfNotExists(CONFIG_DIR)
     writeFileIfNotExists(CONFIG_FILE, config)
     config = {
       ...config,

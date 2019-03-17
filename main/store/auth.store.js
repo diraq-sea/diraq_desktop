@@ -1,7 +1,6 @@
 const fs = require('fs')
-const mkdirIfNotExists = require('../utils/mkdirIfNotExists')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
-const { CONFIG_DIR, AUTH_FILE } = require('../const')
+const { AUTH_FILE } = require('../const')
 let auth = null
 let isInit = false
 
@@ -15,7 +14,6 @@ function save() {
 
 module.exports = {
   init() {
-    mkdirIfNotExists(CONFIG_DIR)
     writeFileIfNotExists(AUTH_FILE, {
       _: "This is your DiraQ credentials file. DON'T SHARE!",
       email: null,
