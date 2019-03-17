@@ -1,6 +1,6 @@
 import roomsStore from '../rooms'
 
-const infoList = {
+let infoList = {
   0: {
     items: [
       {
@@ -24,4 +24,27 @@ export default {
       ...infoList[roomId],
     }
   },
+  post({ folder, name, extname }, { roomId }) {
+    if (extname) {
+    } else {
+      const newFolder = `${folder}/${name}`
+      const { items } = infoList[roomId]
+      let target = items.find(item => item.folder === folder && !item.name)
+
+      if (target) {
+        target.folder = newFolder
+      } else {
+        target = {
+          id: items.length,
+          folder: newFolder,
+        }
+
+        items.push(target)
+      }
+
+      return target
+    }
+  },
+  getAll: () => infoList,
+  setAll: value => (infoList = value),
 }

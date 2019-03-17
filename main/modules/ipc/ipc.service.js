@@ -24,6 +24,7 @@ const {
   ADD_NEW_TAB,
   REMOVE_TAB,
   CHANGE_TAB_TYPE,
+  CREATE_FOLDER,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -116,4 +117,7 @@ module.exports = {
     tabs[index] = { ...tabs[index], type, values }
     configStore.set('tabs', tabs)
   },
+
+  [CREATE_FOLDER]: async ({ roomId, folder, name }) =>
+    (await axios.post(`/rooms/${roomId}`, { folder, name })).data,
 }
