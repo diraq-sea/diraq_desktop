@@ -7,7 +7,13 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint',
   },
-  extends: ['standard', 'plugin:vue/essential', 'plugin:prettier/recommended'],
+  extends: [
+    'standard',
+    'plugin:vue/essential',
+    'plugin:prettier/recommended',
+    'prettier/standard',
+    'prettier/vue',
+  ],
   plugins: ['vue', 'prettier'],
   rules: {
     'no-console': process.env.NODE_ENV === 'development' ? 'off' : 'error',

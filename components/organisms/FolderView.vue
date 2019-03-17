@@ -7,17 +7,24 @@
         <div class="folder-list">
           <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
 
+          <bread-crumb-list :list="breadcrumbs" @select="selectFolder" />
+
           <div
-            v-for="item in roomInfo(roomId).items"
-            :key="item.id"
+            v-for="folder in folders"
+            :key="folder"
             class="folder-item"
-            @click="open(item)"
+            @click="openFolder(folder)"
           >
-            <img class="folder-icon" :src="iconSrc(item)" />
-            <div class="folder-name">{{ item.name }}</div>
+            <img class="folder-icon" src="@/assets/imgs/folder.png" />
+            <div class="folder-name">{{ folder }}</div>
+          </div>
+
+          <div v-for="file in files" :key="file.id" class="folder-item" @click="openFile(file)">
+            <img class="folder-icon" :src="iconSrc(file)" />
+            <div class="folder-name">{{ file.name }}</div>
             <div class="folder-date">
-              <div>Created: {{ birthTime(item) }}</div>
-              <div>Modified: {{ mTime(item) }}</div>
+              <div>Created: {{ birthTime(file) }}</div>
+              <div>Modified: {{ mTime(file) }}</div>
             </div>
           </div>
         </div>
@@ -36,6 +43,7 @@ import { mapState, mapGetters } from 'vuex'
 import { TAB_TYPES, DATE_FORMAT_TYPE } from '~/utils/const'
 import folderIcon from '~/assets/imgs/folder.png'
 import MembersItem from '~/components/molecules/MembersItem'
+import BreadCrumbList from '~/components/molecules/BreadCrumbList'
 import UploadDialog from '~/components/atoms/UploadDialog'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
 
@@ -43,6 +51,7 @@ export default {
   components: {
     LoadingPanel,
     MembersItem,
+    BreadCrumbList,
     UploadDialog,
   },
   props: {
@@ -54,7 +63,6 @@ export default {
   computed: {
     ...mapState('tab', ['tabs']),
     ...mapGetters('room', ['roomInfo']),
-    ...mapGetters('tab', ['currentTab']),
     iconSrc() {
       return item => (item.extname ? this.$fileIcon(item.extname) : folderIcon)
     },
@@ -67,13 +75,27 @@ export default {
     roomId() {
       return this.tab.values.roomId
     },
+    folders() {
+      return this.roomInfo(this.roomId).items.reduce((list, { folder }) => {
+        const matched = folder.match(new RegExp(`^${this.tab.values.folder}/(.+?)(/|$)`))
+        return matched && list.indexOf(matched[1] === -1) ? [...list, matched[1]] : list
+      }, [])
+    },
+    files() {
+      return this.roomInfo(this.roomId).items.filter(
+        ({ folder, name }) => folder === this.tab.values.folder && name,
+      )
+    },
+    breadcrumbs() {
+      return [this.roomInfo(this.roomId).name, ...this.tab.values.folder.split('/').slice(1)]
+    },
   },
   data: () => ({
     loading: true,
     dialogVisible: false,
   }),
   async created() {
-    const { roomId } = this.currentTab.values
+    const { roomId } = this.tab.values
     await Promise.all([
       this.$store.dispatch('room/fetchRoomInfo', roomId),
       this.$store.dispatch('member/fetchMembers', roomId),
@@ -82,7 +104,7 @@ export default {
     this.loading = false
   },
   methods: {
-    async open(item) {
+    async openFile(item) {
       const targetTab = this.tabs.find(
         tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === item.id,
       )
@@ -91,11 +113,23 @@ export default {
         await this.$store.dispatch('tab/changeCurrentTab', targetTab.id)
       } else {
         await this.$store.dispatch('tab/changeTabType', {
-          id: this.currentTab.id,
+          id: this.tab.id,
           type: TAB_TYPES.FILE,
           values: { fileId: item.id, name: item.name, extname: item.extname },
         })
       }
+    },
+    changeFolder(folder) {
+      return this.$store.dispatch('tab/changeTabType', {
+        ...this.tab,
+        values: { ...this.tab.values, folder },
+      })
+    },
+    openFolder(folderName) {
+      return this.changeFolder(`${this.tab.values.folder}/${folderName}`)
+    },
+    selectFolder(i) {
+      return this.changeFolder(i ? `/${this.breadcrumbs.slice(1, i + 2).join('/')}` : '')
     },
     openDialog() {
       this.dialogVisible = !this.dialogVisible
@@ -139,7 +173,6 @@ h1 {
     $ITEM_HEIGHT: 40px;
 
     .folder-item {
-      margin-top: 20px;
       height: calc(#{$ITEM_HEIGHT} + 10px);
       padding: 5px 10px;
       border-bottom: 1px solid $COLOR_BORDER;
@@ -152,8 +185,8 @@ h1 {
       }
 
       .folder-icon {
-        height: 80%;
-        margin-top: calc(#{$ITEM_HEIGHT} * 0.12);
+        height: 70%;
+        margin-top: calc(#{$ITEM_HEIGHT} * 0.17);
       }
 
       .folder-name {
