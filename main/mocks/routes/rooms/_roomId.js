@@ -5,7 +5,7 @@ const infoList = {
     items: [
       {
         id: 0,
-        folder: ['folder1'],
+        folder: '/folder1',
         name: 'file1',
         extname: 'docx',
         birthtime: Date.now() - 3600 * 1000,
