@@ -1,0 +1,11 @@
+{
+  "editor.formatOnSave": true,
+  "html.format.enable": false,
+  "javascript.format.enable": false,
+  "prettier.eslintIntegration": true,
+  "typescript.format.enable": false,
+  "vetur.format.defaultFormatter.css": "prettier",
+  "vetur.format.defaultFormatter.html": "prettier",
+  "vetur.format.defaultFormatter.js": "prettier",
+  "vetur.format.defaultFormatter.scss": "prettier"
+}
