@@ -11,7 +11,7 @@ let mainConfig = {
   module: {
     rules: [
       {
-        test: /\.(js)$/,
+        test: /\.js$/,
         enforce: 'pre',
         exclude: /node_modules/,
         use: {
@@ -20,8 +20,23 @@ let mainConfig = {
       },
       {
         test: /\.js$/,
-        use: 'babel-loader',
         exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              [
+                '@babel/env',
+                {
+                  targets: {
+                    node: 'current',
+                  },
+                },
+              ],
+            ],
+            plugins: ['dynamic-import-node'],
+          },
+        },
       },
     ],
   },
