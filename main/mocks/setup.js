@@ -28,50 +28,56 @@ const createParams = (relativePath, dirPath) => {
   return params
 }
 
-export default client => {
+export default async client => {
   const mock = new MockAdapter(client, { delayResponse: 200 })
   mockStore.init()
 
-  listFiles(path.join(__dirname, 'routes')).forEach(filePath => {
-    const relativePath = filePath.replace(/\\/g, '/').match(/^main\/mocks\/routes\/(.+?)\.js$/)[1]
-    const route = require(`./routes/${relativePath}`).default
+  await Promise.all(
+    listFiles(path.join(__dirname, 'routes')).map(filePath =>
+      (async () => {
+        const relativePath = filePath
+          .replace(/\\/g, '/')
+          .match(/^main\/mocks\/routes\/(.+?)\.js$/)[1]
+        const { default: route } = await import(`./routes/${relativePath}`)
 
-    if (/\/_/.test(relativePath)) {
-      const regPath = new RegExp(relativePath.replace(/\/_[^/]+/g, '/[^/]+'))
+        if (/\/_/.test(relativePath)) {
+          const regPath = new RegExp(relativePath.replace(/\/_[^/]+/g, '/[^/]+'))
 
-      if (route.get) {
-        mock
-          .onGet(regPath)
-          .reply(({ url, baseURL }) => [
-            200,
-            route.get(createParams(relativePath, url.replace(baseURL, ''))),
-          ])
-      }
+          if (route.get) {
+            mock
+              .onGet(regPath)
+              .reply(({ url, baseURL }) => [
+                200,
+                route.get(createParams(relativePath, url.replace(baseURL, ''))),
+              ])
+          }
 
-      if (route.post) {
-        mock.onPost(regPath).reply(({ url, baseURL, data }) => {
-          const value = route.post(
-            JSON.parse(data),
-            createParams(relativePath, url.replace(baseURL, '')),
-          )
-          if (route.getAll) mockStore.set(relativePath, route.getAll())
-          return [204, value]
-        })
-      }
-    } else {
-      if (route.get) mock.onGet(relativePath).reply(() => [200, route.get()])
-      if (route.post) {
-        mock.onPost(relativePath).reply(({ data }) => {
-          const value = route.post(JSON.parse(data))
-          if (route.getAll) mockStore.set(relativePath, route.getAll())
-          return [204, value]
-        })
-      }
-    }
+          if (route.post) {
+            mock.onPost(regPath).reply(({ url, baseURL, data }) => {
+              const value = route.post(
+                JSON.parse(data),
+                createParams(relativePath, url.replace(baseURL, '')),
+              )
+              if (route.getAll) mockStore.set(relativePath, route.getAll())
+              return [204, value]
+            })
+          }
+        } else {
+          if (route.get) mock.onGet(relativePath).reply(() => [200, route.get()])
+          if (route.post) {
+            mock.onPost(relativePath).reply(({ data }) => {
+              const value = route.post(JSON.parse(data))
+              if (route.getAll) mockStore.set(relativePath, route.getAll())
+              return [204, value]
+            })
+          }
+        }
 
-    const savedData = mockStore.get(relativePath)
-    if (route.setAll && savedData) route.setAll(savedData)
-  })
+        const savedData = mockStore.get(relativePath)
+        if (route.setAll && savedData) route.setAll(savedData)
+      })(),
+    ),
+  )
 
   mock.onAny().passThrough()
 }
