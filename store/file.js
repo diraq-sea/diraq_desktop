@@ -33,31 +33,6 @@ export const mutations = {
       [file.id]: file,
     }
   },
-  // addComment(state, { id, value }) {
-  // const comment = await this.$ipc(ADD_COMMENT, { id, value })
-  // const file = state.files.find(file => file.commits.find(commit => commit.id === id))
-  // const commit = file.commits.find(commit => commit.id === id)
-  // const newFile = {
-  //   ...file,
-  //   commits: [...file.commits],
-  // }
-
-  // newFile.commits[newFile.commits.indexOf(commit)] = {
-  //   ...commit,
-  //   comments: [
-  //     ...commit.comments,
-  //     {
-  //       id: Date.now(),
-  //       user: 1,
-  //       date: Date.now() - 3 * 24 * 3600 * 1000,
-  //       comment: value,
-  //     },
-  //   ],
-  // }
-
-  // state.files = [...state.files]
-  // state.files[state.files.indexOf(file)] = newFile
-  // },
   addCommit(state, message) {
     const file = state.files.find(file =>
       file.commits.find(commit => commit.id === state.currentCommit.id),
@@ -99,8 +74,8 @@ export const actions = {
     const newFile = await this.$ipc(FETCH_COMMENT, { fileId, commentId })
     commit('setComment', newFile)
   },
-  async addComment({ dispatch }, { fileId, id, username, commentId, value }) {
-    await this.$ipc(ADD_COMMENT, { fileId, id, username, commentId, value })
+  async addComment({ dispatch }, { fileId, username, commentId, value }) {
+    await this.$ipc(ADD_COMMENT, { fileId, username, commentId, value })
     await dispatch('fetchComment', { fileId, commentId })
   },
 }

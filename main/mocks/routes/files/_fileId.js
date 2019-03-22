@@ -1,8 +1,10 @@
 import roomsStore from '../rooms'
 import foldersStore from '../rooms/_roomId'
+const fs = require('fs') // 仮のJSONフォルダのため
+const { INSTANT_FILE } = require('../../../const') // 仮のJSONフォルダ
 
 const url = 'http://www.mech.tohoku-gakuin.ac.jp/rde/contents/kougakukai/files/template.docx'
-const fileList = {
+const initFileList = {
   0: {
     commits: [
       {
@@ -71,19 +73,25 @@ const fileList = {
     ],
   },
 }
+let newFileList = {}
 
 export default {
   get({ fileId }) {
+    if (!JSON.parse(fs.readFileSync(INSTANT_FILE))) {
+      fs.writeFileSync(INSTANT_FILE, JSON.stringify(initFileList))
+    }
+    let fileList = JSON.parse(fs.readFileSync(INSTANT_FILE))
     const roomId = roomsStore
       .get()
       .find(room => foldersStore.get({ roomId: room.id }).items.find(file => file.id === fileId)).id
 
     if (!fileList[fileId]) fileList[fileId] = { commits: [] }
 
-    return {
+    newFileList = {
       ...foldersStore.get({ roomId }).items.find(file => file.id === fileId),
       ...fileList[fileId],
       roomId,
     }
+    return newFileList
   },
 }

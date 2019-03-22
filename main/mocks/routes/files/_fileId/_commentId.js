@@ -1,8 +1,10 @@
 import roomsStore from '../../rooms'
 import foldersStore from '../../rooms/_roomId'
+const fs = require('fs') // 仮のJSONフォルダのため
+const { INSTANT_FILE } = require('../../../../const') // 仮のJSONフォルダ
 
 const url = 'http://www.mech.tohoku-gakuin.ac.jp/rde/contents/kougakukai/files/template.docx'
-let basicfileList = {
+let basicfileList = JSON.parse(fs.readFileSync(INSTANT_FILE)) || {
   0: {
     commits: [
       {
@@ -13,13 +15,13 @@ let basicfileList = {
         parents: [],
         comments: [
           {
-            id: 3,
+            id: 0,
             user: 2,
             date: Date.now() - 24 * 3600 * 1000,
             comment: '最後のページ意味不明・・・',
           },
           {
-            id: 2,
+            id: 1,
             user: 0,
             date: Date.now() - 2 * 24 * 3600 * 1000,
             comment: 'フォントサイズと行数の見本だろう',
@@ -34,19 +36,19 @@ let basicfileList = {
         parents: ['hash1-1'],
         comments: [
           {
-            id: 12,
+            id: 0,
             user: 3,
             date: Date.now() - 24 * 3600 * 1000,
             comment: '読みやすい英文ですね',
           },
           {
-            id: 11,
+            id: 1,
             user: 4,
             date: Date.now() - 2 * 24 * 3600 * 1000,
             comment: 'さすが東大は違う',
           },
           {
-            id: 10,
+            id: 2,
             user: 1,
             date: Date.now() - 3 * 24 * 3600 * 1000,
             comment: 'いえ、Google翻訳使っただけです',
@@ -61,7 +63,7 @@ let basicfileList = {
         parents: ['hash1-2'],
         comments: [
           {
-            id: 13,
+            id: 0,
             user: 2,
             date: Date.now() - 24 * 3600 * 1000,
             comment: 'ずいぶん書きやすくなってていいと思います',
@@ -75,30 +77,25 @@ let fileList = {}
 
 export default {
   get: () => fileList,
-  post({ fileId, id, username, commentId, value }) {
+  post({ fileId, username, commentId, value }) {
     const roomId = roomsStore
       .get()
       .find(room => foldersStore.get({ roomId: room.id }).items.find(file => file.id === fileId)).id
 
     if (!basicfileList[fileId]) basicfileList[fileId] = { commits: [] }
     const comment = {
-      id: commentId,
+      id: basicfileList[fileId].commits[commentId].comments.length,
       user: 0,
       date: Date.now() - 24 * 3600 * 1000,
       comment: value,
     }
-    let idNumber
-    for (let i = 0; i < basicfileList[fileId].commits.length; i++) {
-      if (id === basicfileList[fileId].commits[i].id) {
-        idNumber = i
-      }
-    }
-    basicfileList[fileId].commits[idNumber].comments.push(comment)
+    basicfileList[fileId].commits[commentId].comments.push(comment)
     fileList = {
       ...foldersStore.get({ roomId }).items.find(file => file.id === fileId),
       ...basicfileList[fileId],
       roomId,
     }
+    fs.writeFileSync(INSTANT_FILE, JSON.stringify(basicfileList))
     return fileList
   },
   getAll: () => fileList,

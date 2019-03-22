@@ -146,7 +146,6 @@ export default {
       if (value) {
         await this.$store.dispatch('file/addComment', {
           fileId,
-          id,
           username,
           commentId,
           value,

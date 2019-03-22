@@ -56,8 +56,10 @@ export default {
   },
   data: () => ({ loading: true }),
   async created() {
-    await this.$store.dispatch('file/fetchFile', this.currentTab.values.fileId)
-
+    // await this.$store.dispatch('file/fetchFile', this.currentTab.values.fileId)
+    const initFileId = this.currentTab.values.fileId
+    // const initCommentId = 1
+    await this.$store.dispatch('file/fetchFile', initFileId)
     await Promise.all([
       this.$store.dispatch('room/fetchRoomInfo', this.roomId),
       this.$store.dispatch('member/fetchMembers', this.roomId),

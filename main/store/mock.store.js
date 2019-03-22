@@ -1,6 +1,6 @@
 const fs = require('fs')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
-const { MOCK_FILE } = require('../const')
+const { MOCK_FILE, INSTANT_FILE } = require('../const')
 let mock = null
 
 function save() {
@@ -10,6 +10,7 @@ function save() {
 module.exports = {
   init() {
     writeFileIfNotExists(MOCK_FILE, {})
+    writeFileIfNotExists(INSTANT_FILE, null)
     mock = JSON.parse(fs.readFileSync(MOCK_FILE))
   },
   get: key => mock[key],
