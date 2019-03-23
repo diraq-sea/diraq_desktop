@@ -88,16 +88,10 @@ export default {
     handlePreview() {},
     handleRemove() {},
     createNew() {
-      this.$emit(
-        'create',
-        this.isFile
-          ? {
-              isFile: this.isFile,
-              name: this.inputValue,
-              extTypeId: this.extTypeId,
-            }
-          : { isFile: this.isFile, name: this.inputValue },
-      )
+      this.$emit('create', {
+        name: this.inputValue,
+        ...(this.isFile ? { extTypeId: this.extTypeId } : {}),
+      })
     },
   },
 }

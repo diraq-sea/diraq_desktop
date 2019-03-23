@@ -134,24 +134,20 @@ export default {
     openDialog() {
       this.dialogVisible = !this.dialogVisible
     },
-    async createNew({ isFile, name, extTypeId }) {
+    async createNew({ name, extTypeId }) {
       this.loading = true
       this.dialogVisible = false
 
-      if (isFile) {
-        await this.$store.dispatch('room/createFile', {
-          roomId: this.roomId,
-          folder: this.tab.values.folder,
-          name,
-          extTypeId,
-        })
-      } else {
-        await this.$store.dispatch('room/createFolder', {
-          roomId: this.roomId,
-          folder: this.tab.values.folder,
-          name,
-        })
+      const item = await this.$store.dispatch('room/createNew', {
+        roomId: this.roomId,
+        folder: this.tab.values.folder,
+        name,
+        ...(extTypeId ? { extTypeId } : {}),
+      })
 
+      if (extTypeId) {
+        await this.openFile(item)
+      } else {
         await this.openFolder(name)
       }
 
