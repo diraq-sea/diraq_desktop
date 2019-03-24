@@ -32,14 +32,15 @@ export default {
   right: 0;
   bottom: 0;
   color: $FONT_BASE;
+  background: $COLOR_TITLE_BAR;
 }
 
 .nuxt {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
   background: $COLOR_PAGE;
 }
 </style>

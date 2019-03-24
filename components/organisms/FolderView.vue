@@ -20,7 +20,7 @@
           </div>
 
           <div v-for="file in files" :key="file.id" class="folder-item" @click="openFile(file)">
-            <img class="folder-icon" :src="iconSrc(file)" />
+            <img class="file-icon" :src="iconSrc(file)" />
             <div class="folder-name">{{ file.name }}</div>
             <div class="folder-date">
               <div>Created: {{ birthTime(file) }}</div>
@@ -32,7 +32,7 @@
       </div>
 
       <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
-        <upload-dialog @create="createNew" />
+        <upload-dialog :visible="dialogVisible" @create="createNew" @drop="dropFile" />
       </el-dialog>
     </template>
   </div>
@@ -156,6 +156,24 @@ export default {
 
       this.loading = false
     },
+    async dropFile(file) {
+      this.loading = true
+      this.dialogVisible = false
+
+      const item = await this.$store.dispatch('room/dropFile', {
+        roomId: this.roomId,
+        folder: this.tab.values.folder,
+        name: file.name
+          .split('.')
+          .slice(0, -1)
+          .join('.'),
+        extname: file.name.split('.').pop(),
+        path: file.path,
+      })
+
+      await this.openFile(item)
+      this.loading = false
+    },
   },
 }
 </script>
@@ -164,6 +182,7 @@ export default {
 @import '@/assets/css/admin.scss';
 
 $HERDER_HEIGHT: 100px;
+$PADDING: 30px;
 
 .folder-container {
   height: 100%;
@@ -176,21 +195,22 @@ $HERDER_HEIGHT: 100px;
 h1 {
   height: $HERDER_HEIGHT;
   line-height: $HERDER_HEIGHT;
+  padding: 0 $PADDING;
 }
 
 .folder-main {
   display: flex;
   position: absolute;
   top: $HERDER_HEIGHT;
-  left: 0;
-  right: 0;
+  left: $PADDING;
+  right: $PADDING;
   bottom: 0;
 
   .folder-list {
     flex: 1;
     max-height: 100%;
     overflow: auto;
-    padding-right: 30px;
+    padding-right: $PADDING;
 
     $ITEM_HEIGHT: 40px;
 
@@ -207,14 +227,21 @@ h1 {
       }
 
       .folder-icon {
-        height: 70%;
-        margin-top: calc(#{$ITEM_HEIGHT} * 0.17);
+        height: 80%;
+        margin-top: calc(#{$ITEM_HEIGHT} * 0.12);
+      }
+
+      .file-icon {
+        height: 60%;
+        margin-top: calc(#{$ITEM_HEIGHT} * 0.22);
+        margin-left: 5px;
+        margin-right: 3px;
       }
 
       .folder-name {
         height: 100%;
         line-height: $ITEM_HEIGHT;
-        margin-left: 15px;
+        margin-left: 12px;
         font-size: 18px;
       }
 

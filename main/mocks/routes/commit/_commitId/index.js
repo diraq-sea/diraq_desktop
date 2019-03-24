@@ -11,10 +11,9 @@ export default {
     return {
       ...commit,
       url:
-        commit.url ||
-        (fileCommits[0].id !== commitId
+        file.dropped || fileCommits[0].id !== commitId
           ? `${mockStore.proxyUrl}/${MOCK_FILES_PATH}/${commitId}.${file.extname}`
-          : `${mockStore.proxyUrl}/${DEFAULT_FILES_PATH_CHUNK}.${file.extname}`),
+          : `${mockStore.proxyUrl}/${DEFAULT_FILES_PATH_CHUNK}.${file.extname}`,
       comments: commentsRoute.get({ commitId }),
     }
   },

@@ -78,7 +78,7 @@ $OPEN_ICON_HEIGHT: 50px;
     left: 0;
     right: 0;
     bottom: 0;
-    width: $MEMBERS_WIDTH;
+    width: calc(#{$MEMBERS_WIDTH} - 1px);
     height: $OPEN_ICON_HEIGHT;
     line-height: $OPEN_ICON_HEIGHT;
     text-align: center;

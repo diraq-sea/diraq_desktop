@@ -1,12 +1,20 @@
+import fs from 'fs'
+import path from 'path'
 import mockStore from '../../../../store/mock.store'
-import { FIRST_COMMIT_MESSAGE } from '../../../../const'
+import {
+  FIRST_CREATED_MESSAGE,
+  FIRST_DROPPED_MESSAGE,
+  MOCK_FILES_DIR,
+  TMP_FILES_DIR,
+} from '../../../../const'
 import fileModel from '../../../models/file'
 import commitModel from '../../../models/commit'
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
-  post({ folder, name, extname }, { roomId }) {
+  post({ folder, name, extname, path: filePath }, { roomId }) {
     const target = mockStore.findByKey('file', 'folder', folder)
+    const dropped = !!filePath
 
     if (extname) {
       // file
@@ -18,6 +26,7 @@ export default {
               folder,
               name,
               extname,
+              dropped,
               birthtime: Date.now(),
               mtime: Date.now(),
             })
@@ -28,16 +37,21 @@ export default {
                 folder,
                 name,
                 extname,
+                dropped,
               }),
             )
 
-      mockStore.add(
-        'commit',
-        commitModel.create({
-          fileId: file.id,
-          message: FIRST_COMMIT_MESSAGE(name),
-        }),
-      )
+      const commit = commitModel.create({
+        fileId: file.id,
+        message: dropped ? FIRST_DROPPED_MESSAGE(name) : FIRST_CREATED_MESSAGE(name),
+      })
+
+      mockStore.add('commit', commit)
+
+      if (dropped) {
+        fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${commit.id}.${extname}`))
+        fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${commit.id}.${extname}`))
+      }
 
       return file
     } else {
