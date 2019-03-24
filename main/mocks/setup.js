@@ -2,6 +2,8 @@ import MockAdapter from 'axios-mock-adapter'
 import fs from 'fs'
 import path from 'path'
 import mockStore from '../store/mock.store'
+import { MOCK_FILES_DIR } from '../const'
+import mkdirIfNotExists from '../utils/mkdirIfNotExists'
 
 const listFiles = dirpath => {
   const list = []
@@ -30,6 +32,8 @@ const createParams = (relativePath, dirPath) => {
 
 export default async client => {
   const mock = new MockAdapter(client, { delayResponse: 200 })
+
+  mkdirIfNotExists(MOCK_FILES_DIR)
   await mockStore.init()
 
   await Promise.all(

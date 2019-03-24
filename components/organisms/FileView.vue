@@ -2,7 +2,7 @@
   <div class="fp-container">
     <loading-panel v-if="loading" />
     <template v-else>
-      <div class="fp-left"><webview :src="viewerSrc" class="viewer" /></div>
+      <div class="fp-left"><webview :src="viewerSrc" :style="viewerStyle" class="viewer" /></div>
       <div class="fp-right">
         <commit-board
           :file="file(fileId)"
@@ -52,6 +52,20 @@ export default {
     },
     roomId() {
       return this.file(this.fileId).roomId
+    },
+    viewerStyle() {
+      const ext = this.file(this.fileId).extname
+
+      return {
+        bottom: `-${
+          {
+            docx: 22,
+            xlsx: 27,
+            pptx: 24,
+          }[ext]
+        }px`,
+        right: `${ext === 'pptx' ? -1 : 0}px`,
+      }
     },
   },
   data: () => ({ loading: true }),
@@ -118,7 +132,5 @@ $COMMIT_MAKER_HEIGHT: 60px;
   position: absolute;
   top: -1px;
   left: -1px;
-  right: 0;
-  bottom: -22px;
 }
 </style>

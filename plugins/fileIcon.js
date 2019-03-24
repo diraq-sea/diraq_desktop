@@ -6,6 +6,6 @@ import PowerpointIcon from '~/assets/imgs/powerpoint.png'
 Vue.prototype.$fileIcon = extname =>
   ({
     docx: WordIcon,
-    xls: ExcelIcon,
+    xlsx: ExcelIcon,
     pptx: PowerpointIcon,
   }[extname])

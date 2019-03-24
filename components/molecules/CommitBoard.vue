@@ -58,9 +58,7 @@
       </div>
       <div class="comments-panel">
         <div class="committer-info">
-          <span class="comment-maker-text">
-            File editting based on "{{ currentCommit.message }}"
-          </span>
+          <div class="comment-maker-text">Editting based on "{{ currentCommit.message }}"</div>
           <div class="file-controls">
             <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
               <i class="fas fa-edit" />
@@ -331,6 +329,8 @@ $COMMIT_GRAPH_LEFT: 35px;
   .comment-maker-text {
     font-size: 12px;
     color: $FONT_BASE;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .comment-input {

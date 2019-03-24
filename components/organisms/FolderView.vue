@@ -46,6 +46,7 @@ import MembersItem from '~/components/molecules/MembersItem'
 import BreadCrumbList from '~/components/molecules/BreadCrumbList'
 import UploadDialog from '~/components/organisms/UploadDialog'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
+import fileExtTypes from '~/common/fileExtTypes'
 
 export default {
   components: {
@@ -142,10 +143,12 @@ export default {
         roomId: this.roomId,
         folder: this.tab.values.folder,
         name,
-        ...(extTypeId ? { extTypeId } : {}),
+        ...(extTypeId !== undefined
+          ? { extname: fileExtTypes.find(({ id }) => id === extTypeId).extname }
+          : {}),
       })
 
-      if (extTypeId) {
+      if (extTypeId !== undefined) {
         await this.openFile(item)
       } else {
         await this.openFolder(name)
