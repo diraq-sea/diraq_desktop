@@ -42,18 +42,27 @@
       <p class="title">Upload new file</p>
       <el-upload
         class="upload-demo"
+        action=""
+        :accept="accept"
         drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        list-type="text/picture/picture-card/pdf"
-        multiple
+        :show-file-list="false"
+        :on-change="onChange"
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
         <div class="el-upload__tip">files with a size less than 512mb</div>
       </el-upload>
+    </div>
+
+    <div v-show="dragging" class="drop-area">
+      <div class="drop-frame"><i class="el-icon-upload" /></div>
+      <div
+        class="drop-panel"
+        @drop.prevent="onDrop"
+        @dragover.prevent
+        @dragleave="onDragleave"
+        @click="onDragleave"
+      />
     </div>
   </div>
 </template>
@@ -62,12 +71,18 @@
 import FILE_EXT_TYPES from '~/common/fileExtTypes'
 
 export default {
+  props: {
+    visible: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
-      fileList: [],
       isFile: true,
       extTypeId: FILE_EXT_TYPES[0].id,
       inputValue: '',
+      dragging: false,
     }
   },
   computed: {
@@ -83,21 +98,56 @@ export default {
     hasValue() {
       return !this.inputValue
     },
+    accept: () => FILE_EXT_TYPES.map(type => `.${type.extname}`).join(','),
+  },
+  watch: {
+    visible(val) {
+      if (val) {
+        document.addEventListener('dragenter', this.onDragenter, false)
+      } else {
+        document.removeEventListener('dragenter', this.onDragenter, false)
+      }
+    },
+  },
+  mounted() {
+    document.addEventListener('dragenter', this.onDragenter, false)
+  },
+  destroyed() {
+    document.removeEventListener('dragenter', this.onDragenter, false)
   },
   methods: {
-    handlePreview() {},
-    handleRemove() {},
     createNew() {
       this.$emit('create', {
         name: this.inputValue,
         ...(this.isFile ? { extTypeId: this.extTypeId } : {}),
       })
     },
+    onDragenter() {
+      this.dragging = true
+    },
+    onDragleave() {
+      this.dragging = false
+    },
+    onDrop(e) {
+      this.onDragleave()
+      const [file] = e.dataTransfer.files
+
+      if (FILE_EXT_TYPES.find(type => type.extname === file.name.split('.').pop())) {
+        this.$emit('drop', file)
+      }
+    },
+    onChange(e) {
+      if (e.status === 'success') {
+        this.$emit('drop', e.raw)
+      }
+    },
   },
 }
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/css/admin.scss';
+
 .dialog-container {
   display: flex;
   justify-content: space-between;
@@ -169,5 +219,43 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.drop-area {
+  position: fixed;
+  top: $TITLEBAR_HEIGHT;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffffee;
+
+  $DROP_COLOR: #409eff;
+  $DROP_PADDING: 80px;
+
+  .drop-frame {
+    position: absolute;
+    top: $DROP_PADDING;
+    left: $DROP_PADDING;
+    right: $DROP_PADDING;
+    bottom: $DROP_PADDING;
+    border: 5px dashed $DROP_COLOR;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $DROP_COLOR;
+
+    i {
+      font-size: 100px;
+    }
+  }
+
+  .drop-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 }
 </style>

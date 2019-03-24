@@ -14,6 +14,7 @@ const {
   FETCH_MEMBERS,
   CREATE_ROOM,
   CREATE_NEW,
+  DROP_FILE,
   FETCH_FILE,
   EDIT_FILE,
   CLOSE_WIN,
@@ -66,6 +67,9 @@ module.exports = {
   [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
 
   [CREATE_NEW]: async ({ roomId, ...params }) =>
+    (await axios.post(`/room/${roomId}/files`, params)).data,
+
+  [DROP_FILE]: async ({ roomId, ...params }) =>
     (await axios.post(`/room/${roomId}/files`, params)).data,
 
   [FETCH_FILE]: async fileId => (await axios.get(`/file/${fileId}`)).data,

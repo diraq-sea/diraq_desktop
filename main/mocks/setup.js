@@ -4,6 +4,7 @@ import path from 'path'
 import mockStore from '../store/mock.store'
 import { MOCK_FILES_DIR } from '../const'
 import mkdirIfNotExists from '../utils/mkdirIfNotExists'
+import commitModel from './models/commit'
 
 const listFiles = dirpath => {
   const list = []
@@ -34,6 +35,16 @@ export default async client => {
   const mock = new MockAdapter(client, { delayResponse: 200 })
 
   mkdirIfNotExists(MOCK_FILES_DIR)
+  commitModel
+    .defaultValues()
+    .slice(1)
+    .forEach(commit =>
+      fs.copyFileSync(
+        path.join(__dirname, './assets/sample.docx'),
+        path.join(MOCK_FILES_DIR, `${commit.id}.docx`),
+      ),
+    )
+
   await mockStore.init()
 
   await Promise.all(
