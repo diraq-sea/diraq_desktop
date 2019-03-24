@@ -1,9 +1,11 @@
 import fs from 'fs'
 import path from 'path'
+import ngrok from 'ngrok'
 import writeFileIfNotExists from '../utils/writeFileIfNotExists'
-import { MOCK_FILE, MOCK_VERSION } from '../const'
+import { MOCK_FILE, MOCK_VERSION, WINDOW_ORIGIN } from '../const'
 
 let mock = {}
+let proxyUrl = null
 
 function save() {
   fs.writeFileSync(MOCK_FILE, JSON.stringify({ version: MOCK_VERSION, data: mock }))
@@ -27,6 +29,11 @@ export default {
         ),
       )
     }
+
+    proxyUrl = await ngrok.connect(+WINDOW_ORIGIN.split(':').pop())
+  },
+  get proxyUrl() {
+    return proxyUrl
   },
   get: modelName => mock[modelName],
   findById: (modelName, id) => mock[modelName].find(data => data.id === id),

@@ -35,7 +35,7 @@ export default {
   create: ({ fileId, message }) => ({
     id: `hash-${mockStore.get('commit').length}`,
     fileId,
-    url,
+    url: null,
     message,
     user: 0,
     birthtime: Date.now(),
