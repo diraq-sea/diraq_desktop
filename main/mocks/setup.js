@@ -30,18 +30,18 @@ const createParams = (relativePath, dirPath) => {
 
 export default async client => {
   const mock = new MockAdapter(client, { delayResponse: 200 })
-  mockStore.init()
+  await mockStore.init()
 
   await Promise.all(
     listFiles(path.join(__dirname, 'routes')).map(filePath =>
       (async () => {
         const relativePath = filePath
           .replace(/\\/g, '/')
-          .match(/^main\/mocks\/routes\/(.+?)\.js$/)[1]
+          .match(/^main\/mocks\/routes\/(.+?)(\/index)?\.js$/)[1]
         const { default: route } = await import(`./routes/${relativePath}`)
 
         if (/\/_/.test(relativePath)) {
-          const regPath = new RegExp(relativePath.replace(/\/_[^/]+/g, '/[^/]+'))
+          const regPath = new RegExp(`${relativePath.replace(/\/_[^/]+/g, '/[^/]+')}$`)
 
           if (route.get) {
             mock
@@ -53,28 +53,19 @@ export default async client => {
           }
 
           if (route.post) {
-            mock.onPost(regPath).reply(({ url, baseURL, data }) => {
-              const value = route.post(
-                JSON.parse(data),
-                createParams(relativePath, url.replace(baseURL, '')),
-              )
-              if (route.getAll) mockStore.set(relativePath, route.getAll())
-              return [204, value]
-            })
+            mock
+              .onPost(regPath)
+              .reply(({ url, baseURL, data }) => [
+                204,
+                route.post(JSON.parse(data), createParams(relativePath, url.replace(baseURL, ''))),
+              ])
           }
         } else {
           if (route.get) mock.onGet(relativePath).reply(() => [200, route.get()])
           if (route.post) {
-            mock.onPost(relativePath).reply(({ data }) => {
-              const value = route.post(JSON.parse(data))
-              if (route.getAll) mockStore.set(relativePath, route.getAll())
-              return [204, value]
-            })
+            mock.onPost(relativePath).reply(({ data }) => [204, route.post(JSON.parse(data))])
           }
         }
-
-        const savedData = mockStore.get(relativePath)
-        if (route.setAll && savedData) route.setAll(savedData)
       })(),
     ),
   )

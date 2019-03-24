@@ -1,12 +1,7 @@
-let rooms = [{ id: 0, name: 'test1', owner: 0 }]
+import mockStore from '../../store/mock.store'
+import roomModel from '../models/room'
 
 export default {
-  get: () => rooms,
-  post({ name }) {
-    const room = { name, id: rooms.length, owner: 0 }
-    rooms.push(room)
-    return room
-  },
-  getAll: () => rooms,
-  setAll: value => (rooms = value),
+  get: () => mockStore.get('room'),
+  post: ({ name }) => mockStore.add('room', roomModel.create({ name })),
 }

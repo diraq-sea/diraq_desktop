@@ -2,29 +2,40 @@
   <div class="dialog-container">
     <div class="create-new">
       <p class="title">Create new</p>
-      <el-radio-group class="radio1" v-model="radio1">
-        <el-radio-button class="new new-file" :label="1">file</el-radio-button>
-        <el-radio-button :label="2" class="new new-folder">folder</el-radio-button>
+      <el-radio-group class="file-or-folder" v-model="isFile">
+        <el-radio-button class="new new-file" :label="true">file</el-radio-button>
+        <el-radio-button :label="false" class="new new-folder">folder</el-radio-button>
       </el-radio-group>
       <transition name="fade">
-        <el-radio-group v-if="radio1 === 1" class="radio2" v-model="radio2">
+        <el-radio-group v-if="isFile" class="radio2" v-model="extTypeId">
           <div class="select-file">
             <div class="files">
-              <el-radio class="radio2group" :label="1">Word</el-radio>
-              <el-radio class="radio2group" :label="3">PDF</el-radio>
+              <el-radio
+                v-for="file in leftFiles"
+                :key="file.id"
+                :label="file.id"
+                class="radio2group"
+                >{{ file.label }}</el-radio
+              >
             </div>
             <div class="files">
-              <el-radio class="radio2group" :label="2">Excel</el-radio>
-              <el-radio class="radio2group" :label="4">Power point</el-radio>
+              <el-radio
+                v-for="file in rightFiles"
+                :key="file.id"
+                :label="file.id"
+                class="radio2group"
+              >
+                {{ file.label }}
+              </el-radio>
             </div>
           </div>
         </el-radio-group>
       </transition>
-      <div class="inputbox">
-        <el-input :placeholder="type" v-model="input1" class="input-with-select">
-          <el-button slot="append">Create</el-button>
+      <form class="inputbox" @submit.prevent="createNew">
+        <el-input :placeholder="placeholder" v-model="inputValue" class="input-with-select">
+          <el-button slot="append" :disabled="hasValue" native-type="submit"> Create </el-button>
         </el-input>
-      </div>
+      </form>
     </div>
     <div class="border"></div>
     <div class="upload-new">
@@ -48,23 +59,40 @@
 </template>
 
 <script>
+import FILE_EXT_TYPES from '~/common/fileExtTypes'
+
 export default {
   data() {
     return {
       fileList: [],
-      radio1: 1,
-      radio2: 1,
-      input1: '',
+      isFile: true,
+      extTypeId: FILE_EXT_TYPES[0].id,
+      inputValue: '',
     }
   },
   computed: {
-    type() {
-      return this.radio1 === 1 ? 'file name' : 'folder name'
+    placeholder() {
+      return this.isFile ? 'file name' : 'folder name'
+    },
+    leftFiles() {
+      return FILE_EXT_TYPES.filter((e, i) => !(i % 2))
+    },
+    rightFiles() {
+      return FILE_EXT_TYPES.filter((e, i) => i % 2)
+    },
+    hasValue() {
+      return !this.inputValue
     },
   },
   methods: {
     handlePreview() {},
     handleRemove() {},
+    createNew() {
+      this.$emit('create', {
+        name: this.inputValue,
+        ...(this.isFile ? { extTypeId: this.extTypeId } : {}),
+      })
+    },
   },
 }
 </script>
@@ -91,7 +119,7 @@ export default {
   display: block;
 }
 
-.radio1 {
+.file-or-folder {
   margin-bottom: 10px;
 }
 

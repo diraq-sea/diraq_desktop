@@ -13,6 +13,7 @@ const {
   FETCH_ROOM_INFO,
   FETCH_MEMBERS,
   CREATE_ROOM,
+  CREATE_NEW,
   FETCH_FILE,
   EDIT_FILE,
   CLOSE_WIN,
@@ -50,7 +51,7 @@ module.exports = {
 
   [LOGOUT]: () => (authStore.token = null),
 
-  [GET_USER_INFO]: async () => (await axios.get('/users')).data,
+  [GET_USER_INFO]: async () => (await axios.get('/user')).data,
 
   [GET_AUTH_EMAIL]: () => ({ email: authStore.email }),
 
@@ -58,13 +59,16 @@ module.exports = {
 
   [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
 
-  [FETCH_ROOM_INFO]: async roomId => (await axios.get(`/rooms/${roomId}`)).data,
+  [FETCH_ROOM_INFO]: async roomId => (await axios.get(`/room/${roomId}`)).data,
 
-  [FETCH_MEMBERS]: async roomId => (await axios.get(`/members/${roomId}`)).data,
+  [FETCH_MEMBERS]: async roomId => (await axios.get(`/room/${roomId}/members`)).data,
 
   [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
 
-  [FETCH_FILE]: async fileId => (await axios.get(`/files/${fileId}`)).data,
+  [CREATE_NEW]: async ({ roomId, ...params }) =>
+    (await axios.post(`/room/${roomId}/files`, params)).data,
+
+  [FETCH_FILE]: async fileId => (await axios.get(`/file/${fileId}`)).data,
 
   [EDIT_FILE]: async ({ extname, commit }) => {
     const filepath = path.join(TMP_FILES_DIR, `${commit.id}.${extname}`)

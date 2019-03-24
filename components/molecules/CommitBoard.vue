@@ -111,7 +111,8 @@ export default {
       return id => this.users.find(user => user.id === id)
     },
     hasChild() {
-      return id => this.file.commits.find(commit => commit.parents.includes(id))
+      return id =>
+        this.file.commits.findIndex(commit => commit.id === id) < this.file.commits.length - 1
     },
     circleStyle() {
       return icon => ({ backgroundImage: `url(${icon})` })

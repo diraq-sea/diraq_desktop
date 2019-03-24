@@ -31,8 +31,8 @@
         <members-item :roomId="roomId" class="folder-members" />
       </div>
 
-      <el-dialog :visible.sync="dialogVisible" :append-to-body="true" class="dialog">
-        <upload-dialog />
+      <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
+        <upload-dialog @create="createNew" />
       </el-dialog>
     </template>
   </div>
@@ -44,7 +44,7 @@ import { TAB_TYPES, DATE_FORMAT_TYPE } from '~/utils/const'
 import folderIcon from '~/assets/imgs/folder.png'
 import MembersItem from '~/components/molecules/MembersItem'
 import BreadCrumbList from '~/components/molecules/BreadCrumbList'
-import UploadDialog from '~/components/atoms/UploadDialog'
+import UploadDialog from '~/components/organisms/UploadDialog'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
@@ -78,7 +78,7 @@ export default {
     folders() {
       return this.roomInfo(this.roomId).items.reduce((list, { folder }) => {
         const matched = folder.match(new RegExp(`^${this.tab.values.folder}/(.+?)(/|$)`))
-        return matched && list.indexOf(matched[1] === -1) ? [...list, matched[1]] : list
+        return matched && list.indexOf(matched[1]) === -1 ? [...list, matched[1]] : list
       }, [])
     },
     files() {
@@ -129,10 +129,29 @@ export default {
       return this.changeFolder(`${this.tab.values.folder}/${folderName}`)
     },
     selectFolder(i) {
-      return this.changeFolder(i ? `/${this.breadcrumbs.slice(1, i + 2).join('/')}` : '')
+      return this.changeFolder(i ? `/${this.breadcrumbs.slice(1, i + 1).join('/')}` : '')
     },
     openDialog() {
       this.dialogVisible = !this.dialogVisible
+    },
+    async createNew({ name, extTypeId }) {
+      this.loading = true
+      this.dialogVisible = false
+
+      const item = await this.$store.dispatch('room/createNew', {
+        roomId: this.roomId,
+        folder: this.tab.values.folder,
+        name,
+        ...(extTypeId ? { extTypeId } : {}),
+      })
+
+      if (extTypeId) {
+        await this.openFile(item)
+      } else {
+        await this.openFolder(name)
+      }
+
+      this.loading = false
     },
   },
 }
@@ -217,5 +236,10 @@ h1 {
 
 .dialog /deep/ .el-dialog__body {
   padding: 20px 40px 50px;
+}
+
+/deep/ .v-modal,
+/deep/ .el-dialog__wrapper {
+  top: $TITLEBAR_HEIGHT;
 }
 </style>
