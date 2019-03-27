@@ -39,7 +39,7 @@ function logStats(proc, data, color, isWebpack = false) {
 
   log += `${chalk[color].bold(`┗ ${[...Array(28)].join('-')}`)}\n`
 
-  console.log(log)
+  console.log(log) // eslint-disable-line
 }
 
 function startMain() {
@@ -48,7 +48,7 @@ function startMain() {
 
     webpack(mainConfig, (err, stats) => {
       if (err) {
-        console.log(err)
+        console.log(err) // eslint-disable-line
         return
       }
 
@@ -89,14 +89,14 @@ function startElectron() {
 }
 
 function init() {
-  console.log(`\n  ${chalk.blue.bold(`Getting ready for the ${process.env.npm_package_name}`)}\n`)
+  console.log(`\n  ${chalk.blue.bold(`Getting ready for the ${process.env.npm_package_name}`)}\n`) // eslint-disable-line
 
   startMain()
     .then(() => {
       startElectron()
     })
     .catch(err => {
-      console.error(err)
+      console.error(err) // eslint-disable-line
     })
 }
 
