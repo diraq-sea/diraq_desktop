@@ -6,11 +6,7 @@
   "main": "main/index.js",
   "private": true,
   "scripts": {
-    "dev": "npm-run-all --parallel dev:renderer dev:main",
-    "dev:renderer": "nuxt",
-    "dev:main": "npm-run-all --serial dev:util dev:app",
-    "dev:util": "wait-on http://localhost:3000/",
-    "dev:app": "nodemon",
+    "dev": "cross-env NODE_ENV=development node .electron/dev-runner.js",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore . .electron"
   },
   "dependencies": {
@@ -30,6 +26,7 @@
     "babel-loader": "8.0.5",
     "babel-plugin-dynamic-import-node": "2.2.0",
     "chalk": "2.4.2",
+    "cross-env": "5.2.0",
     "electron": "4.1.1",
     "electron-devtools-installer": "2.2.4",
     "eslint": "5.15.3",
@@ -46,11 +43,8 @@
     "lint-staged": "8.1.5",
     "ngrok": "3.1.1",
     "node-sass": "4.11.0",
-    "nodemon": "1.18.10",
-    "npm-run-all": "4.1.5",
     "prettier": "1.16.4",
     "sass-loader": "7.1.0",
-    "wait-on": "3.2.0",
     "webpack": "4.29.6"
   },
   "husky": {
@@ -62,17 +56,6 @@
     "*.{js,vue}": [
       "eslint --format codeframe --fix --no-ignore .electron",
       "git add"
-    ]
-  },
-  "nodemonConfig": {
-    "env": {
-      "NODE_ENV": "development"
-    },
-    "exec": "node .electron/dev-runner.js",
-    "watch": [
-      ".electron/",
-      "common/",
-      "main/"
     ]
   }
 }
