@@ -8,7 +8,7 @@ const mainConfig = require('./webpack.main.config')
 
 let electronProcess = null
 let manualRestart = false
-let args = ['--inspect=5858', path.join(__dirname, '../dist/electron/main.js')]
+let args = ['--inspect=5858', path.join(__dirname, '../dist/electron/main')]
 
 function logStats(proc, data, color, isWebpack = false) {
   let log = ''
@@ -88,8 +88,8 @@ function startElectron() {
   })
 }
 
-function init() {
-  console.log(`\n  ${chalk.blue.bold(`Getting ready for the ${process.env.npm_package_name}`)}\n`) // eslint-disable-line
+async function init() {
+  console.log(`\n  ${chalk.blue.bold('Getting ready for DiraQ desktop')}\n`) // eslint-disable-line
 
   startMain()
     .then(() => {
