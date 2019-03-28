@@ -4,7 +4,7 @@ const { dependencies } = require('../package.json')
 
 let mainConfig = {
   entry: {
-    main: path.join(__dirname, '../main/index.js'),
+    main: path.join(__dirname, '../main'),
   },
   externals: [...Object.keys(dependencies || {})],
   node: { __dirname: process.env.NODE_ENV !== 'production' },
