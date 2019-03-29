@@ -25,6 +25,7 @@ const {
   ADD_NEW_TAB,
   REMOVE_TAB,
   CHANGE_TAB_TYPE,
+  ADD_COMMENT,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -74,6 +75,10 @@ module.exports = {
     const filepath = path.join(TMP_FILES_DIR, `${commit.id}.${extname}`)
     if (!fs.existsSync(filepath)) await fetchAndSaveFile(commit.url, filepath)
     await open(filepath)
+  },
+
+  [ADD_COMMENT]: async ({ id, value }) => {
+    await axios.post(`/commit/${id}/comments`, { id, value }).data
   },
 
   [CLOSE_WIN]: () => windowStore.close(),

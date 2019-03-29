@@ -139,12 +139,14 @@ export default {
       const index = this.file.commits.findIndex(commit => commit.id === id)
       this.values[index] = e.target.value
     },
-    submitComment(id) {
+    async submitComment(id) {
       const index = this.file.commits.findIndex(commit => commit.id === id)
       const value = this.values[index]
+      const fileId = this.file.id
 
       if (value) {
-        this.$emit('addComment', { id, value })
+        await this.$store.dispatch('file/addComment', { id, value })
+        await this.$store.dispatch('file/fetchFile', fileId)
         this.values = [...this.values]
         this.values[index] = ''
       }

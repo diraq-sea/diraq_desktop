@@ -51,12 +51,12 @@ export default {
       comment: 'ずいぶん書きやすくなってていいと思います',
     },
   ],
-  create: ({ commitId, comment }) => ({
+  create: ({ id, value }) => ({
     id: mockStore.get('comment').length,
-    commitId,
+    commitId: id,
     user: 0,
     birthtime: Date.now(),
     mtime: Date.now(),
-    comment,
+    comment: value,
   }),
 }
