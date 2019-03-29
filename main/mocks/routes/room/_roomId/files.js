@@ -1,42 +1,75 @@
+import fs from 'fs'
+import path from 'path'
 import mockStore from '../../../../store/mock.store'
+import {
+  FIRST_CREATED_MESSAGE,
+  FIRST_DROPPED_MESSAGE,
+  MOCK_FILES_DIR,
+  TMP_FILES_DIR,
+} from '../../../../const'
+import fileModel from '../../../models/file'
+import commitModel from '../../../models/commit'
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
-  post({ folder, name, extname }, { roomId }) {
+  post({ folder, name, extname, path: filePath }, { roomId }) {
     const target = mockStore.findByKey('file', 'folder', folder)
+    const dropped = !!filePath
 
     if (extname) {
       // file
-      return target && !target.name // フォルダのみ作成されてる状態
-        ? mockStore.update('file', {
-            id: target.id,
-            roomId,
-            folder,
-            name,
-            extname,
-            birthtime: Date.now(),
-            mtime: Date.now(),
-          })
-        : mockStore.add('file', {
-            roomId,
-            folder,
-            name,
-            extname,
-          })
+      const file =
+        target && !target.name // フォルダのみ作成されてる状態
+          ? mockStore.update('file', {
+              id: target.id,
+              roomId,
+              folder,
+              name,
+              extname,
+              dropped,
+              birthtime: Date.now(),
+              mtime: Date.now(),
+            })
+          : mockStore.add(
+              'file',
+              fileModel.create({
+                roomId,
+                folder,
+                name,
+                extname,
+                dropped,
+              }),
+            )
+
+      const commit = commitModel.create({
+        fileId: file.id,
+        message: dropped ? FIRST_DROPPED_MESSAGE(name) : FIRST_CREATED_MESSAGE(name),
+      })
+
+      mockStore.add('commit', commit)
+
+      if (dropped) {
+        fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${commit.id}.${extname}`))
+        fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${commit.id}.${extname}`))
+      }
+
+      return file
     } else {
       // folder
       const newFolder = `${folder}/${name}`
 
       return target && !target.name
         ? mockStore.update('file', {
-            id: target.id,
-            roomId,
+            ...target,
             folder: newFolder,
           })
-        : mockStore.add('file', {
-            roomId,
-            folder: newFolder,
-          })
+        : mockStore.add(
+            'file',
+            fileModel.create({
+              roomId,
+              folder: newFolder,
+            }),
+          )
     }
   },
 }

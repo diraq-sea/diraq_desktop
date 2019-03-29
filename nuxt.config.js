@@ -60,6 +60,7 @@ module.exports = {
         })
       }
       config.target = 'electron-renderer'
+      config.output.globalObject = 'this' // for WebWorker of pdf.js
     },
   },
 

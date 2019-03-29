@@ -1,4 +1,4 @@
-import { FETCH_ROOMS, FETCH_ROOM_INFO, CREATE_ROOM, CREATE_NEW } from '~/common/ipcTypes'
+import { FETCH_ROOMS, FETCH_ROOM_INFO, CREATE_ROOM, CREATE_NEW, DROP_FILE } from '~/common/ipcTypes'
 
 export const state = () => ({
   rooms: null,
@@ -40,6 +40,11 @@ export const actions = {
   async createNew({ dispatch }, params) {
     const item = await this.$ipc(CREATE_NEW, params)
     await dispatch('fetchRoomInfo', params.roomId)
+    return item
+  },
+
+  async dropFile(store, params) {
+    const item = await this.$ipc(DROP_FILE, params)
     return item
   },
 }

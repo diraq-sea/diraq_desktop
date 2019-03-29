@@ -1,7 +1,8 @@
 const fs = require('fs')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
-const { CONFIG_FILE } = require('../const')
+const { CONFIG_FILE, CONFIG_VERSION } = require('../const')
 let config = {
+  version: CONFIG_VERSION,
   windowSize: {
     width: 1000,
     height: 750,
@@ -18,9 +19,10 @@ function checkInit() {
 module.exports = {
   init() {
     writeFileIfNotExists(CONFIG_FILE, config)
-    config = {
-      ...config,
-      ...JSON.parse(fs.readFileSync(CONFIG_FILE)),
+    const data = JSON.parse(fs.readFileSync(CONFIG_FILE))
+
+    if (data.version === CONFIG_VERSION) {
+      config = { ...config, ...data }
     }
 
     isInit = true

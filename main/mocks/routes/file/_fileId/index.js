@@ -1,13 +1,9 @@
 import mockStore from '../../../../store/mock.store'
+import commitsRoute from './commits'
 
 export default {
-  get({ fileId }) {
-    const file = mockStore.findById('file', fileId)
-    const commits = mockStore.filterByKey('commit', 'fileId', fileId).map(commit => ({
-      ...commit,
-      comments: mockStore.filterByKey('comment', 'commitId', commit.id),
-    }))
-
-    return { ...file, commits }
-  },
+  get: ({ fileId }) => ({
+    ...mockStore.findById('file', fileId),
+    commits: commitsRoute.get({ fileId }),
+  }),
 }
