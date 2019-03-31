@@ -28,10 +28,10 @@ export default {
       mtime: Date.now() - 3600 * 1000,
     },
   ],
-  create: ({ fileId, message }) => ({
+  create: ({ fileId, commitComment }) => ({
     id: `hash-${mockStore.get('commit').length}`,
     fileId,
-    message,
+    message: commitComment,
     user: 0,
     birthtime: Date.now(),
     mtime: Date.now(),

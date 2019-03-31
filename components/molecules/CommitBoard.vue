@@ -63,6 +63,9 @@
             <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
               <i class="fas fa-edit" />
             </div>
+            <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
+              <i class="fas fa-edit" />
+            </div>
             <a
               :download="downloadingName"
               :href="currentCommit.url"
@@ -132,26 +135,29 @@ export default {
     }
   },
   methods: {
-    inputComment(id, e) {
+    inputComment(commitId, e) {
       this.values = [...this.values]
-      const index = this.file.commits.findIndex(commit => commit.id === id)
+      const index = this.file.commits.findIndex(commit => commit.id === commitId)
       this.values[index] = e.target.value
     },
-    async submitComment(id) {
-      const index = this.file.commits.findIndex(commit => commit.id === id)
-      const value = this.values[index]
+    async submitComment(commitId) {
+      const index = this.file.commits.findIndex(commit => commit.id === commitId)
+      const comment = this.values[index]
       const fileId = this.file.id
 
-      if (value) {
-        await this.$store.dispatch('file/addComment', { id, value })
+      if (comment) {
+        await this.$store.dispatch('file/addComment', { commitId, comment })
         await this.$store.dispatch('file/fetchFile', fileId)
         this.values = [...this.values]
         this.values[index] = ''
       }
     },
-    submitCommit() {
+    async submitCommit() {
       if (this.commitComment) {
-        this.$emit('addCommit', this.commitComment)
+        const commitComment = this.commitComment
+        const fileId = this.file.id
+        await this.$store.dispatch('file/addCommit', { fileId, commitComment })
+        await this.$store.dispatch('file/fetchFile', fileId)
         this.commitComment = ''
       }
     },
