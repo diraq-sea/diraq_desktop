@@ -63,9 +63,6 @@
             <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
               <i class="fas fa-edit" />
             </div>
-            <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
-              <i class="fas fa-edit" />
-            </div>
             <a
               :download="downloadingName"
               :href="currentCommit.url"
@@ -154,9 +151,9 @@ export default {
     },
     async submitCommit() {
       if (this.commitComment) {
-        const commitComment = this.commitComment
         const fileId = this.file.id
-        await this.$store.dispatch('file/addCommit', { fileId, commitComment })
+        const message = this.commitComment
+        await this.$store.dispatch('file/addCommit', { fileId, message })
         await this.$store.dispatch('file/fetchFile', fileId)
         this.commitComment = ''
       }

@@ -67,7 +67,7 @@ export const actions = {
   async addComment(store, { commitId, comment }) {
     await this.$ipc(ADD_COMMENT, { commitId, comment })
   },
-  async addCommit(store, { fileId, commitComment }) {
-    await this.$ipc(ADD_COMMIT, { fileId, commitComment })
+  async addCommit(store, { fileId, message }) {
+    await this.$ipc(ADD_COMMIT, { fileId, message })
   },
 }
