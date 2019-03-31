@@ -85,9 +85,8 @@ module.exports = {
   [ADD_COMMENT]: async ({ commitId, comment }) =>
     (await axios.post(`/commit/${commitId}/comments`, { comment })).data,
 
-  [ADD_COMMIT]: async ({ fileId, message }) => {
-    await axios.post(`/file/${fileId}/commits`, { message }).data
-  },
+  [ADD_COMMIT]: async ({ fileId, message }) =>
+    (await axios.post(`/file/${fileId}/commits`, { message })).data,
 
   [CLOSE_WIN]: () => windowStore.close(),
 
