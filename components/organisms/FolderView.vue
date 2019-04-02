@@ -178,98 +178,91 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
-$HERDER_HEIGHT: 100px;
-$PADDING: 30px;
-
+<style scoped>
 .folder-container {
   height: 100%;
-  color: $FONT_SUB;
+  color: var(--font-sub);
   max-width: 1080px;
   margin: 0 auto;
   position: relative;
 }
 
 h1 {
-  height: $HERDER_HEIGHT;
-  line-height: $HERDER_HEIGHT;
-  padding: 0 $PADDING;
+  height: var(--herder-height);
+  line-height: var(--herder-height);
+  padding: 0 var(--padding);
 }
 
 .folder-main {
   display: flex;
   position: absolute;
-  top: $HERDER_HEIGHT;
-  left: $PADDING;
-  right: $PADDING;
+  top: var(--herder-height);
+  left: var(--padding);
+  right: var(--padding);
   bottom: 0;
-
-  .folder-list {
-    flex: 1;
-    max-height: 100%;
-    overflow: auto;
-    padding-right: $PADDING;
-
-    $ITEM_HEIGHT: 40px;
-
-    .folder-item {
-      height: calc(#{$ITEM_HEIGHT} + 10px);
-      padding: 5px 10px;
-      border-bottom: 1px solid $COLOR_BORDER;
-      display: flex;
-      transition: 0.2s;
-      cursor: pointer;
-
-      &:hover {
-        background: $COLOR_LIGHT_BLUE;
-      }
-
-      .folder-icon {
-        height: 80%;
-        margin-top: calc(#{$ITEM_HEIGHT} * 0.12);
-      }
-
-      .file-icon {
-        height: 60%;
-        margin-top: calc(#{$ITEM_HEIGHT} * 0.22);
-        margin-left: 5px;
-        margin-right: 3px;
-      }
-
-      .folder-name {
-        height: 100%;
-        line-height: $ITEM_HEIGHT;
-        margin-left: 12px;
-        font-size: 18px;
-      }
-
-      .folder-date {
-        font-size: 12px;
-        margin-left: auto;
-
-        & > div {
-          height: calc(#{$ITEM_HEIGHT} / 2);
-          line-height: calc(#{$ITEM_HEIGHT} / 2);
-        }
-      }
-    }
-  }
-
-  .folder-members {
-    width: $MEMBERS_OPENING_WIDTH;
-    max-height: 100%;
-    overflow: auto;
-  }
 }
 
-.dialog /deep/ .el-dialog__body {
+.folder-main .folder-list {
+  flex: 1;
+  max-height: 100%;
+  overflow: auto;
+  padding-right: var(--padding);
+}
+
+.folder-main .folder-list .folder-item {
+  height: calc(var(--item-height) + 10px);
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.folder-main .folder-list .folder-item:hover {
+  background: var(--color-light-blue);
+}
+
+.folder-main .folder-list .folder-item .folder-icon {
+  height: 80%;
+  margin-top: calc(var(--item-height) * 0.12);
+}
+
+.folder-main .folder-list .folder-item .file-icon {
+  height: 60%;
+  margin-top: calc(var(--item-height) * 0.22);
+  margin-left: 5px;
+  margin-right: 3px;
+}
+
+.folder-main .folder-list .folder-item .folder-name {
+  height: 100%;
+  line-height: var(--item-height);
+  margin-left: 12px;
+  font-size: 18px;
+}
+
+.folder-main .folder-list .folder-item .folder-date {
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.folder-main .folder-list .folder-item .folder-date > div {
+  height: calc(var(--item-height) / 2);
+  line-height: calc(var(--item-height) / 2);
+}
+
+.folder-main .folder-members {
+  width: var(--members-opening-width);
+  max-height: 100%;
+  overflow: auto;
+}
+
+.dialog >>> .el-dialog__body {
   padding: 20px 40px 50px;
 }
 
-/deep/ .v-modal,
-/deep/ .el-dialog__wrapper {
-  top: $TITLEBAR_HEIGHT;
+.dialog >>> .v-modal,
+.dialog >>> .el-dialog__wrapper {
+  top: var(--titlebar-height);
 }
 </style>

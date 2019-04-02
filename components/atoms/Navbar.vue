@@ -6,11 +6,9 @@
   </div>
 </template>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .header {
-  background: $COLOR_DARK;
+  background: var(--color-dark);
   position: fixed;
   top: 0;
   left: 0;
@@ -18,8 +16,8 @@
 }
 
 .header-inner {
-  line-height: $NAVBAR_HEIGHT;
-  height: $NAVBAR_HEIGHT;
+  line-height: var(--navbar-height);
+  height: var(--navbar-height);
   margin: 0 70px;
   position: relative;
 }
@@ -35,6 +33,6 @@
 }
 
 .title > span {
-  color: $COLOR_ACCENT;
+  color: var(--color-accent);
 }
 </style>

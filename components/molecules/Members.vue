@@ -50,56 +50,52 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
-$OPEN_ICON_HEIGHT: 50px;
-
+<style scoped>
 .members-container {
-  border-left: 1px solid $COLOR_BORDER;
-  background: $COLOR_PAGE;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-page);
   transition: 0.3s;
-  width: $MEMBERS_WIDTH;
+  width: var(--members-width);
+}
 
-  &.opening {
-    width: $MEMBERS_OPENING_WIDTH;
-  }
+.members-container.opening {
+  width: var(--members-opening-width);
+}
 
-  .members {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-bottom: $OPEN_ICON_HEIGHT;
-  }
+.members-container .members {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: var(--open-icon-height);
+}
 
-  .members-container-open {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: calc(#{$MEMBERS_WIDTH} - 1px);
-    height: $OPEN_ICON_HEIGHT;
-    line-height: $OPEN_ICON_HEIGHT;
-    text-align: center;
-    font-size: 24px;
-    background: $COLOR_PAGE;
-    color: $COLOR_BORDER;
+.members-container .members-container-open {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: calc(var(--members-width) - 1px);
+  height: var(--open-icon-height);
+  line-height: var(--open-icon-height);
+  text-align: center;
+  font-size: 24px;
+  background: var(--color-page);
+  color: var(--color-border);
+}
 
-    &:hover {
-      color: unset;
-    }
+.members-container .members-container-open:hover {
+  color: unset;
+}
 
-    i {
-      cursor: pointer;
-      transform: rotateZ(0);
-      padding: 5px 10px;
-      transition: 0.3s;
+.members-container .members-container-open i {
+  cursor: pointer;
+  transform: rotateZ(0);
+  padding: 5px 10px;
+  transition: 0.3s;
+}
 
-      &.opening {
-        transform: rotateZ(180deg);
-      }
-    }
-  }
+.members-container .members-container-open i.opening {
+  transform: rotateZ(180deg);
 }
 </style>

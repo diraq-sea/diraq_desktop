@@ -163,48 +163,40 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
-$COMMENT_CIRCLE_SIZE: 32px;
-$COMMIT_MAKER_HEIGHT: 102px;
-$COMMIT_GRAPH_LEFT: 35px;
-
+<style scoped>
 .commit-container {
   user-select: text;
   padding-top: 30px;
-  height: calc(100% - #{$COMMIT_MAKER_HEIGHT});
+  height: calc(100% - var(--commit-maker-height));
   overflow: auto;
+}
 
-  & > div {
-    position: relative;
-  }
+.commit-container > div {
+  position: relative;
+}
 
-  img {
-    user-select: none;
-  }
+.commit-container img {
+  user-select: none;
+}
 
-  .comments-panel {
-    .file-controls {
-      opacity: 0;
-    }
+.commit-container .comments-panel .file-controls {
+  opacity: 0;
+}
 
-    &:hover .file-controls {
-      opacity: 1;
-    }
-  }
+.commit-container .comments-panel:hover .file-controls {
+  opacity: 1;
 }
 
 .commit-graph {
   position: absolute;
   top: 0;
-  left: $COMMIT_GRAPH_LEFT;
+  left: var(--commit-graph-left);
   bottom: 0;
 }
 
 .commit-circle {
-  width: $COMMIT_CIRCLE_SIZE;
-  height: $COMMIT_CIRCLE_SIZE;
+  width: var(--commit-circle-size);
+  height: var(--commit-circle-size);
   border-radius: 50%;
   background: center/cover no-repeat;
 }
@@ -212,130 +204,130 @@ $COMMIT_GRAPH_LEFT: 35px;
 .commit-line {
   width: 5px;
   position: absolute;
-  top: $COMMIT_CIRCLE_SIZE;
+  top: var(--commit-circle-size);
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  background: $COLOR_BLUE;
+  background: var(--color-blue);
 }
 
 .comments-panel {
   margin-left: 90px;
   margin-right: 30px;
   padding-bottom: 40px;
+}
 
-  .comment {
-    position: relative;
-    margin-top: 12px;
-  }
+.comments-panel .comment {
+  position: relative;
+  margin-top: 12px;
+}
 
-  .comment-circle {
-    width: $COMMENT_CIRCLE_SIZE;
-    height: $COMMENT_CIRCLE_SIZE;
-    border-radius: 50%;
-    background: center/cover no-repeat;
-    position: absolute;
-    top: 3px;
-    left: 0;
-  }
+.comments-panel .comment-circle {
+  width: var(--comment-circle-size);
+  height: var(--comment-circle-size);
+  border-radius: 50%;
+  background: center/cover no-repeat;
+  position: absolute;
+  top: 3px;
+  left: 0;
+}
 
-  .comment-body {
-    margin-left: $COMMENT_CIRCLE_SIZE;
-    padding-left: 15px;
-  }
+.comments-panel .comment-body {
+  margin-left: var(--comment-circle-size);
+  padding-left: 15px;
+}
 
-  .committer-info {
-    position: relative;
-    padding-right: 70px;
+.comments-panel .committer-info {
+  position: relative;
+  padding-right: 70px;
+}
 
-    .file-controls {
-      position: absolute;
-      top: 0;
-      right: 0;
+.comments-panel .committer-info .file-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
-      .file-controls-icon {
-        display: inline-block;
-        padding: 3px;
-        cursor: pointer;
-        margin-left: 5px;
-        margin-top: -4px;
-        font-size: 18px;
-        color: $COLOR_BORDER;
-        transition: 0.2s;
+.comments-panel .committer-info .file-controls .file-controls-icon {
+  display: inline-block;
+  padding: 3px;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-top: -4px;
+  font-size: 18px;
+  color: var(--color-border);
+  transition: 0.2s;
+}
 
-        &:hover {
-          color: unset;
-        }
-      }
-    }
-  }
+.comments-panel .committer-info .file-controls .file-controls-icon:hover {
+  color: unset;
+}
 
-  .committer-name,
-  .comment-username {
-    font-weight: bold;
-    display: inline-block;
-  }
+.comments-panel .committer-name,
+.comments-panel .comment-username {
+  font-weight: bold;
+  display: inline-block;
+}
 
-  .committer-date,
-  .comment-date {
-    font-size: 12px;
-    color: $COLOR_DATE;
-  }
+.comments-panel .committer-date,
+.comments-panel .comment-date {
+  font-size: 12px;
+  color: var(--color-date);
+}
 
-  .committer-message {
-    padding: 2px 15px 10px 0;
-  }
+.comments-panel .committer-message {
+  padding: 2px 15px 10px 0;
+}
 
-  .comment-input {
-    margin-top: 25px;
+.comments-panel .comment-input {
+  margin-top: 25px;
+}
 
-    input {
-      border: none;
-      background: $COLOR_SUB;
-      font-size: 16px;
-      padding: 10px;
-      width: 100%;
-      color: $FONT_BASE;
-      border-radius: 5px;
-      user-select: none;
+.comments-panel .comment-input input {
+  border: none;
+  background: var(--color-sub);
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+  color: var(--font-base);
+  border-radius: 5px;
+  user-select: none;
+}
 
-      &::placeholder {
-        color: $COLOR_DATE;
-        font-size: 14px;
-      }
+.comments-panel .comment-input input::placeholder {
+  color: var(--color-date);
+  font-size: 14px;
+}
 
-      &:focus {
-        outline: none;
-      }
-    }
-  }
+.comments-panel .comment-input input:focus {
+  outline: none;
 }
 
 .commit-maker {
-  height: $COMMIT_MAKER_HEIGHT;
-  border-top: 1px solid $COLOR_BORDER;
+  height: var(--commit-maker-height);
+  border-top: 1px solid var(--color-border);
   position: relative;
+}
 
-  .comments-panel {
-    padding-top: 12px;
-  }
+.commit-maker .comments-panel {
+  padding-top: 12px;
+}
 
-  .commit-maker-graph {
-    position: absolute;
-    top: 18px;
-    left: $COMMIT_GRAPH_LEFT;
-  }
+.commit-maker .commit-maker-graph {
+  position: absolute;
+  top: 18px;
+  left: var(--commit-graph-left);
+}
 
-  .comment-maker-text {
-    font-size: 12px;
-    color: $FONT_BASE;
-    overflow: hidden;
-    white-space: nowrap;
-  }
+.commit-maker .comment-maker-text {
+  font-size: 12px;
+  color: var(--font-base);
+  overflow: hidden;
+  white-space: nowrap;
+}
 
-  .comment-input {
-    margin-top: 12px;
-  }
+.commit-maker .comment-input {
+  margin-top: 12px;
 }
 
 .blink {

@@ -52,11 +52,9 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .self-user {
-  width: $MEMBERS_WIDTH;
+  width: var(--members-width);
   height: 100%;
   display: flex;
   justify-content: center;
@@ -64,8 +62,8 @@ export default {
 }
 
 .user-button {
-  width: $ICON_SIZE_SMALL;
-  height: $ICON_SIZE_SMALL;
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
   border-radius: 50%;
   background: center/cover no-repeat;
   cursor: pointer;
@@ -87,9 +85,9 @@ export default {
   display: block;
   cursor: pointer;
   color: #333;
+}
 
-  i {
-    margin-right: 8px;
-  }
+.user-item i {
+  margin-right: 8px;
 }
 </style>

@@ -145,9 +145,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .dialog-container {
   display: flex;
   justify-content: space-between;
@@ -223,39 +221,36 @@ export default {
 
 .drop-area {
   position: fixed;
-  top: $TITLEBAR_HEIGHT;
+  top: var(--titlebar-height);
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffffee;
+  background: #ffffff;
+}
 
-  $DROP_COLOR: #409eff;
-  $DROP_PADDING: 80px;
+.drop-area .drop-frame {
+  position: absolute;
+  top: var(--drop-padding);
+  left: var(--drop-padding);
+  right: var(--drop-padding);
+  bottom: var(--drop-padding);
+  border: 5px dashed var(--drop-color);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--drop-color);
+}
 
-  .drop-frame {
-    position: absolute;
-    top: $DROP_PADDING;
-    left: $DROP_PADDING;
-    right: $DROP_PADDING;
-    bottom: $DROP_PADDING;
-    border: 5px dashed $DROP_COLOR;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $DROP_COLOR;
+.drop-area .drop-frame i {
+  font-size: 100px;
+}
 
-    i {
-      font-size: 100px;
-    }
-  }
-
-  .drop-panel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
+.drop-area .drop-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>

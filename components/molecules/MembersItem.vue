@@ -41,76 +41,74 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .member-item {
-  width: $MEMBERS_OPENING_WIDTH;
+  width: var(--members-opening-width);
   display: flex;
   padding-right: 20px;
+}
 
-  .member-add {
-    width: $MEMBERS_WIDTH;
-    text-align: center;
-    font-size: 22px;
-    padding: 10px 0 10px 5px;
+.member-item .member-add {
+  width: var(--members-width);
+  text-align: center;
+  font-size: 22px;
+  padding: 10px 0 10px 5px;
+}
 
-    i {
-      cursor: pointer;
-      color: $COLOR_BORDER;
-      transition: 0.2s;
+.member-item .member-add i {
+  cursor: pointer;
+  color: var(--color-border);
+  transition: 0.2s;
+}
 
-      &:hover {
-        color: unset;
-      }
-    }
-  }
+.member-item .member-add i:hover {
+  color: unset;
+}
 
-  .member-room {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-  }
+.member-item .member-room {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
 }
 
 .member-icon {
-  width: $MEMBERS_WIDTH;
+  width: var(--members-width);
   padding: 8px 0;
+}
 
-  div {
-    width: $ICON_SIZE_SMALL;
-    height: $ICON_SIZE_SMALL;
-    margin: 0 auto;
-    border-radius: 50%;
-    background: center/cover no-repeat;
-    cursor: pointer;
-    filter: grayscale(100%);
-    opacity: 0.7;
+.member-icon div {
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
+  margin: 0 auto;
+  border-radius: 50%;
+  background: center/cover no-repeat;
+  cursor: pointer;
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
 
-    &.isOnline {
-      filter: grayscale(0%);
-      opacity: 1;
-      position: relative;
+.member-icon div.isOnline {
+  filter: grayscale(0%);
+  opacity: 1;
+  position: relative;
+}
 
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -12.5%;
-        right: -12.5%;
-        width: 50%;
-        height: 50%;
-        background: #43b581;
-        border: $COLOR_PAGE solid 2px;
-        border-radius: 50%;
-      }
-    }
-  }
+.member-icon div.isOnline::after {
+  content: '';
+  position: absolute;
+  bottom: -12.5%;
+  right: -12.5%;
+  width: 50%;
+  height: 50%;
+  background: #43b581;
+  border: var(--color-page) solid 2px;
+  border-radius: 50%;
 }
 
 .member-name {
   flex: 1;
-  border-bottom: $COLOR_BORDER solid 1px;
+  border-bottom: var(--color-border) solid 1px;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -119,7 +117,7 @@ export default {
 
 .member-role {
   width: 60px;
-  border-bottom: $COLOR_BORDER solid 1px;
+  border-bottom: var(--color-border) solid 1px;
   display: flex;
   justify-content: center;
   align-items: center;

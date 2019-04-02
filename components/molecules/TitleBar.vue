@@ -31,61 +31,55 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .title-bar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: $TITLEBAR_HEIGHT;
-  background: $COLOR_TITLE_BAR;
+  height: var(--titlebar-height);
+  background: var(--color-title-bar);
+}
+.title-bar .draggable {
+  position: absolute;
+  top: 3px; /* for resizable */
+  left: 3px;
+  right: 3px;
+  bottom: 0;
+  -webkit-app-region: drag;
+}
 
-  .draggable {
-    position: absolute;
-    top: 3px; // for resizable
-    left: 3px;
-    right: 3px;
-    bottom: 0;
-    -webkit-app-region: drag;
-  }
+.title-bar .win-controls {
+  position: absolute;
+  top: 0;
+  width: var(--controls-width);
+  height: 30px;
+  right: 0;
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+.title-bar .win-controls .controls-icon {
+  flex: 1;
+  height: 100%;
+  color: var(--color-date);
+  line-height: 30px;
+  text-align: center;
+  font-size: 12px;
+}
+.title-bar .win-controls .controls-icon:hover {
+  background: var(--color-border);
+  color: var(--font-sub);
+}
 
-  .win-controls {
-    position: absolute;
-    top: 0;
-    width: $CONTROLS_WIDTH;
-    height: 30px;
-    right: 0;
-    display: flex;
-    -webkit-app-region: no-drag;
+.title-bar .win-controls .controls-icon.invert {
+  transform: rotateZ(180deg);
+}
 
-    .controls-icon {
-      flex: 1;
-      height: 100%;
-      color: $COLOR_DATE;
-      line-height: 30px;
-      text-align: center;
-      font-size: 12px;
-
-      &:hover {
-        background: $COLOR_BORDER;
-        color: $FONT_SUB;
-      }
-
-      &.invert {
-        transform: rotateZ(180deg);
-      }
-
-      &.red {
-        font-size: 16px;
-
-        &:hover {
-          color: #fff;
-          background: $COLOR_RED;
-        }
-      }
-    }
-  }
+.title-bar .win-controls .controls-icon.red {
+  font-size: 16px;
+}
+.title-bar .win-controls .controls-icon.red:hover {
+  color: #fff;
+  background: var(--color-red);
 }
 </style>

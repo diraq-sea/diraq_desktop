@@ -20,6 +20,18 @@
   --color-light-blue: #ecf5ff;
   --font-base: #1d1c1d;
   --font-sub: #616061;
+  --comment-circle-size: 32px;
+  --commit-maker-height: 102px;
+  --commit-graph-left: 35px;
+  --open-icon-height: 50px;
+  --top-bar-height: 70px;
+  --viewer-width: 650px;
+  --commit-maker-height: 60px;
+  --herder-height: 100px;
+  --padding: 30px;
+  --item-height: 40px;
+  --drop-color: #409eff;
+  --drop-padding: 80px;
 }
 
 html {

@@ -16,16 +16,14 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '@/assets/css/common.scss';
+<style>
+@import '@/assets/css/common.css';
 </style>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .page {
   position: fixed;
-  top: $NAVBAR_HEIGHT;
+  top: var(--navbar-height);
   left: 0;
   right: 0;
   bottom: 0;

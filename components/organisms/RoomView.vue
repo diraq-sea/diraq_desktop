@@ -69,100 +69,98 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .room-container {
   height: 100%;
   overflow: auto;
-  color: $FONT_SUB;
+  color: var(--font-sub);
 }
 
 .room-contents {
   max-width: 1080px;
   margin: 0 auto;
   padding: 30px;
+}
 
-  h1 {
-    margin: 0 1.666%;
-  }
+.room-contents h1 {
+  margin: 0 1.666%;
+}
 
-  .room-card-container {
-    display: flex;
-    margin-top: 30px;
+.room-contents .room-card-container {
+  display: flex;
+  margin-top: 30px;
+}
 
-    .room-card {
-      width: 30%;
-      margin: 0 1.666%;
-      padding-top: 16.875%;
-      position: relative;
-      cursor: pointer;
+.room-contents .room-card-container .room-card {
+  width: 30%;
+  margin: 0 1.666%;
+  padding-top: 16.875%;
+  position: relative;
+  cursor: pointer;
+}
 
-      & > div {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
+.room-contents .room-card-container .room-card > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
-      .room-add {
-        display: block;
-        height: 100%;
-        border: 3px dashed $COLOR_DATE;
-        border-radius: 8px;
-        transition: 0.2s;
-        font-size: 30px;
+.room-contents .room-card-container .room-card .room-add {
+  display: block;
+  height: 100%;
+  border: 3px dashed var(--color-date);
+  border-radius: 8px;
+  transition: 0.2s;
+  font-size: 30px;
+}
 
-        &::before {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
+.room-contents .room-card-container .room-card .room-add::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
-        &:hover {
-          background: $COLOR_SUB;
-        }
-      }
+.room-contents .room-card-container .room-card .room-add:hover {
+  background: var(--color-sub);
+}
 
-      .room-info {
-        height: 100%;
-        border-radius: 8px;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+.room-contents .room-card-container .room-card .room-info {
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
 
-        .room-thumbnail {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 30px;
-          border-radius: 8px 8px 0 0;
-          overflow: hidden;
+.room-contents .room-card-container .room-card .room-info .room-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
 
-          div {
-            height: 100%;
-            background: center/cover url(/imgs/room.jpg);
-            transition: 0.5s;
-          }
-        }
+.room-contents .room-card-container .room-card .room-info .room-thumbnail div {
+  height: 100%;
+  background: center/cover url(/imgs/room.jpg);
+  transition: 0.5s;
+}
 
-        &:hover > .room-thumbnail > div {
-          transform: scale(1.15);
-        }
+.room-contents .room-card-container .room-card .room-info:hover > .room-thumbnail > div {
+  transform: scale(1.15);
+}
 
-        .room-name {
-          position: absolute;
-          height: 30px;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          line-height: 30px;
-          padding: 0 15px;
-          overflow: hidden;
-        }
-      }
-    }
-  }
+.room-contents .room-card-container .room-card .room-info .room-name {
+  position: absolute;
+  height: 30px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  line-height: 30px;
+  padding: 0 15px;
+  overflow: hidden;
 }
 </style>
