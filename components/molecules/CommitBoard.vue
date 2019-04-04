@@ -11,6 +11,9 @@
             <span class="committer-name">{{ user(commit.user).name }}</span>
             <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
+              <div class="file-controls-icon" title="View file" @click="viewFile(commit)">
+                <i class="fas fa-eye" />
+              </div>
               <div class="file-controls-icon" title="Edit file" @click="editFile(commit)">
                 <i class="fas fa-edit" />
               </div>
@@ -60,6 +63,9 @@
         <div class="committer-info">
           <div class="comment-maker-text">Editting based on "{{ currentCommit.message }}"</div>
           <div class="file-controls">
+            <div class="file-controls-icon" title="submit file" @click="openDialog">
+              <i class="far fa-folder-open" />
+            </div>
             <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
               <i class="fas fa-edit" />
             </div>
@@ -78,12 +84,18 @@
           <input v-model="commitComment" type="text" placeholder="Input comment for uploading..." />
         </form>
       </div>
+
+      <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
+        <upload-dialog :visible="dialogVisible" @create="createNew" @drop="dropFile" />
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import { DATE_FORMAT_TYPE } from '~/utils/const'
+import UploadDialog from '~/components/organisms/UploadDialog'
+// import fileExtTypes from '~/common/fileExtTypes'
 
 export default {
   props: {
@@ -103,6 +115,9 @@ export default {
       type: String,
       required: true,
     },
+  },
+  components: {
+    UploadDialog,
   },
   computed: {
     user() {
@@ -129,6 +144,7 @@ export default {
     return {
       values: [],
       commitComment: '',
+      dialogVisible: false,
     }
   },
   methods: {
@@ -163,6 +179,36 @@ export default {
         extname: this.file.extname,
         commit,
       })
+    },
+    async viewFile(commit) {
+      const fileId = this.file.id
+      const commitId = commit.id
+      await this.$store.dispatch('file/viewFile', { fileId, commitId })
+    },
+    openDialog() {
+      this.dialogVisible = !this.dialogVisible
+    },
+    async createNew({ name, extTypeId }) {
+      this.loading = true
+      this.dialogVisible = false
+      // const item = await this.$store.dispatch('room/createNew', {
+      //   roomId: this.roomId,
+      //   folder: this.file.folder,
+      //   name,
+      //   ...(extTypeId !== undefined
+      //     ? { extname: fileExtTypes.find(({ id }) => id === extTypeId).extname }
+      //     : {}),
+      // })
+      this.loading = false
+    },
+    async dropFile(file) {
+      this.loading = true
+      this.dialogVisible = false
+      const fileId = this.file.id
+      const filePath = file.path
+      const extname = file.name.split('.').pop()
+      await this.$store.dispatch('file/saveCommitFile', { fileId, filePath, extname })
+      this.loading = false
     },
   },
 }
@@ -355,5 +401,13 @@ $COMMIT_GRAPH_LEFT: 35px;
   100% {
     opacity: 1;
   }
+}
+.dialog /deep/ .el-dialog__body {
+  padding: 20px 40px 50px;
+}
+
+/deep/ .v-modal,
+/deep/ .el-dialog__wrapper {
+  top: $TITLEBAR_HEIGHT;
 }
 </style>

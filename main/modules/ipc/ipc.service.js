@@ -28,6 +28,7 @@ const {
   CHANGE_TAB_TYPE,
   ADD_COMMENT,
   ADD_COMMIT,
+  SAVE_COMMIT_FILE,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -87,6 +88,9 @@ module.exports = {
 
   [ADD_COMMIT]: async ({ fileId, message }) =>
     (await axios.post(`/file/${fileId}/commits`, { message })).data,
+
+  [SAVE_COMMIT_FILE]: async ({ fileId, filePath, extname }) =>
+    (await axios.post(`file/${fileId}`, { filePath, extname })).data,
 
   [CLOSE_WIN]: () => windowStore.close(),
 
