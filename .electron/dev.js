@@ -5,7 +5,7 @@ const webpack = require('webpack')
 const { Nuxt, Builder } = require('nuxt')
 const { spawn } = require('child_process')
 
-const mainConfig = require('./webpack.main.config')
+const mainConfig = require('../webpack.config')
 const rendererConfig = require('../nuxt.config')
 const logs = { electron: 'Electron', main: 'Main Process', renderer: 'Renderer Process' }
 

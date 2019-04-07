@@ -1,10 +1,10 @@
 const path = require('path')
 const webpack = require('webpack')
-const { dependencies } = require('../package.json')
+const { dependencies } = require('./package.json')
 
 let mainConfig = {
   entry: {
-    main: path.join(__dirname, '../main'),
+    main: path.join(__dirname, 'main'),
   },
   externals: [...Object.keys(dependencies || {})],
   node: { __dirname: process.env.NODE_ENV !== 'production' },
@@ -43,7 +43,7 @@ let mainConfig = {
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    path: path.join(__dirname, '../dist/electron'),
+    path: path.join(__dirname, 'dist/electron'),
   },
   plugins: [new webpack.NoEmitOnErrorsPlugin()],
   target: 'electron-main',
