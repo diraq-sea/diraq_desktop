@@ -14,8 +14,7 @@
     "chokidar": "2.1.5",
     "element-ui": "2.6.3",
     "moment-timezone": "0.5.23",
-    "nuxt": "2.5.1",
-    "vue-pdf": "4.0.6"
+    "nuxt": "2.5.1"
   },
   "devDependencies": {
     "@babel/core": "7.4.0",
