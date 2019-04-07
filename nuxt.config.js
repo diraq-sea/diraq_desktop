@@ -63,11 +63,4 @@ module.exports = {
       config.output.globalObject = 'this' // for WebWorker of pdf.js
     },
   },
-
-  /*
-   ** Generate configuration
-   */
-  generate: {
-    dir: 'dist/renderer',
-  },
 }

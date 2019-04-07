@@ -7,43 +7,12 @@ const { spawn } = require('child_process')
 
 const mainConfig = require('../webpack.config')
 const rendererConfig = require('../nuxt.config')
-const logs = { electron: 'Electron', main: 'Main Process', renderer: 'Renderer Process' }
+const logs = require('./logs')
+const logProcesses = { electron: 'Electron', main: 'Main Process', renderer: 'Renderer Process' }
 
 let electronProcess = null
 let manualRestart = false
-let args = ['--inspect=5858', path.join(__dirname, '../dist/electron/main')]
-
-function logStats(proc, data, color, isWebpack = false) {
-  let log = ''
-
-  log += `${chalk[color].bold(`┏ ${proc} ${[...Array(27 - proc.length)].join('-')}`)}\n\n`
-
-  if (typeof data === 'object' && isWebpack) {
-    data
-      .toString({
-        colors: true,
-        chunks: false,
-      })
-      .split(/\r?\n/)
-      .forEach(line => {
-        log += `  ${line}\n`
-      })
-    log += '\n'
-  } else if (typeof data === 'object') {
-    data
-      .toString()
-      .split(/\r?\n/)
-      .forEach(line => {
-        log += `  ${line}\n`
-      })
-  } else {
-    log += `  ${data}\n`
-  }
-
-  log += `${chalk[color].bold(`┗ ${[...Array(28)].join('-')}`)}\n`
-
-  console.log(log) // eslint-disable-line
-}
+let args = ['--inspect=5858', path.join(__dirname, '../dist/main')]
 
 async function startRenderer() {
   rendererConfig.build.quiet = true
@@ -51,15 +20,15 @@ async function startRenderer() {
   const nuxt = new Nuxt(rendererConfig)
 
   nuxt.hook('build:before', () => {
-    logStats(logs.renderer, 'Preparing project for development\n', 'cyan')
+    logs(logProcesses.renderer, 'Preparing project for development\n', 'cyan')
   })
 
   nuxt.hook('build:compiled', ({ stats }) => {
-    logStats(logs.renderer, stats, 'yellow', true)
+    logs(logProcesses.renderer, stats, 'yellow', true)
   })
 
   nuxt.hook('build:done', () => {
-    logStats(logs.renderer, 'Waiting for file changes\n', 'cyan', true)
+    logs(logProcesses.renderer, 'Waiting for file changes\n', 'cyan', true)
   })
 
   await nuxt.server.listen()
@@ -68,8 +37,6 @@ async function startRenderer() {
 
 function startMain() {
   return new Promise(resolve => {
-    mainConfig.mode = 'development'
-
     const compiler = webpack(mainConfig)
 
     compiler.watch({}, (err, stats) => {
@@ -78,7 +45,7 @@ function startMain() {
         return
       }
 
-      logStats(logs.main, stats, 'yellow', true)
+      logs(logProcesses.main, stats, 'yellow', true)
 
       if (electronProcess && electronProcess.kill) {
         manualRestart = true
@@ -107,11 +74,11 @@ function startElectron() {
   electronProcess = spawn(electron, args)
 
   electronProcess.stdout.on('data', data => {
-    logStats(logs.main, data, 'blue')
+    logs(logProcesses.main, data, 'blue')
   })
 
   electronProcess.stderr.on('data', data => {
-    logStats(logs.electron, data, 'red')
+    logs(logProcesses.electron, data, 'red')
   })
 
   electronProcess.on('close', () => {
@@ -119,7 +86,7 @@ function startElectron() {
   })
 }
 
-async function init() {
+async function dev() {
   console.log(`  ${chalk.blue.bold('Getting ready for DiraQ desktop')}\n`) // eslint-disable-line
 
   try {
@@ -131,4 +98,4 @@ async function init() {
   }
 }
 
-init()
+dev()
