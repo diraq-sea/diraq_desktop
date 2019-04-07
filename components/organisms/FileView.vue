@@ -3,17 +3,7 @@
     <loading-panel v-if="loading" />
     <template v-else>
       <div class="fp-left">
-        <div v-if="isPdf" class="pdf-viewer">
-          <pdf
-            v-for="i in numPages"
-            :key="i"
-            :src="url"
-            :page="i"
-            @num-pages="setNumPages"
-            class="pdf"
-          />
-        </div>
-        <webview v-else :src="viewerSrc" :style="viewerStyle" class="viewer" />
+        <webview :src="viewerSrc" :style="viewerStyle" class="viewer" />
       </div>
       <div class="fp-right">
         <commit-board
@@ -33,7 +23,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import Pdf from 'vue-pdf'
 import CommitBoard from '~/components/molecules/CommitBoard'
 import Members from '~/components/molecules/Members'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
@@ -43,7 +32,6 @@ export default {
     LoadingPanel,
     CommitBoard,
     Members,
-    Pdf,
   },
   props: {
     tab: {
@@ -57,7 +45,9 @@ export default {
     ...mapGetters('file', ['file', 'currentCommit']),
     ...mapGetters('tab', ['currentTab']),
     viewerSrc() {
-      return `https://view.officeapps.live.com/op/embed.aspx?src=${this.url}`
+      return this.extname === 'xlsx'
+        ? `https://view.officeapps.live.com/op/embed.aspx?src=${this.url}`
+        : `https://docs.google.com/viewer?url=${this.url}&embedded=true`
     },
     fileId() {
       return this.tab.values.fileId
@@ -73,18 +63,8 @@ export default {
     },
     viewerStyle() {
       return {
-        bottom: `-${
-          {
-            docx: 22,
-            xlsx: 27,
-            pptx: 24,
-          }[this.extname]
-        }px`,
-        right: `${this.extname === 'pptx' ? -1 : 0}px`,
+        bottom: `${this.extname === 'xlsx' ? -27 : 0}px`,
       }
-    },
-    isPdf() {
-      return this.extname === 'pdf'
     },
   },
   data: () => ({ loading: true, numPages: 1 }),
@@ -154,8 +134,9 @@ $COMMIT_MAKER_HEIGHT: 60px;
 
 .viewer {
   position: absolute;
-  top: -1px;
-  left: -1px;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .pdf-viewer {
