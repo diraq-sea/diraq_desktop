@@ -1,5 +1,4 @@
 const { BrowserWindow } = require('electron')
-const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
 const { WINDOW_ORIGIN } = require('../const')
 const configStore = require('./config.store')
 const { ON_MAXIMIZE, ON_UNMAXIMIZE } = require('../../common/ipcToWindowTypes')
@@ -21,9 +20,13 @@ async function init() {
   })
 
   mainWindow.focus()
-  await installExtension(VUEJS_DEVTOOLS)
   mainWindow.loadURL(WINDOW_ORIGIN)
-  mainWindow.webContents.openDevTools()
+
+  if (process.env.NODE_ENV === 'development') {
+    const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
+    await installExtension(VUEJS_DEVTOOLS)
+    mainWindow.webContents.openDevTools()
+  }
 
   mainWindow.on('resize', () => {
     const [width, height] = mainWindow.getSize()
