@@ -19,23 +19,21 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .bc-container {
   height: 40px;
   display: flex;
   align-items: center;
   margin: 15px 10px 5px;
+}
 
-  span {
-    display: inline-block;
-    margin-right: 3px;
+.bc-container span {
+  display: inline-block;
+  margin-right: 3px;
+}
 
-    &.link:hover {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
+.bc-container span.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

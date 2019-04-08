@@ -18,21 +18,19 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '@/assets/css/common.scss';
+<style>
+@import '@/assets/css/common.css';
 </style>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
+<style scoped>
 .root {
   position: fixed;
-  top: $TITLEBAR_HEIGHT;
+  top: var(--titlebar-height);
   left: 0;
   right: 0;
   bottom: 0;
-  color: $FONT_BASE;
-  background: $COLOR_TITLE_BAR;
+  color: var(--font-base);
+  background: var(--color-title-bar);
 }
 
 .nuxt {
@@ -41,6 +39,6 @@ export default {
   left: 2px;
   right: 2px;
   bottom: 2px;
-  background: $COLOR_PAGE;
+  background: var(--color-page);
 }
 </style>

@@ -86,20 +86,14 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import '@/assets/css/admin.scss';
-
-$TOP_BAR_HEIGHT: 70px;
-$VIEWER_WIDTH: 650px;
-$COMMIT_MAKER_HEIGHT: 60px;
-
+<style scoped>
 .fp-container {
   display: flex;
   height: 100%;
 }
 
 .fp-left {
-  min-width: $VIEWER_WIDTH;
+  min-width: var(--viewer-width);
   flex: 3;
   height: 100%;
   position: relative;
@@ -107,29 +101,29 @@ $COMMIT_MAKER_HEIGHT: 60px;
 }
 
 .top-bar {
-  height: $TOP_BAR_HEIGHT;
+  height: var(--top-bar-height);
 }
 
 .fp-right {
   flex: 2;
   height: 100%;
   position: relative;
-  border-left: 1px solid $COLOR_BORDER;
+  border-left: 1px solid var(--color-border);
+}
 
-  .members {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-  }
+.fp-right .members {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
 
-  .commit-board {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: $MEMBERS_WIDTH;
-    bottom: 0;
-  }
+.fp-right .commit-board {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: var(--members-width);
+  bottom: 0;
 }
 
 .viewer {
@@ -146,15 +140,15 @@ $COMMIT_MAKER_HEIGHT: 60px;
   right: 0;
   bottom: 0;
   padding: 0 30px;
-  background: $COLOR_BORDER;
+  background: var(--color-border);
   overflow: auto;
+}
 
-  .pdf {
-    margin: 50px 0;
-  }
+.pdf-viewer .pdf {
+  margin: 50px 0;
+}
 
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-  }
+.pdf-viewer::-webkit-scrollbar-thumb {
+  background: #888;
 }
 </style>
