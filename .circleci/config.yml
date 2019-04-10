@@ -2,24 +2,25 @@ version: 2.1
 
 executors:
   default:
-    working_directory: ~/repo
+    working_directory: ~/project
     docker:
       - image: circleci/node:10.15
         environment:
           TZ: Asia/Tokyo
 
 commands:
-  restore_npm:
+  restore_packages:
     steps:
       - restore_cache:
-          name: Restore npm dependencies
-          key: npm-v1-{{ checksum "package-lock.json" }}
-  save_npm:
+          name: Restore dependencies
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+  save_packages:
     steps:
       - save_cache:
-          name: Cache npm dependencies
-          key: npm-v1-{{ checksum "package-lock.json" }}
+          name: Cache dependencies
+          key: yarn-v1-{{ checksum "yarn.lock" }}
           paths:
+            - ~/.cache/yarn
             - node_modules
 
 jobs:
@@ -28,11 +29,11 @@ jobs:
       name: default
     steps:
       - checkout
-      - restore_npm
+      - restore_packages
       - run:
           name: Install dependencies
-          command: npm config set package-lock false && npm install
-      - save_npm
+          command: yarn install --frozen-lockfile --non-interactive
+      - save_packages
       - run:
           name: Run lint
           command: npm run lint
@@ -41,10 +42,10 @@ jobs:
       name: default
     steps:
       - checkout
-      - restore_npm
+      - restore_packages
       - run:
           name: Run a security audit
-          command: npm audit
+          command: yarn audit
       - run:
           name: Check for outdated packages
           command: sh .circleci/outdated.sh
@@ -55,6 +56,8 @@ workflows:
     jobs:
       - lint
   weekly:
+    jobs:
+      - audit
     triggers:
       - schedule:
           cron: '0 0 * * 6' # Every Saturday 9:00 AM
@@ -62,5 +65,3 @@ workflows:
             branches:
               only:
                 - develop
-    jobs:
-      - audit

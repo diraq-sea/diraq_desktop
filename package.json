@@ -3,11 +3,47 @@
   "version": "0.0.0",
   "description": "DiraQ desktop application",
   "author": "DiraQ",
-  "main": "main/index.js",
+  "main": "dist/main.js",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node .electron/dev-runner.js",
+    "build": "yarn build:renderer && yarn build:main && electron-builder",
+    "build:main": "cross-env NODE_ENV=production webpack",
+    "build:renderer": "nuxt generate",
+    "prebuild": "rimraf build",
+    "dev": "cross-env NODE_ENV=development node .electron/dev.js",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore . .electron"
+  },
+  "build": {
+    "productName": "DiraQ",
+    "appId": "com.example.yourapp",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist",
+      "resources"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "resources/icons/icon.icns"
+    },
+    "win": {
+      "icon": "resources/icons/icon.ico"
+    },
+    "linux": {
+      "icon": "resources/icons"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,vue}": [
+      "eslint --format codeframe --fix --no-ignore",
+      "git add"
+    ]
   },
   "dependencies": {
     "axios": "0.18.0",
@@ -27,6 +63,7 @@
     "chalk": "2.4.2",
     "cross-env": "5.2.0",
     "electron": "4.1.1",
+    "electron-builder": "20.39.0",
     "electron-devtools-installer": "2.2.4",
     "eslint": "5.15.3",
     "eslint-config-prettier": "4.1.0",
@@ -42,17 +79,8 @@
     "lint-staged": "8.1.5",
     "ngrok": "3.1.1",
     "prettier": "1.16.4",
-    "webpack": "4.29.6"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,vue}": [
-      "eslint --format codeframe --fix --no-ignore",
-      "git add"
-    ]
+    "rimraf": "2.6.3",
+    "webpack": "4.29.6",
+    "webpack-cli": "3.3.0"
   }
 }

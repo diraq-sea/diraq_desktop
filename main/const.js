@@ -16,7 +16,10 @@ module.exports = {
   FIRST_CREATED_MESSAGE: name => `「${name}」を新規作成しました。`,
   FIRST_DROPPED_MESSAGE: name => `「${name}」をアップロードしました。`,
   TMP_FILES_DIR: path.join(CONFIG_DIR, 'tmpfiles'),
-  WINDOW_ORIGIN: 'http://localhost:3000',
+  WINDOW_ORIGIN:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000'
+      : `file://${__dirname}/index.html`,
   API_BASE_URL: 'http://localhost:8080/v1',
   PLATFORM: { win32: 'win', darwin: 'mac', linux: 'linux' }[process.platform],
 }
