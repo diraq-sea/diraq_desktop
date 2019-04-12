@@ -1,3 +1,4 @@
+const squirrelStartup = require('electron-squirrel-startup')
 const { app } = require('electron')
 const configStore = require('./store/config.store')
 const authStore = require('./store/auth.store')
@@ -10,6 +11,9 @@ mkdirIfNotExists(CONFIG_DIR)
 
 // ipcServiceのaxios-mockがCONFIG_DIRを必要とするので注意
 const ipcController = require('./modules/ipc/ipc.controller')
+
+// Squirrel.Windows によるインストール中にアプリケーションが起動した場合に終了する
+if (squirrelStartup) app.quit()
 
 async function createWindow() {
   configStore.init()
