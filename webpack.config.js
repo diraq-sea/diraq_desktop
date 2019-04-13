@@ -4,9 +4,7 @@ const { dependencies } = require('./package.json')
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
-  entry: {
-    main: path.join(__dirname, 'main'),
-  },
+  entry: { main: path.join(__dirname, 'main') },
   externals: [...Object.keys(dependencies || {})],
   node: { __dirname: process.env.NODE_ENV !== 'production' },
   module: {
@@ -15,9 +13,7 @@ module.exports = {
         test: /\.js$/,
         enforce: 'pre',
         exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-        },
+        use: { loader: 'eslint-loader' },
       },
       {
         test: /\.js$/,
@@ -25,16 +21,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              [
-                '@babel/env',
-                {
-                  targets: {
-                    node: 'current',
-                  },
-                },
-              ],
-            ],
+            presets: [['@babel/env', { targets: { node: 'current' } }]],
             plugins: ['dynamic-import-node'],
           },
         },

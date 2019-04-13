@@ -7,13 +7,52 @@ const { spawn } = require('child_process')
 
 const mainConfig = require('./webpack.config')
 const rendererConfig = require('./nuxt.config')
-const logs = require('./logs')
 const logProcesses = { electron: 'Electron', main: 'Main Process', renderer: 'Renderer Process' }
 
 let electronProcess = null
 let manualRestart = false
 let args = ['--inspect=5858', path.join(__dirname, './dist/main')]
 
+/**
+ * 標準出力、標準エラー出力をブロックにまとめて表示する。
+ * @param {string} proc ブロックの見出しとして表示する文字列
+ * @param {any} data コンソールに表示するデータ
+ * @param {string} color 見出し、枠線に適用する文字色
+ * @param {boolean} [isWebpack=false] データが webpack の Stats Object か否かのフラグ
+ */
+function logs(proc, data, color, isWebpack = false) {
+  let log = ''
+  log += `${chalk[color].bold(`┏ ${proc} ${[...Array(27 - proc.length)].join('-')}`)}\n\n`
+
+  if (typeof data === 'object' && isWebpack) {
+    data
+      .toString({
+        colors: true,
+        chunks: false,
+      })
+      .split(/\r?\n/)
+      .forEach(line => {
+        log += `  ${line}\n`
+      })
+    log += '\n'
+  } else if (typeof data === 'object') {
+    data
+      .toString()
+      .split(/\r?\n/)
+      .forEach(line => {
+        log += `  ${line}\n`
+      })
+  } else {
+    log += `  ${data}\n`
+  }
+
+  log += `${chalk[color].bold(`┗ ${[...Array(28)].join('-')}`)}\n`
+  console.log(log) // eslint-disable-line
+}
+
+/**
+ * Nuxt.js によるファイルのビルド、開発用サーバーの起動と、ファイルの監視を開始する。
+ */
 async function startRenderer() {
   rendererConfig.build.quiet = true
 
@@ -35,6 +74,10 @@ async function startRenderer() {
   await new Builder(nuxt).build()
 }
 
+/**
+ * webpack による ECMAScript から CommonJS へのトランスコンパイルと、ファイルの監視を開始する。
+ * @returns {Promise}
+ */
 function startMain() {
   return new Promise(resolve => {
     const compiler = webpack(mainConfig)
@@ -63,6 +106,9 @@ function startMain() {
   })
 }
 
+/**
+ * Electron を起動する。
+ */
 function startElectron() {
   // detect yarn or npm and process commandline args accordingly
   if (process.env.npm_execpath.endsWith('yarn.js')) {
@@ -86,6 +132,14 @@ function startElectron() {
   })
 }
 
+/**
+ * 開発用のスクリプトを実行する。
+ * 1. レンダラープロセスとして Nuxt.js の処理を実行
+ *    ファイルのビルド、開発用サーバーの起動、ファイルの変更監視
+ * 2. メインプロセスとして webpack の処理を実行
+ *    ファイルのトランスコンパイル、ファイルの変更監視
+ * 3. Electron の起動
+ */
 async function dev() {
   console.log(`  ${chalk.blue.bold('Getting ready for DiraQ desktop')}\n`) // eslint-disable-line
 
