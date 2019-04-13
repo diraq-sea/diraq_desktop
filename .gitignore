@@ -192,4 +192,4 @@ build
 dist
 
 # Mock files
-static/mocks
+renderer/static/mocks
