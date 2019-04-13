@@ -2,6 +2,7 @@ const pkg = require('./package')
 
 module.exports = {
   mode: 'spa',
+  srcDir: 'renderer/',
   router: process.env.NODE_ENV === 'development' ? {} : { base: `/${__dirname}/dist/` },
 
   /*

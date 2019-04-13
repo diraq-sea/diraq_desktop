@@ -1,5 +1,5 @@
-import { ROLE_TYPES } from '~/common/roleTypes'
-import { FETCH_MEMBERS } from '~/common/ipcTypes'
+import { ROLE_TYPES } from '~~/common/roleTypes'
+import { FETCH_MEMBERS } from '~~/common/ipcTypes'
 
 export const state = () => ({
   membersList: {},

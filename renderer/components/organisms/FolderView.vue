@@ -46,7 +46,7 @@ import MembersItem from '~/components/molecules/MembersItem'
 import BreadCrumbList from '~/components/molecules/BreadCrumbList'
 import UploadDialog from '~/components/organisms/UploadDialog'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
-import fileExtTypes from '~/common/fileExtTypes'
+import fileExtTypes from '~~/common/fileExtTypes'
 
 export default {
   components: {

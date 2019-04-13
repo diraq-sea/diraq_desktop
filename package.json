@@ -10,8 +10,8 @@
     "build:main": "cross-env NODE_ENV=production webpack",
     "build:renderer": "nuxt generate",
     "prebuild": "rimraf build",
-    "dev": "cross-env NODE_ENV=development node .electron/dev.js",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore . .electron"
+    "dev": "cross-env NODE_ENV=development node dev.js",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "build": {
     "productName": "DiraQ",

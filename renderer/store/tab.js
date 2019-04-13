@@ -5,7 +5,7 @@ import {
   ADD_NEW_TAB,
   REMOVE_TAB,
   CHANGE_TAB_TYPE,
-} from '~/common/ipcTypes'
+} from '~~/common/ipcTypes'
 
 export const state = () => ({
   tabs: [],

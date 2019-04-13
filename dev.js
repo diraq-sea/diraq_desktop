@@ -5,14 +5,14 @@ const webpack = require('webpack')
 const { Nuxt, Builder } = require('nuxt')
 const { spawn } = require('child_process')
 
-const mainConfig = require('../webpack.config')
-const rendererConfig = require('../nuxt.config')
+const mainConfig = require('./webpack.config')
+const rendererConfig = require('./nuxt.config')
 const logs = require('./logs')
 const logProcesses = { electron: 'Electron', main: 'Main Process', renderer: 'Renderer Process' }
 
 let electronProcess = null
 let manualRestart = false
-let args = ['--inspect=5858', path.join(__dirname, '../dist/main')]
+let args = ['--inspect=5858', path.join(__dirname, './dist/main')]
 
 async function startRenderer() {
   rendererConfig.build.quiet = true
