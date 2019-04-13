@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import WordIcon from '~/assets/imgs/word.png'
-import ExcelIcon from '~/assets/imgs/excel.png'
-import PowerpointIcon from '~/assets/imgs/powerpoint.png'
-import PdfIcon from '~/assets/imgs/pdf.png'
+import WordIcon from '~/assets/images/word.png'
+import ExcelIcon from '~/assets/images/excel.png'
+import PowerpointIcon from '~/assets/images/powerpoint.png'
+import PdfIcon from '~/assets/images/pdf.png'
 
 Vue.prototype.$fileIcon = extname =>
   ({
