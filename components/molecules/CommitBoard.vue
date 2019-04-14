@@ -54,48 +54,45 @@
         </div>
       </div>
     </div>
-
-    <div class="commit-maker">
-      <div class="commit-maker-graph">
-        <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
-      </div>
-      <div class="comments-panel">
-        <div class="committer-info">
-          <div class="comment-maker-text">Editting based on "{{ currentCommit.message }}"</div>
-          <div class="file-controls">
-            <div class="file-controls-icon" title="submit file" @click="openDialog">
-              <i class="far fa-folder-open" />
-            </div>
-            <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
-              <i class="fas fa-edit" />
-            </div>
-            <a
-              :download="downloadingName"
-              :href="currentCommit.url"
-              class="file-controls-icon"
-              title="Trash editting file"
-            >
-              <i class="far fa-trash-alt" />
-            </a>
-          </div>
+    <div v-if="commit">
+      <div class="commit-maker">
+        <div class="commit-maker-graph">
+          <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
         </div>
+        <div class="comments-panel">
+          <div class="committer-info">
+            <div class="comment-maker-text">Editting based on "{{ currentCommit.message }}"</div>
+            <div class="file-controls">
+              <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
+                <i class="fas fa-edit" />
+              </div>
+              <a
+                :download="downloadingName"
+                :href="currentCommit.url"
+                class="file-controls-icon"
+                title="Trash editting file"
+              >
+                <i class="far fa-trash-alt" />
+              </a>
+            </div>
+          </div>
 
-        <form class="comment-input" @submit.prevent="submitCommit">
-          <input v-model="commitComment" type="text" placeholder="Input comment for uploading..." />
-        </form>
+          <form class="comment-input" @submit.prevent="submitCommit">
+            <input
+              v-model="commitComment"
+              type="text"
+              placeholder="Input comment for uploading..."
+            />
+          </form>
+        </div>
       </div>
-
-      <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
-        <upload-dialog :visible="dialogVisible" @create="createNew" @drop="dropFile" />
-      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { DATE_FORMAT_TYPE } from '~/utils/const'
-import UploadDialog from '~/components/organisms/UploadDialog'
-// import fileExtTypes from '~/common/fileExtTypes'
 
 export default {
   props: {
@@ -116,10 +113,18 @@ export default {
       required: true,
     },
   },
-  components: {
-    UploadDialog,
-  },
   computed: {
+    commit() {
+      for (let commit in this.file.commits) {
+        for (let id in this.committed) {
+          if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
+            return true
+          }
+        }
+      }
+      return false
+    },
+    ...mapState(['committed']),
     user() {
       return id => this.users.find(user => user.id === id)
     },
@@ -154,6 +159,16 @@ export default {
       this.values[index] = e.target.value
     },
     async submitComment(commitId) {
+      // for (let commit in this.file.commits) {
+      //   for (let id in this.committed) {
+      //     console.log(this.committed[id].name.indexOf(this.file.commits[commit].id))
+      //     if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
+      //       console.log('SUCCESS')
+      //       return true
+      //     }
+      //   }
+      // }
+
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       const comment = this.values[index]
       const fileId = this.file.id
@@ -184,31 +199,6 @@ export default {
       const fileId = this.file.id
       const commitId = commit.id
       await this.$store.dispatch('file/viewFile', { fileId, commitId })
-    },
-    openDialog() {
-      this.dialogVisible = !this.dialogVisible
-    },
-    async createNew({ name, extTypeId }) {
-      this.loading = true
-      this.dialogVisible = false
-      // const item = await this.$store.dispatch('room/createNew', {
-      //   roomId: this.roomId,
-      //   folder: this.file.folder,
-      //   name,
-      //   ...(extTypeId !== undefined
-      //     ? { extname: fileExtTypes.find(({ id }) => id === extTypeId).extname }
-      //     : {}),
-      // })
-      this.loading = false
-    },
-    async dropFile(file) {
-      this.loading = true
-      this.dialogVisible = false
-      const fileId = this.file.id
-      const filePath = file.path
-      const extname = file.name.split('.').pop()
-      await this.$store.dispatch('file/saveCommitFile', { fileId, filePath, extname })
-      this.loading = false
     },
   },
 }

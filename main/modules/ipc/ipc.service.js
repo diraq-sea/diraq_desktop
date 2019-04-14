@@ -28,13 +28,14 @@ const {
   CHANGE_TAB_TYPE,
   ADD_COMMENT,
   ADD_COMMIT,
-  SAVE_COMMIT_FILE,
+  FETCH_TMP_INFO,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
 const configStore = require('../../store/config.store')
 const windowStore = require('../../store/window.store')
-const { TMP_FILES_DIR } = require('../../const')
+const tmpStore = require('../../store/tmpfile.store')
+const { TMP_FILES_DIR, TMP_FILE } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
 
@@ -89,9 +90,6 @@ module.exports = {
   [ADD_COMMIT]: async ({ fileId, message }) =>
     (await axios.post(`/file/${fileId}/commits`, { message })).data,
 
-  [SAVE_COMMIT_FILE]: async ({ fileId, filePath, extname }) =>
-    (await axios.post(`file/${fileId}`, { filePath, extname })).data,
-
   [CLOSE_WIN]: () => windowStore.close(),
 
   [MAX_WIN]: () => windowStore.maximize(),
@@ -135,5 +133,9 @@ module.exports = {
     const index = tabs.findIndex(tab => tab.id === id)
     tabs[index] = { ...tabs[index], type, values }
     configStore.set('tabs', tabs)
+  },
+
+  [FETCH_TMP_INFO]: () => {
+    if (fs.existsSync(TMP_FILE)) return tmpStore.readFileInfo()
   },
 }

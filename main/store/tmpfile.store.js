@@ -35,4 +35,7 @@ module.exports = {
     const jsonlist2 = jsonlist.filter(obj => obj.mdate !== null)
     fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist2))
   },
+  readFileInfo() {
+    return JSON.parse(fs.readFileSync(TMP_FILE))
+  },
 }
