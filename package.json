@@ -20,23 +20,19 @@
       "output": "build"
     },
     "files": [
-      "dist",
-      "resources"
+      "dist"
     ],
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "resources/icons/icon.icns",
+      "icon": "main/static/icons/icon.icns",
       "target": "zip"
     },
     "win": {
-      "icon": "resources/icons/icon.ico",
+      "icon": "main/static/icons/icon.ico",
       "target": "squirrel"
     },
     "squirrelWindows": {
-      "loadingGif": "resources/install-spinner.gif"
-    },
-    "linux": {
-      "icon": "resources/icons"
+      "loadingGif": "main/static/images/install-spinner.gif"
     }
   },
   "husky": {
