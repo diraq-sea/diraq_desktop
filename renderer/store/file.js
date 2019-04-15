@@ -1,4 +1,4 @@
-import { FETCH_FILE, EDIT_FILE, ADD_COMMENT, ADD_COMMIT } from '~/common/ipcTypes'
+import { FETCH_FILE, EDIT_FILE, ADD_COMMENT, ADD_COMMIT } from '~~/common/ipcTypes'
 
 const url = 'http://www.mech.tohoku-gakuin.ac.jp/rde/contents/kougakukai/files/template.docx'
 

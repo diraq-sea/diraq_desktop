@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import FILE_EXT_TYPES from '~/common/fileExtTypes'
+import FILE_EXT_TYPES from '~~/common/fileExtTypes'
 
 export default {
   props: {

@@ -1,4 +1,10 @@
-import { FETCH_ROOMS, FETCH_ROOM_INFO, CREATE_ROOM, CREATE_NEW, DROP_FILE } from '~/common/ipcTypes'
+import {
+  FETCH_ROOMS,
+  FETCH_ROOM_INFO,
+  CREATE_ROOM,
+  CREATE_NEW,
+  DROP_FILE,
+} from '~~/common/ipcTypes'
 
 export const state = () => ({
   rooms: null,

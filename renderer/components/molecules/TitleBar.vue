@@ -15,7 +15,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { CLOSE_WIN, MAX_WIN, UNMAX_WIN, MIN_WIN } from '~/common/ipcTypes'
+import { CLOSE_WIN, MAX_WIN, UNMAX_WIN, MIN_WIN } from '~~/common/ipcTypes'
 
 export default {
   computed: {

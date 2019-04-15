@@ -10,8 +10,8 @@
     "build:main": "cross-env NODE_ENV=production webpack",
     "build:renderer": "nuxt generate",
     "prebuild": "rimraf build",
-    "dev": "cross-env NODE_ENV=development node .electron/dev.js",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore . .electron"
+    "dev": "cross-env NODE_ENV=development node dev.js",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "build": {
     "productName": "DiraQ",
@@ -20,23 +20,19 @@
       "output": "build"
     },
     "files": [
-      "dist",
-      "resources"
+      "dist"
     ],
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "resources/icons/icon.icns",
+      "icon": "main/static/icons/icon.icns",
       "target": "zip"
     },
     "win": {
-      "icon": "resources/icons/icon.ico",
+      "icon": "main/static/icons/icon.ico",
       "target": "squirrel"
     },
     "squirrelWindows": {
-      "loadingGif": "resources/install-spinner.gif"
-    },
-    "linux": {
-      "icon": "resources/icons"
+      "loadingGif": "main/static/images/install-spinner.gif"
     }
   },
   "husky": {

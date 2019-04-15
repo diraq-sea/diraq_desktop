@@ -145,7 +145,7 @@ export default {
 
 .room-contents .room-card-container .room-card .room-info .room-thumbnail div {
   height: 100%;
-  background: center/cover url(/imgs/room.jpg);
+  background: center/cover url(/images/room.jpg);
   transition: 0.5s;
 }
 

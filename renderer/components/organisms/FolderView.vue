@@ -15,7 +15,7 @@
             class="folder-item"
             @click="openFolder(folder)"
           >
-            <img class="folder-icon" src="@/assets/imgs/folder.png" />
+            <img class="folder-icon" src="@/assets/images/folder.png" />
             <div class="folder-name">{{ folder }}</div>
           </div>
 
@@ -41,12 +41,12 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { TAB_TYPES, DATE_FORMAT_TYPE } from '~/utils/const'
-import folderIcon from '~/assets/imgs/folder.png'
+import folderIcon from '~/assets/images/folder.png'
 import MembersItem from '~/components/molecules/MembersItem'
 import BreadCrumbList from '~/components/molecules/BreadCrumbList'
 import UploadDialog from '~/components/organisms/UploadDialog'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
-import fileExtTypes from '~/common/fileExtTypes'
+import fileExtTypes from '~~/common/fileExtTypes'
 
 export default {
   components: {

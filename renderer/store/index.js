@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { TMPFILE_OBSERVING, ON_MAXIMIZE, ON_UNMAXIMIZE } from '~/common/ipcToWindowTypes'
+import { TMPFILE_OBSERVING, ON_MAXIMIZE, ON_UNMAXIMIZE } from '~~/common/ipcToWindowTypes'
 
 export const state = () => ({
   isMaximized: false,
