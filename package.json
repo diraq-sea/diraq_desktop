@@ -6,12 +6,10 @@
   "main": "dist/main.js",
   "private": true,
   "scripts": {
-    "build": "yarn build:renderer && yarn build:main && electron-builder",
-    "build:main": "cross-env NODE_ENV=production webpack",
-    "build:renderer": "nuxt generate",
-    "prebuild": "rimraf build",
+    "build": "nuxt generate && cross-env NODE_ENV=production webpack && electron-builder",
+    "prebuild": "rimraf build dist",
     "dev": "cross-env NODE_ENV=development node dev.js",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+    "lint": "eslint --cache --ext .js,.vue --ignore-path .gitignore ."
   },
   "build": {
     "productName": "DiraQ",

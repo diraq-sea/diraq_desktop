@@ -10,7 +10,7 @@ executors:
   builder:
     working_directory: ~/project
     docker:
-      - image: electronuserland/builder:wine
+      - image: electronuserland/builder:wine-mono
     environment:
       CACHE_CONDITION: build
 
@@ -137,3 +137,4 @@ workflows:
             branches:
               only:
                 - develop
+                - build
