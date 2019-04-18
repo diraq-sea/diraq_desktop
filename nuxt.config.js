@@ -2,6 +2,8 @@ const pkg = require('./package')
 
 module.exports = {
   mode: 'spa',
+  srcDir: 'renderer/',
+  router: process.env.NODE_ENV === 'development' ? {} : { base: `/${__dirname}/dist/` },
 
   /*
    ** Headers of the page
@@ -62,12 +64,5 @@ module.exports = {
       config.target = 'electron-renderer'
       config.output.globalObject = 'this' // for WebWorker of pdf.js
     },
-  },
-
-  /*
-   ** Generate configuration
-   */
-  generate: {
-    dir: 'dist/renderer',
   },
 }

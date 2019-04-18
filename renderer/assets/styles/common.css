@@ -1,0 +1,76 @@
+:root {
+  --color-dark: #0e1e25;
+  --color-accent: #e5ec00;
+  --titlebar-height: 42px;
+  --controls-width: 150px;
+  --navbar-height: 70px;
+  --tab-height: 34px;
+  --members-width: 54px;
+  --members-opening-width: 300px;
+  --icon-size-small: 26px;
+  --commit-circle-size: 40px;
+  --color-page: #ffffff;
+  --color-border: #c5c5c5;
+  --color-date: #a5a5a5;
+  --color-sub: #efefef;
+  --color-title-bar: #e7eaed;
+  --color-title-hover: #f1f2f4;
+  --color-red: #d71526;
+  --color-blue: #a0dcff;
+  --color-light-blue: #ecf5ff;
+  --font-base: #1d1c1d;
+  --font-sub: #616061;
+  --comment-circle-size: 32px;
+  --commit-maker-height: 102px;
+  --commit-graph-left: 35px;
+  --open-icon-height: 50px;
+  --top-bar-height: 70px;
+  --viewer-width: 650px;
+  --commit-maker-height: 60px;
+  --herder-height: 100px;
+  --padding: 30px;
+  --item-height: 40px;
+  --drop-color: #409eff;
+  --drop-padding: 80px;
+}
+
+html {
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/*スクロールバー全体*/
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/*スクロールバーの軌道*/
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/*スクロールバーの動く部分*/
+::-webkit-scrollbar-thumb {
+  background: #cacaca;
+}
