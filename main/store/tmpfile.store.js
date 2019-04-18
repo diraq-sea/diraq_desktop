@@ -30,7 +30,9 @@ module.exports = {
     } else if (confirmFileLimit(targetfile.mdate)) {
       targetfile.birthdate = birthtime
     } else {
-      targetfile.mdate = null
+      // console.log('4')
+      // targetfile.mdate = null
+      // ここのコードの意図
     }
     const jsonlist2 = jsonlist.filter(obj => obj.mdate !== null)
     fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist2))

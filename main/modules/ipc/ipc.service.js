@@ -81,7 +81,7 @@ module.exports = {
   [EDIT_FILE]: async ({ extname, commit }) => {
     const filepath = path.join(TMP_FILES_DIR, `${commit.id}.${extname}`)
     if (!fs.existsSync(filepath)) await fetchAndSaveFile(commit.url, filepath)
-    await open(filepath)
+    await open(filepath) // fileがないとき追加通知のみで開かれない
   },
 
   [ADD_COMMENT]: async ({ commitId, comment }) =>

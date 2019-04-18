@@ -118,7 +118,7 @@ export default {
       for (let commit in this.file.commits) {
         for (let id in this.committed) {
           if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
-            return true
+            return true // commit後tmp.json削除
           }
         }
       }
@@ -159,16 +159,6 @@ export default {
       this.values[index] = e.target.value
     },
     async submitComment(commitId) {
-      // for (let commit in this.file.commits) {
-      //   for (let id in this.committed) {
-      //     console.log(this.committed[id].name.indexOf(this.file.commits[commit].id))
-      //     if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
-      //       console.log('SUCCESS')
-      //       return true
-      //     }
-      //   }
-      // }
-
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       const comment = this.values[index]
       const fileId = this.file.id
