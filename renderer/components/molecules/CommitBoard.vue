@@ -375,12 +375,12 @@ export default {
   }
 }
 
-.dialog /deep/ .el-dialog__body {
+.dialog >>> .el-dialog__body {
   padding: 20px 40px 50px;
 }
 
-.dialog /deep/ .v-modal,
-.dialog /deep/ .el-dialog__wrapper {
+.dialog >>> .v-modal,
+.dialog >>> .el-dialog__wrapper {
   top: var(--titlebar-height);
 }
 </style>
