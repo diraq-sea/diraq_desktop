@@ -374,12 +374,13 @@ export default {
     opacity: 1;
   }
 }
+
 .dialog /deep/ .el-dialog__body {
   padding: 20px 40px 50px;
 }
 
-/deep/ .v-modal,
-/deep/ .el-dialog__wrapper {
-  top: $TITLEBAR_HEIGHT;
+.dialog /deep/ .v-modal,
+.dialog /deep/ .el-dialog__wrapper {
+  top: var(--titlebar-height);
 }
 </style>

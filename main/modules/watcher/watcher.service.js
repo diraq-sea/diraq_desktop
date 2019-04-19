@@ -1,7 +1,7 @@
 const { READY, ADD, ADDDIR, UNLINK, UNLINKDIR, CHANGE, ERROR } = require('./watcherTypes')
 const windowStore = require('../../store/window.store')
 const { TMPFILE_OBSERVING } = require('../../../common/ipcToWindowTypes')
-const tmpStore = require('./../../store/tmpfile.store')
+const tmpStore = require('../../store/tmpfile.store')
 
 /* eslint-disable no-console */
 module.exports = type =>

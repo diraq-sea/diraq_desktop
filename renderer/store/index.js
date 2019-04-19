@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron'
 import { TMPFILE_OBSERVING, ON_MAXIMIZE, ON_UNMAXIMIZE } from '~~/common/ipcToWindowTypes'
-import { FETCH_TMP_INFO } from '~/common/ipcTypes'
+import { FETCH_TMP_INFO } from '~~/common/ipcTypes'
 
 export const state = () => ({
   isMaximized: false,
