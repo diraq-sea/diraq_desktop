@@ -10,12 +10,14 @@ module.exports = {
   MOCK_FILE: path.join(CONFIG_DIR, 'mock.json'),
   CONFIG_VERSION: 0,
   MOCK_VERSION: 1,
+
   MOCK_FILES_DIR: path.join(__dirname, '../renderer/static/mocks'),
   MOCK_FILES_PATH: 'mocks',
   DEFAULT_FILES_PATH_CHUNK: 'defaults/default',
   FIRST_CREATED_MESSAGE: name => `「${name}」を新規作成しました。`,
   FIRST_DROPPED_MESSAGE: name => `「${name}」をアップロードしました。`,
   TMP_FILES_DIR: path.join(CONFIG_DIR, 'tmpfiles'),
+  COMMIT_FILE: path.join(CONFIG_DIR, 'commit.json'),
   WINDOW_ORIGIN:
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'

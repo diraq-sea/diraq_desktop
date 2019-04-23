@@ -149,7 +149,6 @@ export default {
     return {
       values: [],
       commitComment: '',
-      dialogVisible: false,
     }
   },
   methods: {
@@ -174,12 +173,19 @@ export default {
       if (this.commitComment) {
         const fileId = this.file.id
         const message = this.commitComment
+        const extname = this.file.extname
+        await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
         await this.$store.dispatch('file/addCommit', { fileId, message })
+        await this.$store.dispatch('deleteTmpInfo', extname)
         await this.$store.dispatch('file/fetchFile', fileId)
+
         this.commitComment = ''
       }
     },
     async editFile(commit) {
+      const fileId = commit.fileId
+      const commitId = commit.id
+      await this.$store.dispatch('file/saveCommitId', { fileId, commitId })
       await this.$store.dispatch('file/editFile', {
         extname: this.file.extname,
         commit,

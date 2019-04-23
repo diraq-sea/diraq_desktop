@@ -30,14 +30,20 @@ module.exports = {
     } else if (confirmFileLimit(targetfile.mdate)) {
       targetfile.birthdate = birthtime
     } else {
-      // console.log('4')
       // targetfile.mdate = null
-      // ここのコードの意図
+      // ここのコードの意図??
     }
     const jsonlist2 = jsonlist.filter(obj => obj.mdate !== null)
     fs.writeFileSync(TMP_FILE, JSON.stringify(jsonlist2))
   },
   readFileInfo() {
+    checkInit()
     return JSON.parse(fs.readFileSync(TMP_FILE))
+  },
+  deleteFileInfo(extname) {
+    checkInit()
+    console.log('deleteInfo') // eslint-disable-line
+    console.log(extname) // eslint-disable-line
+    // どうにかして該当するtmp.jsonを消去したい,そしたらcommitpanel消せる
   },
 }

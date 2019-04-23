@@ -29,12 +29,17 @@ const {
   ADD_COMMENT,
   ADD_COMMIT,
   FETCH_TMP_INFO,
+  SAVE_COMMIT_FILE,
+  SAVE_COMMIT_ID,
+  FETCH_COMMIT_ID,
+  DELETE_TMP_INFO,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
 const configStore = require('../../store/config.store')
 const windowStore = require('../../store/window.store')
 const tmpStore = require('../../store/tmpfile.store')
+const commitStore = require('../../store/commit.store')
 const { TMP_FILES_DIR, TMP_FILE } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
@@ -80,10 +85,24 @@ module.exports = {
 
   [EDIT_FILE]: async ({ extname, commit }) => {
     const filepath = path.join(TMP_FILES_DIR, `${commit.id}.${extname}`)
-    if (!fs.existsSync(filepath)) await fetchAndSaveFile(commit.url, filepath)
+    if (!fs.existsSync(filepath)) {
+      await fetchAndSaveFile(commit.url, filepath) // ここのif文の意図？
+      // fs.copyFileSync(filepath, path.join(TMP_FILES_DIR, `${commit.id}.${extname}`))
+    }
     await open(filepath) // fileがないとき追加通知のみで開かれない
   },
 
+  [SAVE_COMMIT_FILE]: async ({ fileId, commitId, extname }) => {
+    const filePath = path.join(TMP_FILES_DIR, `${commitId}.${extname}`)
+    await axios.post(`file/${fileId}`, { filePath, extname }).data
+  },
+
+  [SAVE_COMMIT_ID]: async ({ fileId, commitId }) => {
+    commitStore.writeInfo({ fileId, commitId })
+  },
+  [FETCH_COMMIT_ID]: async fileId => {
+    return commitStore.readInfo(fileId)
+  },
   [ADD_COMMENT]: async ({ commitId, comment }) =>
     (await axios.post(`/commit/${commitId}/comments`, { comment })).data,
 
@@ -137,5 +156,8 @@ module.exports = {
 
   [FETCH_TMP_INFO]: () => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.readFileInfo()
+  },
+  [DELETE_TMP_INFO]: extname => {
+    if (fs.existsSync(TMP_FILE)) tmpStore.deleteFileInfo(extname)
   },
 }

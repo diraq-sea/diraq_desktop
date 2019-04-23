@@ -1,4 +1,12 @@
-import { FETCH_FILE, EDIT_FILE, ADD_COMMENT, ADD_COMMIT } from '~~/common/ipcTypes'
+import {
+  FETCH_FILE,
+  EDIT_FILE,
+  ADD_COMMENT,
+  ADD_COMMIT,
+  SAVE_COMMIT_FILE,
+  SAVE_COMMIT_ID,
+  FETCH_COMMIT_ID,
+} from '~~/common/ipcTypes'
 
 export const state = () => ({
   fileList: {},
@@ -52,5 +60,12 @@ export const actions = {
       fileId,
       id: commitId,
     })
+  },
+  async saveCommitFile(store, { fileId, extname }) {
+    const commitId = await this.$ipc(FETCH_COMMIT_ID, fileId)
+    await this.$ipc(SAVE_COMMIT_FILE, { fileId, commitId, extname })
+  },
+  async saveCommitId(store, { fileId, commitId }) {
+    await this.$ipc(SAVE_COMMIT_ID, { fileId, commitId })
   },
 }
