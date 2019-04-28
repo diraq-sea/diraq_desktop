@@ -33,6 +33,14 @@ module.exports = {
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, 'dist'),
   },
+  resolve: {
+    alias: {
+      '~': path.join(__dirname, 'main'),
+      '~~': process.cwd(),
+      '@': path.join(__dirname, 'main'),
+      '@@': process.cwd(),
+    },
+  },
   plugins: [new webpack.NoEmitOnErrorsPlugin()],
   target: 'electron-main',
 }
