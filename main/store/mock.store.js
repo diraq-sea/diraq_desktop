@@ -19,14 +19,18 @@ export default {
     if (mockJson.version === MOCK_VERSION) {
       mock = mockJson.data
     } else {
+      const mockModelDirPath = path.join(__dirname, '../mocks/models')
+      const regex = /\.js$/
+
+      const mockModelFiles = fs
+        .readdirSync(mockModelDirPath)
+        .filter(file => fs.statSync(path.join(mockModelDirPath, file)).isFile() && regex.test(file))
+
       await Promise.all(
-        fs.readdirSync(path.join(__dirname, '../mocks/models')).map(filename =>
-          (async () => {
-            mock[
-              filename.replace('.js', '')
-            ] = (await import(`../mocks/models/${filename}`)).default.defaultValues()
-          })(),
-        ),
+        mockModelFiles.map(async file => {
+          const { defaultValues } = await import(`../mocks/models/${file}`) // Dynamic import ですべて変数のパスは不可
+          mock[file.replace(regex, '')] = defaultValues()
+        }),
       )
     }
 

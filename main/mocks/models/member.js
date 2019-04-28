@@ -1,8 +1,8 @@
-import mockStore from '../../store/mock.store'
-import { ROLE_TYPES } from '../../../common/roleTypes'
+import mockStore from '~/store/mock.store'
+import { ROLE_TYPES } from '~~/common/roleTypes'
 
-export default {
-  defaultValues: () => [
+export function defaultValues() {
+  return [
     {
       id: 0,
       name: 'mitsuhide',
@@ -38,12 +38,17 @@ export default {
       role: ROLE_TYPES[3].id,
       roomIds: [0],
     },
-  ],
-  create: ({ name, icon, role, roomId }) => ({
+  ]
+}
+
+export function create({ name, icon, role, roomId }) {
+  return {
     id: mockStore.get('member').length,
     name,
     icon,
     role,
     roomIds: [roomId],
-  }),
+  }
 }
+
+export default { defaultValues, create }

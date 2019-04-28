@@ -1,8 +1,8 @@
-import mockStore from '../../store/mock.store'
-import { FIRST_CREATED_MESSAGE } from '../../const'
+import mockStore from '~/store/mock.store'
+import { FIRST_CREATED_MESSAGE } from '~/const'
 
-export default {
-  defaultValues: () => [
+export function defaultValues() {
+  return [
     {
       id: 'hash-0',
       fileId: 0,
@@ -27,13 +27,18 @@ export default {
       birthtime: Date.now() - 3600 * 1000,
       mtime: Date.now() - 3600 * 1000,
     },
-  ],
-  create: ({ fileId, message }) => ({
+  ]
+}
+
+export function create({ fileId, message }) {
+  return {
     id: `hash-${mockStore.get('commit').length}`,
     fileId,
     message,
     user: 0,
     birthtime: Date.now(),
     mtime: Date.now(),
-  }),
+  }
 }
+
+export default { defaultValues, create }
