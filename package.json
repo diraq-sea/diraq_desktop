@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nuxt generate && cross-env NODE_ENV=production webpack && electron-builder",
     "prebuild": "rimraf build dist",
-    "dev": "cross-env NODE_ENV=development node dev.js",
+    "dev": "node --require=esm scripts/dev.js",
     "lint": "eslint --cache --ext .js,.vue --ignore-path .gitignore ."
   },
   "build": {
