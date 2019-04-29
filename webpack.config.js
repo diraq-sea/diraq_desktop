@@ -3,10 +3,8 @@ const webpack = require('webpack')
 const { dependencies } = require('./package.json')
 
 module.exports = {
-  mode: process.env.NODE_ENV || 'development',
   entry: { main: path.join(__dirname, 'main') },
   externals: [...Object.keys(dependencies || {})],
-  node: { __dirname: process.env.NODE_ENV !== 'production' },
   module: {
     rules: [
       {
