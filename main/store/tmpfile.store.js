@@ -44,7 +44,7 @@ module.exports = {
   },
   deleteFileInfo({ commitId, extname }) {
     checkInit()
-    const filename = commitId + '.' + extname
+    const filename = `${commitId}.${extname}`
     const tmplist = JSON.parse(fs.readFileSync(TMP_FILE))
     const numberInTmp = tmplist.findIndex(obj => obj.name === filename)
     tmplist.splice(numberInTmp, 1)

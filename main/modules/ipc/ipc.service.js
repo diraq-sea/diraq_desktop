@@ -112,16 +112,15 @@ module.exports = {
   [SAVE_COMMIT_FILE]: async ({ fileId, commitId, extname }) => {
     const filename = corrStore.hashToFilename(commitId)
     const filePath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
-    const newcommitId = (await axios.post(`file/${fileId}`, { filePath, extname })).data // prettier-ignore
+    const newcommitId = (await axios.post(`file/${fileId}`, { filePath, extname })).data
     corrStore.replaceFileInfo(commitId, newcommitId)
   },
 
-  [SAVE_COMMIT_ID]: async ({ commitpanel, fileId, commitId }) => {
-    return commitStore.writeInfo({ commitpanel, fileId, commitId })
-  },
-  [FETCH_COMMIT_ID]: async fileId => {
-    return commitStore.readInfo(fileId)
-  },
+  [SAVE_COMMIT_ID]: ({ commitpanel, fileId, commitId }) =>
+    commitStore.writeInfo({ commitpanel, fileId, commitId }),
+
+  [FETCH_COMMIT_ID]: fileId => commitStore.readInfo(fileId),
+
   [ADD_COMMENT]: async ({ commitId, comment }) =>
     (await axios.post(`/commit/${commitId}/comments`, { comment })).data,
 

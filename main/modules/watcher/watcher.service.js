@@ -2,6 +2,7 @@ const { READY, ADD, ADDDIR, UNLINK, UNLINKDIR, CHANGE, ERROR } = require('./watc
 const windowStore = require('../../store/window.store')
 const { TMPFILE_OBSERVING } = require('../../../common/ipcToWindowTypes')
 const tmpStore = require('../../store/tmpfile.store')
+const { TMPFILE_STATES } = require('../../../common/chokidarTypes')
 
 /* eslint-disable no-console */
 module.exports = type =>
@@ -33,7 +34,8 @@ module.exports = type =>
       const commentChange = `修正されました-> ${path}`
       tmpStore.writeFileInfo(path)
       console.log(commentChange)
-      windowStore.send(TMPFILE_OBSERVING, commentChange)
+      const result = TMPFILE_STATES.CHANGED
+      windowStore.send(TMPFILE_OBSERVING, result)
     },
     [ERROR]: path => {
       const commentError = `エラーです-> ${path}`
