@@ -171,7 +171,7 @@ export default {
   margin-bottom: 10px;
 }
 
-.el-radio-button /deep/ .el-radio-button__inner {
+.el-radio-button >>> .el-radio-button__inner {
   margin-bottom: 10px;
   width: 100px;
 }
@@ -205,7 +205,7 @@ export default {
   width: 100%;
 }
 
-.upload-demo /deep/ .el-upload-dragger {
+.upload-demo >>> .el-upload-dragger {
   width: 135%;
 }
 

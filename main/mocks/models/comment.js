@@ -1,7 +1,7 @@
-import mockStore from '../../store/mock.store'
+import mockStore from '~/store/mock.store'
 
-export default {
-  defaultValues: () => [
+export function defaultValues() {
+  return [
     {
       id: 0,
       commitId: 'hash-0',
@@ -50,13 +50,18 @@ export default {
       mtime: Date.now() - 24 * 3600 * 1000,
       comment: 'ずいぶん書きやすくなってていいと思います',
     },
-  ],
-  create: ({ commitId, comment }) => ({
+  ]
+}
+
+export function create({ commitId, comment }) {
+  return {
     id: mockStore.get('comment').length,
     commitId,
     user: 0,
     birthtime: Date.now(),
     mtime: Date.now(),
     comment,
-  }),
+  }
 }
+
+export default { defaultValues, create }
