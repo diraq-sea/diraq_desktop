@@ -8,9 +8,9 @@ module.exports = {
   CONFIG_FILE: path.join(CONFIG_DIR, 'config.json'),
   TMP_FILE: path.join(CONFIG_DIR, 'tmp.json'),
   MOCK_FILE: path.join(CONFIG_DIR, 'mock.json'),
+  CORR_FILE: path.join(CONFIG_DIR, 'corr.json'),
   CONFIG_VERSION: 0,
   MOCK_VERSION: 1,
-
   MOCK_FILES_DIR: path.join(__dirname, '../renderer/static/mocks'),
   MOCK_FILES_PATH: 'mocks',
   DEFAULT_FILES_PATH_CHUNK: 'defaults/default',

@@ -40,7 +40,8 @@ const configStore = require('../../store/config.store')
 const windowStore = require('../../store/window.store')
 const tmpStore = require('../../store/tmpfile.store')
 const commitStore = require('../../store/commit.store')
-const { TMP_FILES_DIR, TMP_FILE } = require('../../const')
+const corrStore = require('../../store/corr.store')
+const { TMP_FILES_DIR, TMP_FILE, MOCK_FILES_DIR } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
 
@@ -83,22 +84,40 @@ module.exports = {
 
   [FETCH_FILE]: async fileId => (await axios.get(`/file/${fileId}`)).data,
 
-  [EDIT_FILE]: async ({ extname, commit }) => {
-    const filepath = path.join(TMP_FILES_DIR, `${commit.id}.${extname}`)
-    if (!fs.existsSync(filepath)) {
-      await fetchAndSaveFile(commit.url, filepath) // ここのif文の意図？
-      // fs.copyFileSync(filepath, path.join(TMP_FILES_DIR, `${commit.id}.${extname}`))
+  [EDIT_FILE]: async ({ extname, commit, result }) => {
+    let filename = corrStore.hashToFilename(commit.id)
+    const filepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
+    const mockpath = path.join(MOCK_FILES_DIR, `${commit.id}.${extname}`)
+    if (result === 'initialCommit') {
+      if (!fs.existsSync(filepath)) {
+        console.log('初コミット') // eslint-disable-line
+        await fetchAndSaveFile(commit.url, filepath) // ここのif文の意図？
+      }
+      await open(filepath)
+    } else if (result === 'mustCommit') {
+      console.log('commitしてから') // eslint-disable-line
+    } else if (result === 'anotherFileCommit') {
+      console.log('置き換え', filename) // eslint-disable-line
+      filename = `${Date.now()}_${commit.id}`
+      const newfilepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
+      corrStore.writeFileInfo(filename, commit.id)
+      fs.copyFileSync(mockpath, newfilepath)
+      await open(newfilepath) // fileがないとき追加通知のみで開かれない
+    } else {
+      console.log('そのまま', filename) // eslint-disable-line
+      await open(filepath)
     }
-    await open(filepath) // fileがないとき追加通知のみで開かれない
   },
 
   [SAVE_COMMIT_FILE]: async ({ fileId, commitId, extname }) => {
-    const filePath = path.join(TMP_FILES_DIR, `${commitId}.${extname}`)
-    await axios.post(`file/${fileId}`, { filePath, extname }).data
+    const filename = corrStore.hashToFilename(commitId)
+    const filePath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
+    const newcommitId = (await axios.post(`file/${fileId}`, { filePath, extname })).data // prettier-ignore
+    corrStore.replaceFileInfo(commitId, newcommitId)
   },
 
-  [SAVE_COMMIT_ID]: async ({ fileId, commitId }) => {
-    commitStore.writeInfo({ fileId, commitId })
+  [SAVE_COMMIT_ID]: async ({ commitpanel, fileId, commitId }) => {
+    return commitStore.writeInfo({ commitpanel, fileId, commitId })
   },
   [FETCH_COMMIT_ID]: async fileId => {
     return commitStore.readInfo(fileId)
@@ -158,6 +177,6 @@ module.exports = {
     if (fs.existsSync(TMP_FILE)) return tmpStore.readFileInfo()
   },
   [DELETE_TMP_INFO]: extname => {
-    if (fs.existsSync(TMP_FILE)) tmpStore.deleteFileInfo(extname)
+    if (fs.existsSync(TMP_FILE)) return tmpStore.deleteFileInfo(extname)
   },
 }

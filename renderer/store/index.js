@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron'
 import { TMPFILE_OBSERVING, ON_MAXIMIZE, ON_UNMAXIMIZE } from '~~/common/ipcToWindowTypes'
-import { FETCH_TMP_INFO, DELETE_TMP_INFO } from '~~/common/ipcTypes'
+import { FETCH_TMP_INFO, DELETE_TMP_INFO, FETCH_COMMIT_ID } from '~~/common/ipcTypes'
 
 export const state = () => ({
   isMaximized: false,
@@ -21,8 +21,10 @@ export const actions = {
     const tmpInfo = await this.$ipc(FETCH_TMP_INFO)
     commit('setCommitted', tmpInfo)
   },
-  async deleteTmpInfo(store, extname) {
-    await this.$ipc(DELETE_TMP_INFO, extname)
+  async deleteTmpInfo({ commit }, { fileId, extname }) {
+    const commitId = await this.$ipc(FETCH_COMMIT_ID, fileId)
+    const tmpInfo = await this.$ipc(DELETE_TMP_INFO, { commitId, extname })
+    commit('setCommitted', tmpInfo)
   },
 }
 

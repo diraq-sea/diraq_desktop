@@ -176,19 +176,25 @@ export default {
         const extname = this.file.extname
         await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
         await this.$store.dispatch('file/addCommit', { fileId, message })
-        await this.$store.dispatch('deleteTmpInfo', extname)
+        await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
         await this.$store.dispatch('file/fetchFile', fileId)
-
         this.commitComment = ''
       }
     },
     async editFile(commit) {
       const fileId = commit.fileId
       const commitId = commit.id
-      await this.$store.dispatch('file/saveCommitId', { fileId, commitId })
+      const extname = this.file.extname
+      const commitpanel = this.commit
+      const result = await this.$store.dispatch('file/saveCommitId', {
+        commitpanel,
+        fileId,
+        commitId,
+      })
       await this.$store.dispatch('file/editFile', {
-        extname: this.file.extname,
+        extname,
         commit,
+        result,
       })
     },
     async viewFile(commit) {

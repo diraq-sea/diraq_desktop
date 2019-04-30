@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
 const { TMP_FILE } = require('../const')
+const corrStore = require('../store/corr.store')
 let tmpfiles = []
 let isInit = false
 
@@ -20,9 +21,10 @@ module.exports = {
   },
   writeFileInfo(pathinfo) {
     checkInit()
-
     const jsonlist = JSON.parse(fs.readFileSync(TMP_FILE))
-    const filename = path.basename(pathinfo)
+    const extname = path.extname(pathinfo)
+    const name = path.basename(pathinfo, extname)
+    const filename = corrStore.filenameToHash(name) // corr.jsonがちゃんとできた後に実行したい
     const { birthtime, mtime } = fs.statSync(pathinfo)
     const targetfile = jsonlist.find(json => json.name === filename)
     if (!targetfile) {
@@ -40,10 +42,13 @@ module.exports = {
     checkInit()
     return JSON.parse(fs.readFileSync(TMP_FILE))
   },
-  deleteFileInfo(extname) {
+  deleteFileInfo({ commitId, extname }) {
     checkInit()
-    console.log('deleteInfo') // eslint-disable-line
-    console.log(extname) // eslint-disable-line
-    // どうにかして該当するtmp.jsonを消去したい,そしたらcommitpanel消せる
+    const filename = commitId + '.' + extname
+    const tmplist = JSON.parse(fs.readFileSync(TMP_FILE))
+    const numberInTmp = tmplist.findIndex(obj => obj.name === filename)
+    tmplist.splice(numberInTmp, 1)
+    fs.writeFileSync(TMP_FILE, JSON.stringify(tmplist))
+    return tmplist
   },
 }

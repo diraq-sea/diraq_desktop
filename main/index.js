@@ -6,6 +6,7 @@ const tmpStore = require('./store/tmpfile.store')
 const windowStore = require('./store/window.store')
 const watcherController = require('./modules/watcher/watcher.controller')
 const commitStore = require('./store/commit.store')
+const corrStore = require('./store/corr.store')
 const { CONFIG_DIR } = require('./const')
 const mkdirIfNotExists = require('./utils/mkdirIfNotExists')
 
@@ -26,6 +27,7 @@ async function createWindow() {
   ipcController.init()
   watcherController.init()
   commitStore.init()
+  corrStore.init()
 }
 
 app.on('ready', createWindow)
