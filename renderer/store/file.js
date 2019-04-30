@@ -1,6 +1,12 @@
-import { FETCH_FILE, EDIT_FILE, ADD_COMMENT, ADD_COMMIT } from '~~/common/ipcTypes'
-
-const url = 'http://www.mech.tohoku-gakuin.ac.jp/rde/contents/kougakukai/files/template.docx'
+import {
+  FETCH_FILE,
+  EDIT_FILE,
+  ADD_COMMENT,
+  ADD_COMMIT,
+  SAVE_COMMIT_FILE,
+  SAVE_COMMIT_ID,
+  FETCH_COMMIT_ID,
+} from '~~/common/ipcTypes'
 
 export const state = () => ({
   fileList: {},
@@ -27,29 +33,6 @@ export const mutations = {
       [fileId]: id,
     }
   },
-  addCommit(state, message) {
-    const file = state.files.find(file =>
-      file.commits.find(commit => commit.id === state.currentCommit.id),
-    )
-
-    const newFile = {
-      ...file,
-      commits: [
-        ...file.commits,
-        {
-          id: `hash${Date.now()}`,
-          url,
-          message,
-          user: 1,
-          parents: [file.commits[file.commits.length - 1].id],
-          comments: [],
-        },
-      ],
-    }
-
-    state.files = [...state.files]
-    state.files[state.files.indexOf(file)] = newFile
-  },
 }
 
 export const actions = {
@@ -68,6 +51,22 @@ export const actions = {
     await this.$ipc(ADD_COMMENT, { commitId, comment })
   },
   async addCommit(store, { fileId, message }) {
-    await this.$ipc(ADD_COMMIT, { fileId, message })
+    await this.$ipc(ADD_COMMIT, { fileId, message }) // commit.jsonからcommitId取得してtmp.jspn消す方向
+  },
+  async viewFile({ commit }, { fileId, commitId }) {
+    const file = await this.$ipc(FETCH_FILE, fileId)
+    commit('setFile', file)
+    commit('setCurrentCommitId', {
+      fileId,
+      id: commitId,
+    })
+  },
+  async saveCommitFile(store, { fileId, extname }) {
+    const commitId = await this.$ipc(FETCH_COMMIT_ID, fileId)
+    await this.$ipc(SAVE_COMMIT_FILE, { fileId, commitId, extname })
+  },
+  async saveCommitId(store, { commitpanel, fileId, commitId }) {
+    const result = await this.$ipc(SAVE_COMMIT_ID, { commitpanel, fileId, commitId })
+    return result
   },
 }

@@ -1,13 +1,9 @@
-const pkg = require('./package')
+import pkg from './package'
 
-module.exports = {
+export default {
   mode: 'spa',
   srcDir: 'renderer/',
-  router: process.env.NODE_ENV === 'development' ? {} : { base: `/${__dirname}/dist/` },
-
-  /*
-   ** Headers of the page
-   */
+  router: { mode: 'hash' },
   head: {
     title: pkg.name,
     meta: [
@@ -17,20 +13,8 @@ module.exports = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-
-  /*
-   ** Customize the progress-bar color
-   */
   loading: false,
-
-  /*
-   ** Global CSS
-   */
   css: ['element-ui/lib/theme-chalk/index.css', '@fortawesome/fontawesome-free/css/all.css'],
-
-  /*
-   ** Plugins to load before mounting the App
-   */
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/ipc',
@@ -38,19 +22,8 @@ module.exports = {
     '@/plugins/platform',
     '@/plugins/fileIcon',
   ],
-
-  /*
-   ** Nuxt.js modules
-   */
   modules: [],
-
-  /*
-   ** Build configuration
-   */
   build: {
-    /*
-     ** You can extend webpack config here
-     */
     extend(config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
@@ -61,8 +34,10 @@ module.exports = {
           exclude: /(node_modules)/,
         })
       }
-      config.target = 'electron-renderer'
+
       config.output.globalObject = 'this' // for WebWorker of pdf.js
+      config.output.publicPath = './_nuxt/'
+      config.target = 'electron-renderer'
     },
   },
 }

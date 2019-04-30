@@ -11,6 +11,9 @@
             <span class="committer-name">{{ user(commit.user).name }}</span>
             <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
+              <div class="file-controls-icon" title="View file" @click="viewFile(commit)">
+                <i class="fas fa-eye" />
+              </div>
               <div class="file-controls-icon" title="Edit file" @click="editFile(commit)">
                 <i class="fas fa-edit" />
               </div>
@@ -51,38 +54,44 @@
         </div>
       </div>
     </div>
-
-    <div class="commit-maker">
-      <div class="commit-maker-graph">
-        <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
-      </div>
-      <div class="comments-panel">
-        <div class="committer-info">
-          <div class="comment-maker-text">Editting based on "{{ currentCommit.message }}"</div>
-          <div class="file-controls">
-            <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
-              <i class="fas fa-edit" />
-            </div>
-            <a
-              :download="downloadingName"
-              :href="currentCommit.url"
-              class="file-controls-icon"
-              title="Trash editting file"
-            >
-              <i class="far fa-trash-alt" />
-            </a>
-          </div>
+    <div v-if="commit">
+      <div class="commit-maker">
+        <div class="commit-maker-graph">
+          <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
         </div>
+        <div class="comments-panel">
+          <div class="committer-info">
+            <div class="comment-maker-text">Editting based on "{{ currentCommit.message }}"</div>
+            <div class="file-controls">
+              <div class="file-controls-icon" title="Edit file" @click="editFile(currentCommit)">
+                <i class="fas fa-edit" />
+              </div>
+              <a
+                :download="downloadingName"
+                :href="currentCommit.url"
+                class="file-controls-icon"
+                title="Trash editting file"
+              >
+                <i class="far fa-trash-alt" />
+              </a>
+            </div>
+          </div>
 
-        <form class="comment-input" @submit.prevent="submitCommit">
-          <input v-model="commitComment" type="text" placeholder="Input comment for uploading..." />
-        </form>
+          <form class="comment-input" @submit.prevent="submitCommit">
+            <input
+              v-model="commitComment"
+              type="text"
+              placeholder="Input comment for uploading..."
+            />
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { DATE_FORMAT_TYPE } from '~/utils/const'
 
 export default {
@@ -105,6 +114,17 @@ export default {
     },
   },
   computed: {
+    commit() {
+      for (let commit in this.file.commits) {
+        for (let id in this.committed) {
+          if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
+            return true // commit後tmp.json削除
+          }
+        }
+      }
+      return false
+    },
+    ...mapState(['committed']),
     user() {
       return id => this.users.find(user => user.id === id)
     },
@@ -157,16 +177,34 @@ export default {
       if (this.commitComment) {
         const fileId = this.file.id
         const message = this.commitComment
+        const extname = this.file.extname
+        await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
         await this.$store.dispatch('file/addCommit', { fileId, message })
+        await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
         await this.$store.dispatch('file/fetchFile', fileId)
         this.commitComment = ''
       }
     },
     async editFile(commit) {
-      await this.$store.dispatch('file/editFile', {
-        extname: this.file.extname,
-        commit,
+      const fileId = commit.fileId
+      const commitId = commit.id
+      const extname = this.file.extname
+      const commitpanel = this.commit
+      const result = await this.$store.dispatch('file/saveCommitId', {
+        commitpanel,
+        fileId,
+        commitId,
       })
+      await this.$store.dispatch('file/editFile', {
+        extname,
+        commit,
+        result,
+      })
+    },
+    async viewFile(commit) {
+      const fileId = this.file.id
+      const commitId = commit.id
+      await this.$store.dispatch('file/viewFile', { fileId, commitId })
     },
   },
 }
@@ -351,5 +389,14 @@ export default {
   100% {
     opacity: 1;
   }
+}
+
+.dialog >>> .el-dialog__body {
+  padding: 20px 40px 50px;
+}
+
+.dialog >>> .v-modal,
+.dialog >>> .el-dialog__wrapper {
+  top: var(--titlebar-height);
 }
 </style>

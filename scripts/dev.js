@@ -1,59 +1,26 @@
-const chalk = require('chalk')
-const electron = require('electron')
-const path = require('path')
-const webpack = require('webpack')
-const { Nuxt, Builder } = require('nuxt')
-const { spawn } = require('child_process')
+import chalk from 'chalk'
+import { spawn } from 'child_process'
+import electron from 'electron'
+import path from 'path'
+import webpack from 'webpack'
+import { Nuxt, Builder } from 'nuxt'
+import mainConfig from '../webpack.config'
+import pkg from '../package'
+import rendererConfig from '../nuxt.config'
+import logs from './logs'
 
-const mainConfig = require('./webpack.config')
-const rendererConfig = require('./nuxt.config')
+process.env.NODE_ENV = 'development'
+
 const logProcesses = { electron: 'Electron', main: 'Main Process', renderer: 'Renderer Process' }
 
 let electronProcess = null
 let manualRestart = false
-let args = ['--inspect=5858', path.join(__dirname, './dist/main')]
-
-/**
- * 標準出力、標準エラー出力をブロックにまとめて表示する。
- * @param {string} proc ブロックの見出しとして表示する文字列
- * @param {any} data コンソールに表示するデータ
- * @param {string} color 見出し、枠線に適用する文字色
- * @param {boolean} [isWebpack=false] データが webpack の Stats Object か否かのフラグ
- */
-function logs(proc, data, color, isWebpack = false) {
-  let log = ''
-  log += `${chalk[color].bold(`┏ ${proc} ${[...Array(27 - proc.length)].join('-')}`)}\n\n`
-
-  if (typeof data === 'object' && isWebpack) {
-    data
-      .toString({
-        colors: true,
-        chunks: false,
-      })
-      .split(/\r?\n/)
-      .forEach(line => {
-        log += `  ${line}\n`
-      })
-    log += '\n'
-  } else if (typeof data === 'object') {
-    data
-      .toString()
-      .split(/\r?\n/)
-      .forEach(line => {
-        log += `  ${line}\n`
-      })
-  } else {
-    log += `  ${data}\n`
-  }
-
-  log += `${chalk[color].bold(`┗ ${[...Array(28)].join('-')}`)}\n`
-  console.log(log) // eslint-disable-line
-}
 
 /**
  * Nuxt.js によるファイルのビルド、開発用サーバーの起動と、ファイルの監視を開始する。
  */
 async function startRenderer() {
+  rendererConfig.dev = true
   rendererConfig.build.quiet = true
 
   const nuxt = new Nuxt(rendererConfig)
@@ -70,7 +37,9 @@ async function startRenderer() {
     logs(logProcesses.renderer, 'Waiting for file changes\n', 'cyan', true)
   })
 
+  await nuxt.ready()
   await nuxt.server.listen()
+  process.env._NUXT_URL_ = nuxt.server.listeners[0].url
   await new Builder(nuxt).build()
 }
 
@@ -80,11 +49,14 @@ async function startRenderer() {
  */
 function startMain() {
   return new Promise(resolve => {
+    mainConfig.mode = process.env.NODE_ENV
+    mainConfig.node = { __dirname: true, __filename: true }
+
     const compiler = webpack(mainConfig)
 
     compiler.watch({}, (err, stats) => {
       if (err) {
-        console.log(err) // eslint-disable-line
+        console.error(err.stack || err) // eslint-disable-line
         return
       }
 
@@ -110,14 +82,7 @@ function startMain() {
  * Electron を起動する。
  */
 function startElectron() {
-  // detect yarn or npm and process commandline args accordingly
-  if (process.env.npm_execpath.endsWith('yarn.js')) {
-    args = args.concat(process.argv.slice(3))
-  } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {
-    args = args.concat(process.argv.slice(2))
-  }
-
-  electronProcess = spawn(electron, args)
+  electronProcess = spawn(electron, [path.join(process.cwd(), pkg.main)])
 
   electronProcess.stdout.on('data', data => {
     logs(logProcesses.main, data, 'blue')
@@ -148,7 +113,8 @@ async function dev() {
     await startMain()
     startElectron()
   } catch (err) {
-    console.error(err) // eslint-disable-line
+    console.error(err.stack || err) // eslint-disable-line
+    process.exit(1)
   }
 }
 

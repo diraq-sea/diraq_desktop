@@ -19,14 +19,14 @@ async function init() {
     titleBarStyle: 'hidden',
   })
 
-  mainWindow.focus()
-  mainWindow.loadURL(WINDOW_ORIGIN)
-
   if (process.env.NODE_ENV === 'development') {
     const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
     await installExtension(VUEJS_DEVTOOLS)
     mainWindow.webContents.openDevTools()
   }
+
+  mainWindow.focus()
+  mainWindow.loadURL(WINDOW_ORIGIN)
 
   mainWindow.on('resize', () => {
     const [width, height] = mainWindow.getSize()

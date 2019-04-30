@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import mockStore from '../../../../store/mock.store'
+import corrStore from '../../../../store/corr.store'
 import {
   FIRST_CREATED_MESSAGE,
   FIRST_DROPPED_MESSAGE,
@@ -49,8 +50,11 @@ export default {
       mockStore.add('commit', commit)
 
       if (dropped) {
-        fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${commit.id}.${extname}`))
-        fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${commit.id}.${extname}`))
+        const hashname = commit.id
+        const filename = `${Date.now()}_${name}`
+        fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${filename}.${extname}`))
+        fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${hashname}.${extname}`))
+        corrStore.writeFileInfo(filename, hashname)
       }
 
       return file

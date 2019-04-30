@@ -1,12 +1,10 @@
-const path = require('path')
-const webpack = require('webpack')
-const { dependencies } = require('./package.json')
+import path from 'path'
+import webpack from 'webpack'
+import pkg from './package'
 
-module.exports = {
-  mode: process.env.NODE_ENV || 'development',
+export default {
   entry: { main: path.join(__dirname, 'main') },
-  externals: [...Object.keys(dependencies || {})],
-  node: { __dirname: process.env.NODE_ENV !== 'production' },
+  externals: [...Object.keys(pkg.dependencies || {})],
   module: {
     rules: [
       {
@@ -32,6 +30,14 @@ module.exports = {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, 'dist'),
+  },
+  resolve: {
+    alias: {
+      '~': path.join(__dirname, 'main'),
+      '~~': process.cwd(),
+      '@': path.join(__dirname, 'main'),
+      '@@': process.cwd(),
+    },
   },
   plugins: [new webpack.NoEmitOnErrorsPlugin()],
   target: 'electron-main',
