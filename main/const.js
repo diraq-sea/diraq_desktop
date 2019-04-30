@@ -18,7 +18,7 @@ module.exports = {
   TMP_FILES_DIR: path.join(CONFIG_DIR, 'tmpfiles'),
   WINDOW_ORIGIN:
     process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000'
+      ? process.env._NUXT_URL_
       : `file://${__dirname}/index.html`,
   API_BASE_URL: 'http://localhost:8080/v1',
   PLATFORM: { win32: 'win', darwin: 'mac', linux: 'linux' }[process.platform],

@@ -1,12 +1,10 @@
-const path = require('path')
-const webpack = require('webpack')
-const { dependencies } = require('./package.json')
+import path from 'path'
+import webpack from 'webpack'
+import pkg from './package'
 
-module.exports = {
-  mode: process.env.NODE_ENV || 'development',
+export default {
   entry: { main: path.join(__dirname, 'main') },
-  externals: [...Object.keys(dependencies || {})],
-  node: { __dirname: process.env.NODE_ENV !== 'production' },
+  externals: [...Object.keys(pkg.dependencies || {})],
   module: {
     rules: [
       {
