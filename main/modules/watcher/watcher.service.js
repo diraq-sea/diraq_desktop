@@ -34,8 +34,7 @@ module.exports = type =>
       const commentChange = `修正されました-> ${path}`
       tmpStore.writeFileInfo(path)
       console.log(commentChange)
-      const result = TMPFILE_STATES.CHANGED
-      windowStore.send(TMPFILE_OBSERVING, result)
+      windowStore.send(TMPFILE_OBSERVING, TMPFILE_STATES.CHANGED)
     },
     [ERROR]: path => {
       const commentError = `エラーです-> ${path}`
