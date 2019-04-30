@@ -131,6 +131,10 @@ export default {
       commitComment: '',
     }
   },
+  mounted() {
+    let container = this.$el.querySelector('.commit-container')
+    container.scrollTop = container.scrollHeight
+  },
   methods: {
     inputComment(commitId, e) {
       this.values = [...this.values]
