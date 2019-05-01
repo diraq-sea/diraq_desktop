@@ -1,6 +1,6 @@
+const fs = require('fs')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
 const { COMMIT_FILE } = require('../const')
-const fs = require('fs')
 const corrStore = require('../store/corr.store')
 const commitfile = []
 let isInit = false

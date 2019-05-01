@@ -1,6 +1,6 @@
+const fs = require('fs')
 const writeFileIfNotExists = require('../utils/writeFileIfNotExists')
 const { CORR_FILE } = require('../const')
-const fs = require('fs')
 const corrfile = []
 let isInit = false
 
