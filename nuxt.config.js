@@ -32,6 +32,7 @@ export default {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/,
+          options: { cache: true, fix: true },
         })
       }
 
