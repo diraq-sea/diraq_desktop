@@ -29,7 +29,7 @@ export default {
     })
   },
   methods: {
-    async invite() {
+    invite() {
       ipcRenderer.send('invite-token-request')
     },
   },
