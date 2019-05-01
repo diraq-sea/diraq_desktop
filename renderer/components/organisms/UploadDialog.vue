@@ -186,7 +186,7 @@ export default {
 }
 
 .el-radio {
-  margin: 0px 20px 15px 0px;
+  margin: 0 20px 15px 0;
   display: block;
 }
 
@@ -225,7 +225,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff;
+  background: #fff;
 }
 
 .drop-area .drop-frame {

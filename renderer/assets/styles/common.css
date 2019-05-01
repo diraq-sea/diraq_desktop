@@ -9,7 +9,7 @@
   --members-opening-width: 300px;
   --icon-size-small: 26px;
   --commit-circle-size: 40px;
-  --color-page: #ffffff;
+  --color-page: #fff;
   --color-border: #c5c5c5;
   --color-date: #a5a5a5;
   --color-sub: #efefef;
@@ -48,8 +48,8 @@ html {
 }
 
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
 }
@@ -59,18 +59,18 @@ a {
   color: inherit;
 }
 
-/*スクロールバー全体*/
+/* スクロールバー全体 */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
-/*スクロールバーの軌道*/
+/* スクロールバーの軌道 */
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/*スクロールバーの動く部分*/
+/* スクロールバーの動く部分 */
 ::-webkit-scrollbar-thumb {
   background: #cacaca;
 }

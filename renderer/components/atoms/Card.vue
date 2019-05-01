@@ -25,7 +25,7 @@ export default {
   border-radius: 6px;
   padding: 30px 40px;
   border: 1px solid rgb(216, 216, 216);
-  box-shadow: rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
+  box-shadow: rgba(122, 122, 122, 0.0588235) 0 0 6px 3px;
 }
 
 .title {
@@ -33,8 +33,8 @@ export default {
   letter-spacing: 0.05em;
   margin-block-start: 0.67em;
   margin-block-end: 0.67em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
   padding-bottom: 10px;
   box-sizing: border-box;
   color: #202124;
