@@ -1,6 +1,6 @@
-import MockAdapter from 'axios-mock-adapter'
 import fs from 'fs'
 import path from 'path'
+import MockAdapter from 'axios-mock-adapter'
 import mockStore from '../store/mock.store'
 import { MOCK_FILES_DIR } from '../const'
 import mkdirIfNotExists from '../utils/mkdirIfNotExists'
