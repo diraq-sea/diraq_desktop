@@ -40,7 +40,6 @@ export default {
   color: #202124;
   font-weight: bold;
   font-size: 27px;
-  font-weight: 300;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }

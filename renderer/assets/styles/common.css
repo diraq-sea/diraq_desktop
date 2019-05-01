@@ -1,3 +1,19 @@
+/* スクロールバー全体 */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* スクロールバーの軌道 */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* スクロールバーの動く部分 */
+::-webkit-scrollbar-thumb {
+  background: #cacaca;
+}
+
 :root {
   --color-dark: #0e1e25;
   --color-accent: #e5ec00;
@@ -57,20 +73,4 @@ html {
 a {
   text-decoration: none;
   color: inherit;
-}
-
-/* スクロールバー全体 */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-/* スクロールバーの軌道 */
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* スクロールバーの動く部分 */
-::-webkit-scrollbar-thumb {
-  background: #cacaca;
 }

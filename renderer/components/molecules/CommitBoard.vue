@@ -226,6 +226,12 @@ export default {
   opacity: 0;
 }
 
+.comments-panel .committer-info .file-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .commit-container .comments-panel:hover .file-controls {
   opacity: 1;
 }
@@ -283,12 +289,6 @@ export default {
 .comments-panel .committer-info {
   position: relative;
   padding-right: 70px;
-}
-
-.comments-panel .committer-info .file-controls {
-  position: absolute;
-  top: 0;
-  right: 0;
 }
 
 .comments-panel .committer-info .file-controls .file-controls-icon {

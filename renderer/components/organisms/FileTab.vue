@@ -142,33 +142,12 @@ export default {
   background: var(--color-title-hover);
 }
 
-.tab-container .ft-tab .tab-content:hover + .tab-dragarea {
-  opacity: 0;
-}
-
-.tab-container .ft-tab .tab-content:hover i {
-  opacity: 1;
-}
-
-.tab-container .ft-tab:hover {
-  border-right-color: transparent;
-}
-
-.tab-container .ft-tab.current {
-  color: var(--font-base);
-  border-right-color: transparent;
-}
-
 .tab-container .ft-tab.current .tab-dragarea {
   display: none;
 }
 
-.tab-container .ft-tab.current .tab-content {
-  background: var(--color-page);
-}
-
-.tab-container .ft-tab.current i {
-  opacity: 1;
+.tab-container .ft-tab .tab-content:hover + .tab-dragarea {
+  opacity: 0;
 }
 
 .tab-container .ft-tab i {
@@ -187,18 +166,6 @@ export default {
   transition: 0.2s opacity;
 }
 
-.tab-container .ft-tab i:hover {
-  background: var(--color-border);
-}
-
-.tab-container .tab-plus {
-  display: inline-block;
-  color: var(--font-sub);
-  font-size: 14px;
-  text-align: center;
-  width: 30px;
-}
-
 .tab-container .tab-plus i {
   -webkit-app-region: no-drag;
   display: inline-block;
@@ -208,7 +175,40 @@ export default {
   border-radius: 50%;
 }
 
+.tab-container .ft-tab.current i {
+  opacity: 1;
+}
+
+.tab-container .ft-tab i:hover {
+  background: var(--color-border);
+}
+
 .tab-container .tab-plus i:hover {
   background: var(--color-border);
+}
+
+.tab-container .ft-tab .tab-content:hover i {
+  opacity: 1;
+}
+
+.tab-container .ft-tab:hover {
+  border-right-color: transparent;
+}
+
+.tab-container .ft-tab.current {
+  color: var(--font-base);
+  border-right-color: transparent;
+}
+
+.tab-container .ft-tab.current .tab-content {
+  background: var(--color-page);
+}
+
+.tab-container .tab-plus {
+  display: inline-block;
+  color: var(--font-sub);
+  font-size: 14px;
+  text-align: center;
+  width: 30px;
 }
 </style>
