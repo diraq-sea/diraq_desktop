@@ -8,14 +8,14 @@
       <div class="fp-right">
         <commit-board
           :file="file(fileId)"
-          :currentCommit="currentCommit(fileId)"
+          :current-commit="currentCommit(fileId)"
           :users="members(roomId)"
-          :selfIcon="icon"
+          :self-icon="icon"
           class="commit-board"
           @addComment="$store.commit('file/addComment', $event)"
           @addCommit="$store.commit('file/addCommit', $event)"
         />
-        <members :roomId="roomId" class="members" />
+        <members :room-id="roomId" class="members" />
       </div>
     </template>
   </div>

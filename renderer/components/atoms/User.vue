@@ -25,15 +25,15 @@ export default {
       required: true,
     },
   },
-  computed: {
-    userStyle() {
-      return { backgroundImage: `url(${this.icon})` }
-    },
-  },
   data() {
     return {
       isOpeningUser: false,
     }
+  },
+  computed: {
+    userStyle() {
+      return { backgroundImage: `url(${this.icon})` }
+    },
   },
   mounted() {
     window.addEventListener('mousedown', this.closeOpenUser, false)

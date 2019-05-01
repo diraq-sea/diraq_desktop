@@ -115,8 +115,8 @@ export default {
   },
   computed: {
     commit() {
-      for (let commit in this.file.commits) {
-        for (let id in this.committed) {
+      for (const commit in this.file.commits) {
+        for (const id in this.committed) {
           if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
             return true // commit後tmp.json削除
           }

@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <members-item :roomId="roomId" class="folder-members" />
+        <members-item :room-id="roomId" class="folder-members" />
       </div>
 
       <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">

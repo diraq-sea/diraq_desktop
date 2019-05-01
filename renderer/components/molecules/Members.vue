@@ -1,6 +1,6 @@
 <template>
   <div :class="containerClass" class="members-container" @mousedown.stop>
-    <members-item :roomId="roomId" :roomName="roomInfo(roomId).name" class="members" />
+    <members-item :room-id="roomId" :room-name="roomInfo(roomId).name" class="members" />
 
     <div class="members-container-open">
       <i :class="containerClass" class="fas fa-angle-left" @mousedown="toggleOpening" />
