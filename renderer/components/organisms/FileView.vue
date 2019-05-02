@@ -39,6 +39,7 @@ export default {
       required: true,
     },
   },
+  data: () => ({ loading: true, numPages: 1 }),
   computed: {
     ...mapState('user', ['icon']),
     ...mapGetters('member', ['members']),
@@ -67,7 +68,6 @@ export default {
       }
     },
   },
-  data: () => ({ loading: true, numPages: 1 }),
   async created() {
     await this.$store.dispatch('file/fetchFile', this.currentTab.values.fileId)
 

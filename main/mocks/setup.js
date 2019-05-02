@@ -4,7 +4,7 @@ import MockAdapter from 'axios-mock-adapter'
 import mockStore from '../store/mock.store'
 import { MOCK_FILES_DIR } from '../const'
 import mkdirIfNotExists from '../utils/mkdirIfNotExists'
-import commitModel from './models/commit'
+import { defaultValues } from './models/commit'
 
 const listFiles = dirpath => {
   const list = []
@@ -35,8 +35,7 @@ export default async client => {
   const mock = new MockAdapter(client, { delayResponse: 200 })
 
   mkdirIfNotExists(MOCK_FILES_DIR)
-  commitModel
-    .defaultValues()
+  defaultValues()
     .slice(1)
     .forEach(commit =>
       fs.copyFileSync(

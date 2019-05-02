@@ -22,16 +22,16 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      isOpening: false,
+    }
+  },
   computed: {
     ...mapGetters('room', ['roomInfo']),
     containerClass() {
       return { opening: this.isOpening }
     },
-  },
-  data() {
-    return {
-      isOpening: false,
-    }
   },
   mounted() {
     window.addEventListener('mousedown', this.close, false)

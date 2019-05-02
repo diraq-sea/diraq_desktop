@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div v-if="commit">
+    <div v-if="isModified">
       <div class="commit-maker">
         <div class="commit-maker-graph">
           <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
@@ -113,8 +113,14 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      values: [],
+      commitComment: '',
+    }
+  },
   computed: {
-    commit() {
+    isModified() {
       for (const commit in this.file.commits) {
         for (const id in this.committed) {
           if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
@@ -144,12 +150,6 @@ export default {
     formattedDate() {
       return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
-  },
-  data() {
-    return {
-      values: [],
-      commitComment: '',
-    }
   },
   methods: {
     inputComment(commitId, e) {
