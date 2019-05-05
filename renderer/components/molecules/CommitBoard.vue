@@ -185,7 +185,7 @@ export default {
       const fileId = commit.fileId
       const commitId = commit.id
       const extname = this.file.extname
-      const commitpanel = this.commit
+      const commitpanel = this.isModified
       const result = await this.$store.dispatch('file/saveCommitId', {
         commitpanel,
         fileId,
