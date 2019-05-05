@@ -9,6 +9,7 @@ import {
 export const state = () => ({
   rooms: null,
   roomInfoList: {},
+  roomId: null,
 })
 
 export const getters = {
@@ -24,6 +25,9 @@ export const mutations = {
       ...state.roomInfoList,
       [roomInfo.id]: roomInfo,
     }
+  },
+  setRoomId(state, roomId) {
+    state.roomId = roomId
   },
 }
 
@@ -52,5 +56,9 @@ export const actions = {
   async dropFile(store, params) {
     const item = await this.$ipc(DROP_FILE, params)
     return item
+  },
+
+  async getRoomId({ commit }, roomId) {
+    commit('setRoomId', roomId)
   },
 }

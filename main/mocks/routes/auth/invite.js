@@ -1,6 +1,6 @@
 export default {
-  post: () => ({
+  get: () => ({
     token:
-      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag',
+      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag', // DiraQアプリケーションを持っていない場合、インストールとユーザー登録を要請する
   }),
 }

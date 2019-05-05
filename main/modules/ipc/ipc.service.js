@@ -8,7 +8,7 @@ const {
   LOGOUT,
   GET_USER_INFO,
   GET_AUTH_EMAIL,
-  INVITE,
+  GET_INVITE_TOKEN,
   FETCH_ROOMS,
   FETCH_ROOM_INFO,
   FETCH_MEMBERS,
@@ -33,6 +33,7 @@ const {
   SAVE_COMMIT_ID,
   FETCH_COMMIT_ID,
   DELETE_TMP_INFO,
+  SAVE_INVITE_INFO,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -66,7 +67,7 @@ module.exports = {
 
   [GET_AUTH_EMAIL]: () => ({ email: authStore.email }),
 
-  [INVITE]: async () => (await axios.post('/auth/invite')).data.token,
+  [GET_INVITE_TOKEN]: async () => (await axios.get('/auth/invite')).data.token,
 
   [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
 
@@ -104,7 +105,7 @@ module.exports = {
       fs.copyFileSync(mockpath, newfilepath)
       await open(newfilepath) // fileがないとき追加通知のみで開かれない
     } else {
-      console.log('そのまま', filename) // eslint-disable-line
+      console.log('そのまま', filepath) // eslint-disable-line
       await open(filepath)
     }
   },
@@ -177,5 +178,10 @@ module.exports = {
   },
   [DELETE_TMP_INFO]: extname => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.deleteFileInfo(extname)
+  },
+
+  [SAVE_INVITE_INFO]: async ({ email, roomId, token }) => {
+    console.log(email, roomId, token) // eslint-disable-line
+    await axios.post(`/invite`, { email, roomId, token })
   },
 }
