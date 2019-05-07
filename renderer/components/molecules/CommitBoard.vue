@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="commit-container">
-      <div v-for="commit in file.commits" :key="commit.id">
+      <div v-for="(commit, index) in file.commits" :key="commit.id">
         <div class="commit-graph">
           <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
           <div v-if="hasChild(commit.id)" class="commit-line" />
@@ -28,8 +28,14 @@
             </div>
           </div>
           <div class="committer-message">{{ commit.message }}</div>
+          <button v-on:click="toggle(index)">toggle</button>
 
-          <div v-for="comment in commit.comments" :key="comment.id" class="comment">
+          <div
+            v-show="showcomments[index]"
+            v-for="comment in commit.comments"
+            :key="comment.id"
+            class="comment"
+          >
             <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
             <div class="comment-body">
               <span class="comment-username">{{ user(comment.user).name }}</span>
@@ -146,9 +152,16 @@ export default {
     },
   },
   data() {
+    let commitnumber = this.file.commits.length
+    let showcomments = Array.apply(null, Array(commitnumber)).map(function() {
+      return false
+    })
+    showcomments[commitnumber - 1] = true
+    // console.log(showcomments)
     return {
       values: [],
       commitComment: '',
+      showcomments: showcomments,
     }
   },
   methods: {
@@ -156,6 +169,13 @@ export default {
       this.values = [...this.values]
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       this.values[index] = e.target.value
+    },
+    toggle(index) {
+      // console.log(this.showcomments)
+      this.showcomments[index] = !this.showcomments[index]
+      this.showcomments = [...this.showcomments]
+      // this.Vue.set(this.showcomments, index, !this.showcomments[index])
+      // console.log(this.showcomments)
     },
     async submitComment(commitId) {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
