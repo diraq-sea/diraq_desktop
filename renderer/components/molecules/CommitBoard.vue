@@ -157,7 +157,6 @@ export default {
       return false
     })
     showcomments[commitnumber - 1] = true
-    // console.log(showcomments)
     return {
       values: [],
       commitComment: '',
@@ -171,11 +170,8 @@ export default {
       this.values[index] = e.target.value
     },
     toggle(index) {
-      // console.log(this.showcomments)
       this.showcomments[index] = !this.showcomments[index]
       this.showcomments = [...this.showcomments]
-      // this.Vue.set(this.showcomments, index, !this.showcomments[index])
-      // console.log(this.showcomments)
     },
     async submitComment(commitId) {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
