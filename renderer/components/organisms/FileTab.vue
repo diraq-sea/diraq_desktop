@@ -91,7 +91,7 @@ export default {
 }
 
 .ft-tab {
-  flex: 1 1 300px;
+  flex: 0 1 300px;
 }
 
 .tab-container .ft-tab {
