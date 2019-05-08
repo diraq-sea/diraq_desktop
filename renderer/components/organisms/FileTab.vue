@@ -87,8 +87,11 @@ export default {
 
 .tab-container {
   flex: 1;
-  overflow-x: auto;
-  white-space: nowrap;
+  display: flex;
+}
+
+.ft-tab {
+  flex: 0 1 300px;
 }
 
 .tab-container .ft-tab {
