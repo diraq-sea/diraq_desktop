@@ -1,3 +1,4 @@
+import StyleLintPlugin from 'stylelint-webpack-plugin'
 import pkg from './package'
 
 export default {
@@ -32,7 +33,14 @@ export default {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/,
+          options: { cache: true, fix: true },
         })
+        config.plugins.push(
+          new StyleLintPlugin({
+            files: ['**/*.{vue,css}'],
+            fix: true,
+          }),
+        )
       }
 
       config.output.globalObject = 'this' // for WebWorker of pdf.js

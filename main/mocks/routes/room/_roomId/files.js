@@ -8,8 +8,8 @@ import {
   MOCK_FILES_DIR,
   TMP_FILES_DIR,
 } from '../../../../const'
-import fileModel from '../../../models/file'
-import commitModel from '../../../models/commit'
+import { create as createFileModel } from '../../../models/file'
+import { create as createCommitModel } from '../../../models/commit'
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
@@ -33,7 +33,7 @@ export default {
             })
           : mockStore.add(
               'file',
-              fileModel.create({
+              createFileModel({
                 roomId,
                 folder,
                 name,
@@ -42,7 +42,7 @@ export default {
               }),
             )
 
-      const commit = commitModel.create({
+      const commit = createCommitModel({
         fileId: file.id,
         message: dropped ? FIRST_DROPPED_MESSAGE(name) : FIRST_CREATED_MESSAGE(name),
       })
@@ -69,7 +69,7 @@ export default {
           })
         : mockStore.add(
             'file',
-            fileModel.create({
+            createFileModel({
               roomId,
               folder: newFolder,
             }),

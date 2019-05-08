@@ -1,6 +1,6 @@
 import mockStore from '../../../../store/mock.store'
-import commentsRoute from './comments'
 import { MOCK_FILES_PATH, DEFAULT_FILES_PATH_CHUNK } from '../../../../const'
+import commentsRoute from './comments'
 
 export default {
   get({ commitId }) {

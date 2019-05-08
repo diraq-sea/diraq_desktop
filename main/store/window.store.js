@@ -1,7 +1,7 @@
 const { BrowserWindow } = require('electron')
 const { WINDOW_ORIGIN } = require('../const')
-const configStore = require('./config.store')
 const { ON_MAXIMIZE, ON_UNMAXIMIZE } = require('../../common/ipcToWindowTypes')
+const configStore = require('./config.store')
 
 let mainWindow = null
 

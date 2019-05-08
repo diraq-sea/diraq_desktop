@@ -68,7 +68,7 @@ jobs:
       - attach_data
       - run:
           name: Run lint
-          command: yarn lint
+          command: yarn lint:script && yarn lint:style
 
   ##
   # Workflow: packaging
@@ -132,7 +132,7 @@ workflows:
           context: desktop
     triggers:
       - schedule:
-          cron: '0 0 * * 6' # Every Saturday 9:00 AM
+          cron: "0 0 * * 6" # Every Saturday 9:00 AM
           filters:
             branches:
               only:

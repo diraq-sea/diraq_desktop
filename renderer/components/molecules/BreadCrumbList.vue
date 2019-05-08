@@ -1,7 +1,7 @@
 <template>
   <div class="bc-container">
     <span v-if="!list.length">/</span>
-    <template v-else v-for="(name, i) in list">
+    <template v-for="(name, i) in list" v-else>
       <span :key="`slash-${i}`">/</span>
       <span :key="`link-${i}`" class="link" @mousedown="$emit('select', i)">{{ name }}</span>
     </template>

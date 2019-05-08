@@ -35,11 +35,11 @@ export default {
       required: true,
     },
   },
+  data: () => ({ loading: true }),
   computed: {
     ...mapState('room', ['rooms']),
     ...mapState('tab', ['currentTabId']),
   },
-  data: () => ({ loading: true }),
   async created() {
     await this.$store.dispatch('room/fetchRooms')
     this.loading = false
