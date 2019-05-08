@@ -200,6 +200,7 @@ export default {
     async viewFile(commit) {
       const fileId = this.file.id
       const commitId = commit.id
+      // console.log(commitId)
       await this.$store.dispatch('file/viewFile', { fileId, commitId })
     },
   },
