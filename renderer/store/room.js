@@ -58,7 +58,7 @@ export const actions = {
     return item
   },
 
-  async getRoomId({ commit }, roomId) {
+  getRoomId({ commit }, roomId) {
     commit('setRoomId', roomId)
   },
 }
