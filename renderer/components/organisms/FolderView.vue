@@ -19,7 +19,13 @@
             <div class="folder-name">{{ folder }}</div>
           </div>
 
-          <div v-for="file in files" :key="file.id" class="folder-item" @click="openFile(file)">
+          <div
+            v-for="file in files"
+            :key="file.id"
+            class="folder-item"
+            @click="openFile(file)"
+            @click.right="deleteFile(roomId, file.id)"
+          >
             <img class="file-icon" :src="iconSrc(file)" />
             <div class="folder-name">{{ file.name }}</div>
             <div class="folder-date">
@@ -174,6 +180,10 @@ export default {
       await this.openFile(item)
       this.loading = false
     },
+
+    async deleteFile(roomId, fileId) {
+      await this.$store.dispatch('room/deleteFileInRoom', { roomId, fileId })
+    },
   },
 }
 </script>
@@ -264,5 +274,20 @@ h1 {
 .dialog >>> .v-modal,
 .dialog >>> .el-dialog__wrapper {
   top: var(--titlebar-height);
+}
+
+.folder-main .folder-list .folder-item .file-controls-icon {
+  display: inline-block;
+  padding: 3px;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-top: 4px;
+  font-size: 18px;
+  color: var(--color-border);
+  transition: 0.2s;
+}
+
+.folder-main .folder-list .folder-item .file-controls-icon:hover {
+  color: unset;
 }
 </style>
