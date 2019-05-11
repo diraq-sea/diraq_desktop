@@ -3,7 +3,11 @@
     <div class="commit-container">
       <div v-for="commit in file.commits" :key="commit.id">
         <div class="commit-graph">
-          <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
+          <div
+            class="commit-circle"
+            :class="{ enhance: commit.id == viewingId }"
+            :style="circleStyle(user(commit.user).icon)"
+          />
           <div v-if="hasChild(commit.id)" class="commit-line" />
         </div>
         <div class="comments-panel">
@@ -149,6 +153,7 @@ export default {
     return {
       values: [],
       commitComment: '',
+      viewingId: this.file.commits[this.file.commits.length - 1].id,
     }
   },
   methods: {
@@ -200,8 +205,8 @@ export default {
     async viewFile(commit) {
       const fileId = this.file.id
       const commitId = commit.id
-      // console.log(commitId)
       await this.$store.dispatch('file/viewFile', { fileId, commitId })
+      this.viewingId = commitId
     },
   },
 }
@@ -243,6 +248,12 @@ export default {
   height: var(--commit-circle-size);
   border-radius: 50%;
   background: center/cover no-repeat;
+}
+
+.enhance {
+  border-style: solid;
+  border-color: green;
+  border-width: 3pt;
 }
 
 .commit-line {
