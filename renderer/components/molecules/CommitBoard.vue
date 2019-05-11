@@ -178,10 +178,12 @@ export default {
         showcomments[key] = true
       }
     }
+    const viewingId = this.file.commits[this.file.commits.length - 1].id
+    showcomments[viewingId] = true
     return {
       values: [],
       commitComment: '',
-      viewingId: this.file.commits[this.file.commits.length - 1].id,
+      viewingId,
       showcomments,
     }
   },
