@@ -34,7 +34,7 @@ export const mutations = {
 
 export const actions = {
   async fetchRooms({ commit }) {
-    const rooms = (await this.$ipc(FETCH_ROOMS)).reverse()
+    const rooms = [...(await this.$ipc(FETCH_ROOMS))].reverse()
     commit('setRooms', rooms)
   },
 
@@ -59,7 +59,7 @@ export const actions = {
     return item
   },
 
-  async getRoomId({ commit }, roomId) {
+  getRoomId({ commit }, roomId) {
     commit('setRoomId', roomId)
   },
   async deleteFileInRoom(state, { roomId, fileId }) {
