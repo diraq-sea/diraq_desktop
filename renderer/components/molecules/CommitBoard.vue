@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="commit-container">
-      <div v-for="(commit, index) in file.commits" :key="commit.id">
+      <div v-for="commit in file.commits" :key="commit.id">
         <div class="commit-graph">
           <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
           <div v-if="hasChild(commit.id)" class="commit-line" />
@@ -28,10 +28,23 @@
             </div>
           </div>
           <div class="committer-message">{{ commit.message }}</div>
-          <button v-on:click="toggle(index)">toggle</button>
+          <div
+            v-show="!showcomments[commit.id]"
+            style="cursor: pointer; color: gray"
+            @click="toggle(commit.id)"
+          >
+            {{ commit.comments.length }} comments
+          </div>
+          <div
+            v-show="showcomments[commit.id] && commit.comments.length > 1"
+            style="cursor: pointer; color: gray"
+            @click="toggle(commit.id)"
+          >
+            toggle comments
+          </div>
 
           <div
-            v-show="showcomments[index]"
+            v-show="showcomments[commit.id]"
             v-for="comment in commit.comments"
             :key="comment.id"
             class="comment"
@@ -44,7 +57,7 @@
             </div>
           </div>
 
-          <div class="comment">
+          <div v-show="showcomments[commit.id]" class="comment">
             <div class="comment-circle" :style="circleStyle(selfIcon)" />
             <div class="comment-body">
               <form class="comment-input" @submit.prevent="submitComment(commit.id)">
@@ -152,11 +165,15 @@ export default {
     },
   },
   data() {
-    let commitnumber = this.file.commits.length
-    let showcomments = Array.apply(null, Array(commitnumber)).map(function() {
-      return false
-    })
-    showcomments[commitnumber - 1] = true
+    let showcomments = this.file.commits.reduce(
+      (obj, commit) => Object.assign(obj, { [commit.id]: false }),
+      {},
+    )
+    for (let key in showcomments) {
+      if (this.file.commits.find(commit => commit.id === key).comments.length === 1) {
+        showcomments[key] = true
+      }
+    }
     return {
       values: [],
       commitComment: '',
@@ -169,9 +186,8 @@ export default {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       this.values[index] = e.target.value
     },
-    toggle(index) {
-      this.showcomments[index] = !this.showcomments[index]
-      this.showcomments = [...this.showcomments]
+    toggle(id) {
+      this.showcomments[id] = !this.showcomments[id]
     },
     async submitComment(commitId) {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
