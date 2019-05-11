@@ -239,6 +239,13 @@ export default {
       const commitId = commit.id
       await this.$store.dispatch('file/viewFile', { fileId, commitId })
       this.viewingId = commitId
+      for (let key in this.showcomments) {
+        if (key === commitId) {
+          this.showcomments[key] = true
+        } else {
+          this.showcomments[key] = false
+        }
+      }
     },
   },
 }
