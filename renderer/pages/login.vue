@@ -3,12 +3,12 @@
     <card title="Welcome to DiraQ">
       <div class="signin">Sign in from here</div>
       <div class="format">
-        <el-input placeholder="Please input e-mail" v-model="email" type="email" clearable />
-        <el-button type="info" @click="prelogin" :disabled="notHaveEmail">send</el-button>
+        <el-input v-model="email" placeholder="Please input e-mail" type="email" clearable />
+        <el-button type="info" :disabled="notHaveEmail" @click="prelogin">send</el-button>
       </div>
       <div class="format">
-        <el-input placeholder="Please input token" v-model="loginToken" type="text" clearable />
-        <el-button type="info" @click="login" :disabled="notHaveToken">send</el-button>
+        <el-input v-model="loginToken" placeholder="Please input token" type="text" clearable />
+        <el-button type="info" :disabled="notHaveToken" @click="login">send</el-button>
       </div>
     </card>
   </div>
@@ -21,12 +21,6 @@ export default {
   layout: 'login',
   components: {
     Card,
-  },
-  async asyncData({ store }) {
-    await store.dispatch('login/getAuthEmail')
-    return {
-      email: store.state.login.email,
-    }
   },
   data() {
     return {
@@ -43,6 +37,12 @@ export default {
     notHaveToken() {
       return this.loginToken.length < 192
     },
+  },
+  async asyncData({ store }) {
+    await store.dispatch('login/getAuthEmail')
+    return {
+      email: store.state.login.email,
+    }
   },
   methods: {
     async prelogin() {

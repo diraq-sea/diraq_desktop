@@ -1,7 +1,7 @@
 import mockStore from '../../store/mock.store'
-import roomModel from '../models/room'
+import { create } from '../models/room'
 
 export default {
   get: () => mockStore.get('room'),
-  post: ({ name }) => mockStore.add('room', roomModel.create({ name })),
+  post: ({ name }) => mockStore.add('room', create({ name })),
 }

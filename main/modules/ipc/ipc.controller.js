@@ -1,6 +1,6 @@
 const { ipcMain } = require('electron')
-const ipcService = require('./ipc.service')
 const ipcTypes = require('../../../common/ipcTypes')
+const ipcService = require('./ipc.service')
 
 module.exports = {
   init() {

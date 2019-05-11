@@ -48,8 +48,8 @@
           </div>
 
           <div
-            v-show="showcomments[commit.id]"
             v-for="comment in commit.comments"
+            v-show="showcomments[commit.id]"
             :key="comment.id"
             class="comment"
           >
@@ -77,7 +77,7 @@
         </div>
       </div>
     </div>
-    <div v-if="commit">
+    <div v-if="isModified">
       <div class="commit-maker">
         <div class="commit-maker-graph">
           <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
@@ -137,9 +137,9 @@ export default {
     },
   },
   computed: {
-    commit() {
-      for (let commit in this.file.commits) {
-        for (let id in this.committed) {
+    isModified() {
+      for (const commit in this.file.commits) {
+        for (const id in this.committed) {
           if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
             return true // commit後tmp.json削除
           }
@@ -169,11 +169,11 @@ export default {
     },
   },
   data() {
-    let showcomments = this.file.commits.reduce(
+    const showcomments = this.file.commits.reduce(
       (obj, commit) => Object.assign(obj, { [commit.id]: false }),
       {},
     )
-    for (let key in showcomments) {
+    for (const key in showcomments) {
       if (this.file.commits.find(commit => commit.id === key).comments.length === 1) {
         showcomments[key] = true
       }
@@ -182,7 +182,7 @@ export default {
       values: [],
       commitComment: '',
       viewingId: this.file.commits[this.file.commits.length - 1].id,
-      showcomments: showcomments,
+      showcomments,
     }
   },
   methods: {
@@ -222,7 +222,7 @@ export default {
       const fileId = commit.fileId
       const commitId = commit.id
       const extname = this.file.extname
-      const commitpanel = this.commit
+      const commitpanel = this.isModified
       const result = await this.$store.dispatch('file/saveCommitId', {
         commitpanel,
         fileId,
@@ -239,7 +239,7 @@ export default {
       const commitId = commit.id
       await this.$store.dispatch('file/viewFile', { fileId, commitId })
       this.viewingId = commitId
-      for (let key in this.showcomments) {
+      for (const key in this.showcomments) {
         if (key === commitId) {
           this.showcomments[key] = true
         } else {
@@ -269,6 +269,12 @@ export default {
 
 .commit-container .comments-panel .file-controls {
   opacity: 0;
+}
+
+.comments-panel .committer-info .file-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .commit-container .comments-panel:hover .file-controls {
@@ -334,12 +340,6 @@ export default {
 .comments-panel .committer-info {
   position: relative;
   padding-right: 70px;
-}
-
-.comments-panel .committer-info .file-controls {
-  position: absolute;
-  top: 0;
-  right: 0;
 }
 
 .comments-panel .committer-info .file-controls .file-controls-icon {

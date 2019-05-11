@@ -9,6 +9,7 @@ import {
 export const state = () => ({
   rooms: null,
   roomInfoList: {},
+  roomId: null,
 })
 
 export const getters = {
@@ -25,11 +26,14 @@ export const mutations = {
       [roomInfo.id]: roomInfo,
     }
   },
+  setRoomId(state, roomId) {
+    state.roomId = roomId
+  },
 }
 
 export const actions = {
   async fetchRooms({ commit }) {
-    const rooms = (await this.$ipc(FETCH_ROOMS)).reverse()
+    const rooms = [...(await this.$ipc(FETCH_ROOMS))].reverse()
     commit('setRooms', rooms)
   },
 
@@ -52,5 +56,9 @@ export const actions = {
   async dropFile(store, params) {
     const item = await this.$ipc(DROP_FILE, params)
     return item
+  },
+
+  getRoomId({ commit }, roomId) {
+    commit('setRoomId', roomId)
   },
 }

@@ -1,10 +1,10 @@
-import MockAdapter from 'axios-mock-adapter'
 import fs from 'fs'
 import path from 'path'
+import MockAdapter from 'axios-mock-adapter'
 import mockStore from '../store/mock.store'
 import { MOCK_FILES_DIR } from '../const'
 import mkdirIfNotExists from '../utils/mkdirIfNotExists'
-import commitModel from './models/commit'
+import { defaultValues } from './models/commit'
 
 const listFiles = dirpath => {
   const list = []
@@ -15,11 +15,12 @@ const listFiles = dirpath => {
   return list
 }
 
-const createParams = (relativePath, dirPath) => {
+const createParams = (relativePath, url, baseURL) => {
   const params = {}
   const dirList = relativePath.split('/')
 
-  dirPath
+  url
+    .replace(baseURL, '')
     .slice(1)
     .split('/')
     .forEach((dir, i) => {
@@ -35,8 +36,7 @@ export default async client => {
   const mock = new MockAdapter(client, { delayResponse: 200 })
 
   mkdirIfNotExists(MOCK_FILES_DIR)
-  commitModel
-    .defaultValues()
+  defaultValues()
     .slice(1)
     .forEach(commit =>
       fs.copyFileSync(
@@ -63,7 +63,7 @@ export default async client => {
               .onGet(regPath)
               .reply(({ url, baseURL }) => [
                 200,
-                route.get(createParams(relativePath, url.replace(baseURL, ''))),
+                route.get(createParams(relativePath, url, baseURL)),
               ])
           }
 
@@ -72,13 +72,40 @@ export default async client => {
               .onPost(regPath)
               .reply(({ url, baseURL, data }) => [
                 204,
-                route.post(JSON.parse(data), createParams(relativePath, url.replace(baseURL, ''))),
+                route.post(JSON.parse(data), createParams(relativePath, url, baseURL)),
+              ])
+          }
+
+          if (route.put) {
+            mock
+              .onPut(regPath)
+              .reply(({ url, baseURL, data }) => [
+                204,
+                route.put(JSON.parse(data), createParams(relativePath, url, baseURL)),
+              ])
+          }
+
+          if (route.delete) {
+            mock
+              .onDelete(regPath)
+              .reply(({ url, baseURL, data }) => [
+                204,
+                route.delete(JSON.parse(data), createParams(relativePath, url, baseURL)),
               ])
           }
         } else {
           if (route.get) mock.onGet(relativePath).reply(() => [200, route.get()])
+
           if (route.post) {
             mock.onPost(relativePath).reply(({ data }) => [204, route.post(JSON.parse(data))])
+          }
+
+          if (route.put) {
+            mock.onPut(relativePath).reply(({ data }) => [204, route.put(JSON.parse(data))])
+          }
+
+          if (route.delete) {
+            mock.onDelete(relativePath).reply(({ data }) => [204, route.delete(JSON.parse(data))])
           }
         }
       })(),

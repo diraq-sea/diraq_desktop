@@ -1,8 +1,8 @@
-const { READY, ADD, ADDDIR, UNLINK, UNLINKDIR, CHANGE, ERROR } = require('./watcherTypes')
 const windowStore = require('../../store/window.store')
 const { TMPFILE_OBSERVING } = require('../../../common/ipcToWindowTypes')
 const tmpStore = require('../../store/tmpfile.store')
 const { TMPFILE_STATES } = require('../../../common/chokidarTypes')
+const { READY, ADD, ADDDIR, UNLINK, UNLINKDIR, CHANGE, ERROR } = require('./watcherTypes')
 
 /* eslint-disable no-console */
 module.exports = type =>
