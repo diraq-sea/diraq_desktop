@@ -152,10 +152,17 @@ export default {
     }
   },
   mounted() {
-    let container = this.$el.querySelector('.commit-container')
-    container.scrollTop = container.scrollHeight
+    let commits = this.file.commits
+    let commitId = commits[commits.length - 1].id
+    this.scrolltoaCommit(commitId)
   },
   methods: {
+    scrolltoaCommit(commitId) {
+      let container = this.$el.querySelector('.commit-container')
+      const index = this.file.commits.findIndex(commit => commit.id === commitId)
+      this.$el.querySelectorAll('.commit-graph')[index].scrollIntoView()
+      container.scrollBy(0, -25)
+    },
     inputComment(commitId, e) {
       this.values = [...this.values]
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
@@ -205,6 +212,7 @@ export default {
       const fileId = this.file.id
       const commitId = commit.id
       await this.$store.dispatch('file/viewFile', { fileId, commitId })
+      this.scrolltoaCommit(commitId)
     },
   },
 }
