@@ -178,7 +178,7 @@ export default {
         showcomments[key] = true
       }
     }
-    const viewingId = this.file.commits[this.file.commits.length - 1].id
+    const viewingId = this.currentCommit.id
     showcomments[viewingId] = true
     return {
       values: [],
@@ -218,6 +218,8 @@ export default {
         await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
         await this.$store.dispatch('file/fetchFile', fileId)
         this.commitComment = ''
+        this.showcomments[this.currentCommit.id] = true
+        this.change_viewingCommit(this.currentCommit.id)
       }
     },
     async editFile(commit) {
@@ -236,10 +238,7 @@ export default {
         result,
       })
     },
-    async viewFile(commit) {
-      const fileId = this.file.id
-      const commitId = commit.id
-      await this.$store.dispatch('file/viewFile', { fileId, commitId })
+    change_viewingCommit(commitId) {
       this.viewingId = commitId
       for (const key in this.showcomments) {
         if (key === commitId) {
@@ -248,6 +247,12 @@ export default {
           this.showcomments[key] = false
         }
       }
+    },
+    async viewFile(commit) {
+      const fileId = this.file.id
+      const commitId = commit.id
+      await this.$store.dispatch('file/viewFile', { fileId, commitId })
+      this.change_viewingCommit(commitId)
     },
   },
 }
