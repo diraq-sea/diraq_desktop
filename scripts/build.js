@@ -35,12 +35,11 @@ async function build() {
   if (process.env.BUILD_LINUX) buildTargets.push(Platform.LINUX)
   if (process.env.BUILD_MAC) buildTargets.push(Platform.MAC)
   if (process.env.BUILD_WINDOWS) buildTargets.push(Platform.WINDOWS)
+  if (buildTargets.length === 0) buildTargets.push(Platform.current())
 
   try {
     await compileMain()
-    await electronBuilder({
-      targets: buildTargets.length !== 0 ? createTargets(buildTargets) : Platform.current(),
-    })
+    await electronBuilder({ targets: createTargets(buildTargets) })
   } catch (err) {
     console.error(err.stack || err) // eslint-disable-line
     process.exit(1)

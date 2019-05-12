@@ -1,8 +1,8 @@
 const chokidar = require('chokidar')
-const watcherService = require('./watcher.service')
-const watcherTypes = require('./watcherTypes')
 const mkdirIfNotExists = require('../../utils/mkdirIfNotExists')
 const { TMP_FILES_DIR } = require('../../const')
+const watcherService = require('./watcher.service')
+const watcherTypes = require('./watcherTypes')
 
 module.exports = {
   init() {

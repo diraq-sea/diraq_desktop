@@ -24,6 +24,9 @@ import { mapGetters } from 'vuex'
 import AddDialog from '~/components/organisms/AddDialog'
 
 export default {
+  components: {
+    AddDialog,
+  },
   props: {
     roomId: {
       type: Number,
@@ -34,9 +37,6 @@ export default {
       required: false,
       default: '',
     },
-  },
-  components: {
-    AddDialog,
   },
   data: () => ({
     dialogVisible: false,
