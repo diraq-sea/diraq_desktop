@@ -44,7 +44,7 @@
             style="cursor: pointer; color: gray"
             @click="toggle(commit.id)"
           >
-            toggle comments
+            hide comments
           </div>
 
           <div
