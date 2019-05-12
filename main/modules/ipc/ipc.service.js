@@ -186,6 +186,6 @@ module.exports = {
     await axios.post(`/invite`, { email, roomId, token })
   },
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
-    await axios.delete(`/room/${roomId}/files`, { fileId })
+    await axios.delete(`/room/${roomId}/files`, { data: { fileId } })
   },
 }

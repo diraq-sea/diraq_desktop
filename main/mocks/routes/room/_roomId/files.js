@@ -80,6 +80,8 @@ export default {
     }
   },
   delete: ({ fileId }) => {
-    console.log(fileId) // eslint-disable-line
+    let newData = mockStore.findByKey('file', 'id', fileId) // eslint-disable-line
+    newData.access = false
+    mockStore.update('file', newData)
   },
 }

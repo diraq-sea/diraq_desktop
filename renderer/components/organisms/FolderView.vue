@@ -21,6 +21,7 @@
 
           <div
             v-for="file in files"
+            v-show="file.access"
             :key="file.id"
             class="folder-item"
             @click="openFile(file)"
@@ -183,6 +184,7 @@ export default {
 
     async deleteFile(roomId, fileId) {
       await this.$store.dispatch('room/deleteFileInRoom', { roomId, fileId })
+      // ページリロード必要
     },
   },
 }
