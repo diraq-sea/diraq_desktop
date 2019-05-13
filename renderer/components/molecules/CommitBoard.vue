@@ -27,8 +27,12 @@
               </a>
             </div>
           </div>
-          <div class="committer-message">{{ commit.message }}</div>
-
+          <div v-if="commit.message == ''">
+            <div class="committer-message-nocomment">{{ 'no comment' }}</div>
+          </div>
+          <div v-else>
+            <div class="committer-message">{{ commit.message }}</div>
+          </div>
           <div v-for="comment in commit.comments" :key="comment.id" class="comment">
             <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
             <div class="comment-body">
@@ -170,16 +174,14 @@ export default {
       }
     },
     async submitCommit() {
-      if (this.commitComment) {
-        const fileId = this.file.id
-        const message = this.commitComment
-        const extname = this.file.extname
-        await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
-        await this.$store.dispatch('file/addCommit', { fileId, message })
-        await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
-        await this.$store.dispatch('file/fetchFile', fileId)
-        this.commitComment = ''
-      }
+      const fileId = this.file.id
+      const message = this.commitComment
+      const extname = this.file.extname
+      await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
+      await this.$store.dispatch('file/addCommit', { fileId, message })
+      await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
+      await this.$store.dispatch('file/fetchFile', fileId)
+      this.commitComment = ''
     },
     async editFile(commit) {
       const fileId = commit.fileId
@@ -320,6 +322,13 @@ export default {
 
 .comments-panel .committer-message {
   padding: 2px 15px 10px 0;
+}
+
+.comments-panel .committer-message-nocomment {
+  padding: 2px 15px 10px 0;
+  font-size: 14px;
+  font-style: italic;
+  opacity: 0.4;
 }
 
 .comments-panel .comment-input {
