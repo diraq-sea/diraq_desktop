@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-    <div v-if="commit">
+    <div v-if="isModified">
       <div class="commit-maker">
         <div class="commit-maker-graph">
           <div class="commit-circle blink" :style="circleStyle(selfIcon)" />
@@ -117,10 +117,16 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      values: [],
+      commitComment: '',
+    }
+  },
   computed: {
-    commit() {
-      for (let commit in this.file.commits) {
-        for (let id in this.committed) {
+    isModified() {
+      for (const commit in this.file.commits) {
+        for (const id in this.committed) {
           if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
             return true // commit後tmp.json削除
           }
@@ -148,12 +154,6 @@ export default {
     formattedDate() {
       return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
-  },
-  data() {
-    return {
-      values: [],
-      commitComment: '',
-    }
   },
   methods: {
     inputComment(commitId, e) {
@@ -187,7 +187,7 @@ export default {
       const fileId = commit.fileId
       const commitId = commit.id
       const extname = this.file.extname
-      const commitpanel = this.commit
+      const commitpanel = this.isModified
       const result = await this.$store.dispatch('file/saveCommitId', {
         commitpanel,
         fileId,
@@ -226,6 +226,12 @@ export default {
 
 .commit-container .comments-panel .file-controls {
   opacity: 0;
+}
+
+.comments-panel .committer-info .file-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .commit-container .comments-panel:hover .file-controls {
@@ -285,12 +291,6 @@ export default {
 .comments-panel .committer-info {
   position: relative;
   padding-right: 70px;
-}
-
-.comments-panel .committer-info .file-controls {
-  position: absolute;
-  top: 0;
-  right: 0;
 }
 
 .comments-panel .committer-info .file-controls .file-controls-icon {

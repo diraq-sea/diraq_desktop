@@ -2,12 +2,12 @@
   <div class="dialog-container">
     <div class="create-new">
       <p class="title">Create new</p>
-      <el-radio-group class="file-or-folder" v-model="isFile">
+      <el-radio-group v-model="isFile" class="file-or-folder">
         <el-radio-button class="new new-file" :label="true">file</el-radio-button>
         <el-radio-button :label="false" class="new new-folder">folder</el-radio-button>
       </el-radio-group>
       <transition name="fade">
-        <el-radio-group v-if="isFile" class="radio2" v-model="extTypeId">
+        <el-radio-group v-if="isFile" v-model="extTypeId" class="radio2">
           <div class="select-file">
             <div class="files">
               <el-radio
@@ -32,7 +32,7 @@
         </el-radio-group>
       </transition>
       <form class="inputbox" @submit.prevent="createNew">
-        <el-input :placeholder="placeholder" v-model="inputValue" class="input-with-select">
+        <el-input v-model="inputValue" :placeholder="placeholder" class="input-with-select">
           <el-button slot="append" :disabled="hasValue" native-type="submit"> Create </el-button>
         </el-input>
       </form>
@@ -186,7 +186,7 @@ export default {
 }
 
 .el-radio {
-  margin: 0px 20px 15px 0px;
+  margin: 0 20px 15px 0;
   display: block;
 }
 
@@ -225,7 +225,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff;
+  background: #fff;
 }
 
 .drop-area .drop-frame {

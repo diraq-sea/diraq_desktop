@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <members-item :roomId="roomId" class="folder-members" />
+        <members-item :room-id="roomId" class="folder-members" />
       </div>
 
       <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
@@ -61,6 +61,10 @@ export default {
       required: true,
     },
   },
+  data: () => ({
+    loading: true,
+    dialogVisible: false,
+  }),
   computed: {
     ...mapState('tab', ['tabs']),
     ...mapGetters('room', ['roomInfo']),
@@ -91,10 +95,6 @@ export default {
       return [this.roomInfo(this.roomId).name, ...this.tab.values.folder.split('/').slice(1)]
     },
   },
-  data: () => ({
-    loading: true,
-    dialogVisible: false,
-  }),
   async created() {
     const { roomId } = this.tab.values
     await Promise.all([

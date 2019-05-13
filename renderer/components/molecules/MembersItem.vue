@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="member-item">
-      <div class="member-add"><i class="fas fa-user-plus" title="ルームにメンバーを追加" /></div>
+      <div class="member-add">
+        <i class="fas fa-user-plus" title="ルームにメンバーを追加" @click="openDialog" />
+      </div>
       <div v-if="roomName" class="member-room">Room: {{ roomName }}</div>
     </div>
     <div v-for="member in sortedMembers(roomId)" :key="member.id" class="member-item">
@@ -11,13 +13,20 @@
       <div class="member-name">{{ member.name }}</div>
       <div class="member-role">{{ roleLabel(member.role) }}</div>
     </div>
+    <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
+      <add-dialog :visible="dialogVisible" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import AddDialog from '~/components/organisms/AddDialog'
 
 export default {
+  components: {
+    AddDialog,
+  },
   props: {
     roomId: {
       type: Number,
@@ -29,6 +38,9 @@ export default {
       default: '',
     },
   },
+  data: () => ({
+    dialogVisible: false,
+  }),
   computed: {
     ...mapGetters('member', ['sortedMembers', 'roleLabel']),
     memberIconStyle() {
@@ -36,6 +48,12 @@ export default {
     },
     memberIconClass() {
       return isOnline => ({ isOnline })
+    },
+  },
+  methods: {
+    async openDialog() {
+      await this.$store.dispatch('room/getRoomId', this.roomId)
+      this.dialogVisible = !this.dialogVisible
     },
   },
 }
@@ -122,5 +140,14 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 12px;
+}
+
+.dialog >>> .el-dialog__body {
+  padding: 20px 40px 50px;
+}
+
+.dialog >>> .v-modal,
+.dialog >>> .el-dialog__wrapper {
+  top: var(--titlebar-height);
 }
 </style>
