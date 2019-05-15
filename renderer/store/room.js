@@ -5,6 +5,7 @@ import {
   CREATE_NEW,
   DROP_FILE,
 } from '~~/common/ipcTypes'
+import { DELETE_FILE_IN_ROOM } from '../../common/ipcTypes'
 
 export const state = () => ({
   rooms: null,
@@ -60,5 +61,8 @@ export const actions = {
 
   getRoomId({ commit }, roomId) {
     commit('setRoomId', roomId)
+  },
+  async deleteFileInRoom(state, { roomId, fileId }) {
+    await this.$ipc(DELETE_FILE_IN_ROOM, { roomId, fileId })
   },
 }

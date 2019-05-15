@@ -34,6 +34,7 @@ const {
   FETCH_COMMIT_ID,
   DELETE_TMP_INFO,
   SAVE_INVITE_INFO,
+  DELETE_FILE_IN_ROOM,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -183,5 +184,8 @@ module.exports = {
   [SAVE_INVITE_INFO]: async ({ email, roomId, token }) => {
     console.log(email, roomId, token) // eslint-disable-line
     await axios.post(`/invite`, { email, roomId, token })
+  },
+  [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
+    await axios.delete(`/room/${roomId}/files`, { data: { fileId } })
   },
 }
