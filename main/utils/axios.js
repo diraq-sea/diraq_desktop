@@ -14,6 +14,8 @@ client.interceptors.request.use(config => {
   return config
 })
 
-if (process.env.NODE_ENV === 'development') setupMock(client)
+export async function setupAxiosMock() {
+  await setupMock(client)
+}
 
 export default client
