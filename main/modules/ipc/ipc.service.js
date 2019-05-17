@@ -34,6 +34,7 @@ const {
   FETCH_COMMIT_ID,
   DELETE_TMP_INFO,
   SAVE_INVITE_INFO,
+  NEW_USER_INFO,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -176,6 +177,7 @@ module.exports = {
   [FETCH_TMP_INFO]: () => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.readFileInfo()
   },
+
   [DELETE_TMP_INFO]: extname => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.deleteFileInfo(extname)
   },
@@ -183,5 +185,10 @@ module.exports = {
   [SAVE_INVITE_INFO]: async ({ email, roomId, token }) => {
     console.log(email, roomId, token) // eslint-disable-line
     await axios.post(`/invite`, { email, roomId, token })
+  },
+
+  [NEW_USER_INFO]: async ({ name, email }) => {
+    console.log(name, email) // eslint-disable-line
+    await axios.post('/user', { name, email })
   },
 }

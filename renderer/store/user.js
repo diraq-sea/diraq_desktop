@@ -1,4 +1,4 @@
-import { GET_USER_INFO } from '~~/common/ipcTypes'
+import { GET_USER_INFO, NEW_USER_INFO } from '~~/common/ipcTypes'
 
 export const state = () => ({
   name: null,
@@ -22,6 +22,12 @@ export const mutations = {
 export const actions = {
   async getUserInfo({ commit }) {
     const userInfo = await this.$ipc(GET_USER_INFO)
+    commit('setUserInfo', userInfo)
+  },
+  async newUserInfo({ commit }, { name, email }) {
+    await this.$ipc(NEW_USER_INFO, { name, email })
+    const icon = null
+    const userInfo = { name, email, icon }
     commit('setUserInfo', userInfo)
   },
 }

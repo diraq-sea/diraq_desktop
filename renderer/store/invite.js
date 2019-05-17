@@ -21,6 +21,7 @@ export const actions = {
     } else {
       const token = await this.$ipc(GET_INVITE_TOKEN)
       await this.$ipc(SAVE_INVITE_INFO, { email, roomId, token })
+      // roomからメンバーを追加するときはsignin処理とroomへのメンバー追加が必要
     }
     commit('setUserInfo', userInfo)
     return '招待しました'
