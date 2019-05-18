@@ -16,6 +16,7 @@ export default {
   post({ folder, name, extname, path: filePath }, { roomId }) {
     const target = mockStore.findByKey('file', 'folder', folder)
     const dropped = !!filePath
+    const access = true
 
     if (extname) {
       // file
@@ -28,6 +29,7 @@ export default {
               name,
               extname,
               dropped,
+              access,
               birthtime: Date.now(),
               mtime: Date.now(),
             })
@@ -39,6 +41,7 @@ export default {
                 name,
                 extname,
                 dropped,
+                access,
               }),
             )
 
@@ -75,5 +78,10 @@ export default {
             }),
           )
     }
+  },
+  delete: ({ fileId }) => {
+    let newData = mockStore.findByKey('file', 'id', fileId) // eslint-disable-line
+    newData.access = false
+    mockStore.update('file', newData)
   },
 }
