@@ -3,9 +3,9 @@
     <h1 class="title">diraq_desktop</h1>
     <h2 class="subtitle">Welcome {{ name }}</h2>
     名前
-    <p><input type="text" v-model="invitee_name" /></p>
+    <p><input v-model="invitee_name" type="text" /></p>
     メールアドレス
-    <p><input type="text" v-model="invitee_email" /></p>
+    <p><input v-model="invitee_email" type="text" /></p>
     <p><button @click="invite">招待</button></p>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
     })
   },
   methods: {
-    async invite() {
+    invite() {
       ipcRenderer.send('invite-token-request')
     },
   },

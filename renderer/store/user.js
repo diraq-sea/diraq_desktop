@@ -26,7 +26,7 @@ export const actions = {
   },
   async newUserInfo({ commit }, { name, email }) {
     await this.$ipc(NEW_USER_INFO, { name, email })
-    const icon = null
+    const icon = '/images/user2.png'
     const userInfo = { name, email, icon }
     commit('setUserInfo', userInfo)
   },

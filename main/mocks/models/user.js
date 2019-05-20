@@ -3,16 +3,17 @@ export function defaultValues() {
     {
       name: 'Kento Ueda',
       email: 'diraq@diraq.io',
+      icon: '/images/user2.png',
       registtime: Date.now() - 3600 * 1000,
     },
   ]
 }
 
 export function create({ name, email }) {
-  // inviteの情報に一致するか確かめてから
   return {
     name,
     email,
+    icon: '/images/user3.png',
     registtime: Date.now(),
   }
 }

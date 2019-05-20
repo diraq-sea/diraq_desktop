@@ -1,5 +1,5 @@
 import mockStore from '../../store/mock.store'
-import userModel from '../models/user'
+import { create } from '../models/user'
 
 const user = {
   name: 'user1',
@@ -9,5 +9,10 @@ const user = {
 
 export default {
   get: () => user,
-  post: ({ name, email }) => mockStore.add('user', userModel.create({ name, email })),
+  post: ({ name, email }) => {
+    if (mockStore.findByKey('invite', 'email', email).email === email) {
+      mockStore.add('user', create({ name, email }))
+      mockStore.delete('invite', 'email', email)
+    }
+  },
 }

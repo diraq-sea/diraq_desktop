@@ -4,7 +4,7 @@
       <div>
         <h1 class="title">Welcome</h1>
         メールアドレス
-        <p><input type="text" v-model="invitee_email" /></p>
+        <p><input v-model="invitee_email" type="text" /></p>
         <p><button>追加</button></p>
         <p><button @click="invite">招待</button></p>
         <h3>{{ comment }}</h3>
@@ -32,6 +32,7 @@ export default {
         this.comment = await this.$store.dispatch('invite/getUserInfo', { email, roomId })
       }
       this.invitee_email = ''
+      this.$router.push('/signin')
     },
   },
 }

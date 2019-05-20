@@ -22,6 +22,7 @@ export default {
       const name = this.invitee_name
       const email = this.invitee_email
       await this.$store.dispatch('user/newUserInfo', { name, email })
+      this.$router.push('/')
     },
   },
 }
