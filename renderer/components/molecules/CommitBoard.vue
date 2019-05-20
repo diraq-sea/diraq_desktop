@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="commit-container">
+    <div :class="CommitContainerObject">
       <div v-for="commit in file.commits" :key="commit.id">
         <div class="commit-graph">
           <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
@@ -27,12 +27,7 @@
               </a>
             </div>
           </div>
-          <div v-if="commit.message == ''">
-            <div class="committer-message-nocomment">{{ 'no comment' }}</div>
-          </div>
-          <div v-else>
-            <div class="committer-message">{{ commit.message }}</div>
-          </div>
+          <div class="committer-message">{{ commit.message }}</div>
           <div v-for="comment in commit.comments" :key="comment.id" class="comment">
             <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
             <div class="comment-body">
@@ -121,9 +116,24 @@ export default {
     return {
       values: [],
       commitComment: '',
+      board_modified: false,
+      board_default: true,
     }
   },
   computed: {
+    CommitContainerObject() {
+      if (this.isModified) {
+        return {
+          'commit-container': true,
+          'commit-container-modified-true': false,
+        }
+      } else {
+        return {
+          'commit-container': false,
+          'commit-container-modified-true': true,
+        }
+      }
+    },
     isModified() {
       for (const commit in this.file.commits) {
         for (const id in this.committed) {
@@ -177,11 +187,13 @@ export default {
       const fileId = this.file.id
       const message = this.commitComment
       const extname = this.file.extname
-      await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
-      await this.$store.dispatch('file/addCommit', { fileId, message })
-      await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
-      await this.$store.dispatch('file/fetchFile', fileId)
-      this.commitComment = ''
+      if (message) {
+        await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
+        await this.$store.dispatch('file/addCommit', { fileId, message })
+        await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
+        await this.$store.dispatch('file/fetchFile', fileId)
+        this.commitComment = ''
+      }
     },
     async editFile(commit) {
       const fileId = commit.fileId
@@ -216,14 +228,24 @@ export default {
   overflow: auto;
 }
 
+.commit-container-modified-true {
+  user-select: text;
+  padding-top: 30px;
+  height: 100%;
+  overflow: auto;
+}
+
+.commit-container-modified-true > div,
 .commit-container > div {
   position: relative;
 }
 
+.commit-container-modified-true img,
 .commit-container img {
   user-select: none;
 }
 
+.commit-container-modified-true .comments-panel .file-controls,
 .commit-container .comments-panel .file-controls {
   opacity: 0;
 }
@@ -234,6 +256,7 @@ export default {
   right: 0;
 }
 
+.commit-container-modified-true .comments-panel:hover .file-controls,
 .commit-container .comments-panel:hover .file-controls {
   opacity: 1;
 }
@@ -324,13 +347,6 @@ export default {
   padding: 2px 15px 10px 0;
 }
 
-.comments-panel .committer-message-nocomment {
-  padding: 2px 15px 10px 0;
-  font-size: 14px;
-  font-style: italic;
-  opacity: 0.4;
-}
-
 .comments-panel .comment-input {
   margin-top: 25px;
 }
@@ -362,7 +378,7 @@ export default {
 }
 
 .commit-maker .comments-panel {
-  padding-top: 12px;
+  padding-top: 1px;
 }
 
 .commit-maker .commit-maker-graph {
