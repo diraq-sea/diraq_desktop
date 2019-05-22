@@ -8,7 +8,7 @@ module.exports = {
   init() {
     mkdirIfNotExists(TMP_FILES_DIR)
     const watcher = chokidar.watch(TMP_FILES_DIR, {
-      ignored: /(^|[\\])\../,
+      ignored: /(^~)|(^\.)|(\.tmp)/g,
       persistent: true, // 監視を継続するかどうか
     })
     Object.values(watcherTypes).forEach(type => {
