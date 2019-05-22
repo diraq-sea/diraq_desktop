@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="commit-container">
+    <div :class="CommitContainerObject">
       <div v-for="commit in file.commits" :key="commit.id">
         <div class="commit-graph">
           <div
@@ -32,6 +32,7 @@
             </div>
           </div>
           <div class="committer-message">{{ commit.message }}</div>
+
           <div
             v-show="!showcomments[commit.id]"
             style="cursor: pointer; color: gray"
@@ -137,6 +138,19 @@ export default {
     },
   },
   computed: {
+    CommitContainerObject() {
+      if (this.isModified) {
+        return {
+          'commit-container': true,
+          'commit-container-modified-true': false,
+        }
+      } else {
+        return {
+          'commit-container': false,
+          'commit-container-modified-true': true,
+        }
+      }
+    },
     isModified() {
       for (const commit in this.file.commits) {
         for (const id in this.committed) {
@@ -185,6 +199,8 @@ export default {
       commitComment: '',
       viewingId,
       showcomments,
+      board_modified: false,
+      board_default: true,
     }
   },
   mounted() {
@@ -220,10 +236,10 @@ export default {
       }
     },
     async submitCommit() {
-      if (this.commitComment) {
-        const fileId = this.file.id
-        const message = this.commitComment
-        const extname = this.file.extname
+      const fileId = this.file.id
+      const message = this.commitComment
+      const extname = this.file.extname
+      if (message) {
         await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
         await this.$store.dispatch('file/addCommit', { fileId, message })
         await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
@@ -278,14 +294,24 @@ export default {
   overflow: auto;
 }
 
+.commit-container-modified-true {
+  user-select: text;
+  padding-top: 30px;
+  height: 100%;
+  overflow: auto;
+}
+
+.commit-container-modified-true > div,
 .commit-container > div {
   position: relative;
 }
 
+.commit-container-modified-true img,
 .commit-container img {
   user-select: none;
 }
 
+.commit-container-modified-true .comments-panel .file-controls,
 .commit-container .comments-panel .file-controls {
   opacity: 0;
 }
@@ -296,6 +322,7 @@ export default {
   right: 0;
 }
 
+.commit-container-modified-true .comments-panel:hover .file-controls,
 .commit-container .comments-panel:hover .file-controls {
   opacity: 1;
 }
@@ -423,7 +450,7 @@ export default {
 }
 
 .commit-maker .comments-panel {
-  padding-top: 12px;
+  padding-top: 1px;
 }
 
 .commit-maker .commit-maker-graph {
