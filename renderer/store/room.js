@@ -4,6 +4,7 @@ import {
   CREATE_ROOM,
   CREATE_NEW,
   DROP_FILE,
+  ADD_MEMBERS,
 } from '~~/common/ipcTypes'
 import { DELETE_FILE_IN_ROOM } from '../../common/ipcTypes'
 
@@ -45,6 +46,8 @@ export const actions = {
   async createRoom({ dispatch }, name) {
     const room = await this.$ipc(CREATE_ROOM, name)
     await dispatch('fetchRooms')
+    const params = { roomId: room.id, memberIds: [room.owner] }
+    await this.$ipc(ADD_MEMBERS, params)
     return room
   },
 

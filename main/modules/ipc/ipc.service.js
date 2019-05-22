@@ -12,6 +12,7 @@ const {
   FETCH_ROOMS,
   FETCH_ROOM_INFO,
   FETCH_MEMBERS,
+  ADD_MEMBERS,
   CREATE_ROOM,
   CREATE_NEW,
   DROP_FILE,
@@ -75,6 +76,9 @@ module.exports = {
   [FETCH_ROOM_INFO]: async roomId => (await axios.get(`/room/${roomId}`)).data,
 
   [FETCH_MEMBERS]: async roomId => (await axios.get(`/room/${roomId}/members`)).data,
+
+  [ADD_MEMBERS]: async ({ roomId, ...params }) =>
+    (await axios.post(`/room/${roomId}/members`, params)).data,
 
   [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
 
