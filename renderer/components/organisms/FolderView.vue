@@ -25,13 +25,16 @@
             :key="file.id"
             class="folder-item"
             @click="openFile(file)"
-            @click.right="deleteFile(roomId, file.id)"
+            @contextmenu.prevent="showContextmenu($event)"
           >
             <img class="file-icon" :src="iconSrc(file)" />
             <div class="folder-name">{{ file.name }}</div>
             <div class="folder-date">
               <div>Created: {{ birthTime(file) }}</div>
               <div>Modified: {{ mTime(file) }}</div>
+            </div>
+            <div class="context-menu">
+              <div @click="deleteFile(roomId, file.id)">deleteFile</div>
             </div>
           </div>
         </div>
@@ -147,6 +150,12 @@ export default {
     openDialog() {
       this.dialogVisible = !this.dialogVisible
     },
+    showContextmenu(e) {
+      const menu = document.getElementsByClassName('context-menu')[0]
+      menu.style.left = e.layerX + 20 + 'px'
+      menu.style.top = e.layerY + 'px'
+      menu.classList.add('active')
+    },
     async createNew({ name, extTypeId }) {
       this.loading = true
       this.dialogVisible = false
@@ -186,7 +195,6 @@ export default {
       await this.openFile(item)
       this.loading = false
     },
-
     async deleteFile(roomId, fileId) {
       await this.$store.dispatch('room/deleteFileInRoom', { roomId, fileId })
       // ページリロード必要
@@ -272,6 +280,24 @@ h1 {
   width: var(--members-opening-width);
   max-height: 100%;
   overflow: auto;
+}
+
+.context-menu {
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: none;
+  list-style: none;
+  position: absolute;
+  z-index: 2147483647;
+  background-color: white;
+  border: 1px solid #ebebeb;
+  border-bottom-width: 0;
+}
+
+.context-menu.active {
+  display: block;
 }
 
 .dialog >>> .el-dialog__body {
