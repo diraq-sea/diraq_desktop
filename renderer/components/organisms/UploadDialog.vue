@@ -148,12 +148,12 @@ export default {
 <style scoped>
 .dialog-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
 }
 
 .create-new {
   position: relative;
-  width: 100%;
+  width: 250px;
 }
 
 .title {
@@ -202,7 +202,7 @@ export default {
 }
 
 .upload-new {
-  width: 100%;
+  width: 250px;
 }
 
 .upload-demo >>> .el-upload-dragger {

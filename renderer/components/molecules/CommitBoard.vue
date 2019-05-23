@@ -137,6 +137,27 @@ export default {
       required: true,
     },
   },
+  data() {
+    const showcomments = this.file.commits.reduce(
+      (obj, commit) => Object.assign(obj, { [commit.id]: false }),
+      {},
+    )
+    for (const key in showcomments) {
+      if (this.file.commits.find(commit => commit.id === key).comments.length === 1) {
+        showcomments[key] = true
+      }
+    }
+    const viewingId = this.currentCommit.id
+    showcomments[viewingId] = true
+    return {
+      values: [],
+      commitComment: '',
+      viewingId,
+      showcomments,
+      board_modified: false,
+      board_default: true,
+    }
+  },
   computed: {
     CommitContainerObject() {
       if (this.isModified) {
@@ -182,27 +203,6 @@ export default {
       return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
   },
-  data() {
-    const showcomments = this.file.commits.reduce(
-      (obj, commit) => Object.assign(obj, { [commit.id]: false }),
-      {},
-    )
-    for (const key in showcomments) {
-      if (this.file.commits.find(commit => commit.id === key).comments.length === 1) {
-        showcomments[key] = true
-      }
-    }
-    const viewingId = this.currentCommit.id
-    showcomments[viewingId] = true
-    return {
-      values: [],
-      commitComment: '',
-      viewingId,
-      showcomments,
-      board_modified: false,
-      board_default: true,
-    }
-  },
   mounted() {
     const commits = this.file.commits
     const commitId = commits[commits.length - 1].id
@@ -210,7 +210,10 @@ export default {
   },
   methods: {
     scrolltoaCommit(commitId) {
-      const container = this.$el.querySelector('.commit-container')
+      let container = this.$el.querySelector('.commit-container')
+      if (container === null) {
+        container = this.$el.querySelector('.commit-container-modified-true')
+      }
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       this.$el.querySelectorAll('.commit-graph')[index].scrollIntoView()
       container.scrollBy(0, -25)
