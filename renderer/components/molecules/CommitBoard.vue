@@ -122,16 +122,9 @@ export default {
   },
   computed: {
     CommitContainerObject() {
-      if (this.isModified) {
-        return {
-          'commit-container': true,
-          'commit-container-modified-true': false,
-        }
-      } else {
-        return {
-          'commit-container': false,
-          'commit-container-modified-true': true,
-        }
+      return {
+        'commit-container': !this.isModified,
+        'commit-container-modified-true': this.isModified,
       }
     },
     isModified() {
@@ -224,14 +217,14 @@ export default {
 .commit-container {
   user-select: text;
   padding-top: 30px;
-  height: calc(100% - var(--commit-maker-height));
+  height: 100%;
   overflow: auto;
 }
 
 .commit-container-modified-true {
   user-select: text;
   padding-top: 30px;
-  height: 100%;
+  height: calc(100% - var(--commit-maker-height));
   overflow: auto;
 }
 
