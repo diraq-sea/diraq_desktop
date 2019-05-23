@@ -38,7 +38,12 @@
         <members-item :room-id="roomId" class="folder-members" />
       </div>
 
-      <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
+      <el-dialog
+        :visible.sync="dialogVisible"
+        :modal-append-to-body="false"
+        class="dialog"
+        width="700px"
+      >
         <upload-dialog :visible="dialogVisible" @create="createNew" @drop="dropFile" />
       </el-dialog>
     </template>
@@ -270,7 +275,7 @@ h1 {
 }
 
 .dialog >>> .el-dialog__body {
-  padding: 20px 40px 50px;
+  padding: 20px 40px 50px 40px;
 }
 
 .dialog >>> .v-modal,
