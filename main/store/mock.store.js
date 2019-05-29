@@ -55,4 +55,10 @@ export default {
     save()
     return newData
   },
+  deleteById(modelName, id) {
+    const dataId = mock[modelName].findIndex(data => data.id === id)
+    mock[modelName].splice(dataId, 1)
+    save()
+    return mock
+  },
 }

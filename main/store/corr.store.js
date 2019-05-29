@@ -29,6 +29,15 @@ module.exports = {
       fs.writeFileSync(CORR_FILE, JSON.stringify(corrlist))
     }
   },
+  deleteFileInfo(filename) {
+    checkInit()
+    const corrlist = JSON.parse(fs.readFileSync(CORR_FILE))
+    const deleteId = corrlist.findIndex(corr => corr.filename === filename)
+    if (deleteId >= 0) {
+      corrlist.splice(deleteId, 1)
+      fs.writeFileSync(CORR_FILE, JSON.stringify(corrlist))
+    }
+  },
   hashToFilename(commitId) {
     checkInit()
     const corrlist = JSON.parse(fs.readFileSync(CORR_FILE))

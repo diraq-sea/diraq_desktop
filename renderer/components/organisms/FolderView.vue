@@ -1,5 +1,5 @@
 <template>
-  <div class="folder-container">
+  <div class="folder-container" @click="hideContextmenu">
     <loading-panel v-if="loading" />
     <template v-else>
       <h1>Room: {{ roomInfo(roomId).name }}</h1>
@@ -34,7 +34,7 @@
               <div>Modified: {{ mTime(file) }}</div>
             </div>
             <div class="context-menu">
-              <div @click="deleteFile(roomId, file.id)">deleteFile</div>
+              <div class="context-menu-item" @click="deleteFile(file.id, $event)">削除</div>
             </div>
           </div>
         </div>
@@ -150,8 +150,21 @@ export default {
     openDialog() {
       this.dialogVisible = !this.dialogVisible
     },
+    hideContextmenu() {
+      const allMenu = document.getElementsByClassName('context-menu')
+      for (const item of allMenu) {
+        item.classList.remove('active')
+      }
+    },
     showContextmenu(e) {
-      const menu = document.getElementsByClassName('context-menu')[0]
+      this.hideContextmenu()
+      let clickedItem
+      for (const item of e.path) {
+        if (item.className === 'folder-item') {
+          clickedItem = item
+        }
+      }
+      const menu = clickedItem.getElementsByClassName('context-menu')[0]
       menu.style.left = e.layerX + 20 + 'px'
       menu.style.top = e.layerY + 'px'
       menu.classList.add('active')
@@ -195,9 +208,11 @@ export default {
       await this.openFile(item)
       this.loading = false
     },
-    async deleteFile(roomId, fileId) {
+    async deleteFile(fileId, e) {
+      e.stopPropagation()
+      const roomId = this.roomId
       await this.$store.dispatch('room/deleteFileInRoom', { roomId, fileId })
-      // ページリロード必要
+      this.hideContextmenu()
     },
   },
 }
@@ -296,8 +311,20 @@ h1 {
   border-bottom-width: 0;
 }
 
+.context-menu-item {
+  display: flex;
+  cursor: pointer;
+  padding: 8px 15px;
+  align-items: center;
+  border-bottom: 1px solid #ebebeb;
+}
+
 .context-menu.active {
   display: block;
+}
+
+.context-menu-item:hover {
+  background-color: #ebebeb;
 }
 
 .dialog >>> .el-dialog__body {
