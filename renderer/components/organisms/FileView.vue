@@ -12,11 +12,13 @@
           :users="members(roomId)"
           :self-icon="icon"
           class="commit-board"
+          @openModal="openModal"
           @addComment="$store.commit('file/addComment', $event)"
           @addCommit="$store.commit('file/addCommit', $event)"
         />
         <members :room-id="roomId" class="members" />
       </div>
+      <modal v-if="isModal" :modal-message="getModalMessage()" @closeModal="closeModal" />
     </template>
   </div>
 </template>
@@ -26,12 +28,14 @@ import { mapState, mapGetters } from 'vuex'
 import CommitBoard from '~/components/molecules/CommitBoard'
 import Members from '~/components/molecules/Members'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
+import Modal from '~/components/organisms/Modal'
 
 export default {
   components: {
     LoadingPanel,
     CommitBoard,
     Members,
+    Modal,
   },
   props: {
     tab: {
@@ -39,7 +43,12 @@ export default {
       required: true,
     },
   },
-  data: () => ({ loading: true, numPages: 1 }),
+  data: () => ({
+    loading: true,
+    numPages: 1,
+    isModal: false,
+    modalMessage: '',
+  }),
   computed: {
     ...mapState('user', ['icon']),
     ...mapGetters('member', ['members']),
@@ -82,7 +91,19 @@ export default {
     setNumPages(e) {
       this.numPages = e || this.numPages
     },
+    openModal(message) {
+      this.isModal = true
+      this.modalMessage = message
+    },
+    closeModal() {
+      this.isModal = false
+      this.modalMessage = ''
+    },
+    getModalMessage() {
+      return this.modalMessage
+    },
   },
+  public: {},
 }
 </script>
 
