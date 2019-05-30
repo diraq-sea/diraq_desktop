@@ -4,7 +4,7 @@
     <template v-else>
       <h1>Room: {{ roomInfo(roomId).name }}</h1>
       <div class="folder-main">
-        <div class="folder-list">
+        <div ref="folder_list" class="folder-list">
           <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
 
           <bread-crumb-list :list="breadcrumbs" @select="selectFolder" />
@@ -23,6 +23,7 @@
             v-for="file in files"
             v-show="file.access"
             :key="file.id"
+            ref="folder_item"
             class="folder-item"
             @click="openFile(file)"
             @contextmenu.prevent="showContextmenu($event)"
@@ -33,7 +34,7 @@
               <div>Created: {{ birthTime(file) }}</div>
               <div>Modified: {{ mTime(file) }}</div>
             </div>
-            <div class="context-menu">
+            <div ref="context_menu" class="context-menu">
               <div class="context-menu-item" @click="deleteFile(file.id, $event)">削除</div>
             </div>
           </div>
@@ -151,20 +152,18 @@ export default {
       this.dialogVisible = !this.dialogVisible
     },
     hideContextmenu() {
-      const allMenu = document.getElementsByClassName('context-menu')
-      for (const item of allMenu) {
-        item.classList.remove('active')
+      const allMenu = this.$refs.context_menu
+      if (allMenu) {
+        for (const item of allMenu) {
+          item.classList.remove('active')
+        }
       }
     },
     showContextmenu(e) {
       this.hideContextmenu()
-      let clickedItem
-      for (const item of e.path) {
-        if (item.className === 'folder-item') {
-          clickedItem = item
-        }
-      }
-      const menu = clickedItem.getElementsByClassName('context-menu')[0]
+      const clickedItem = e.path[e.path.indexOf(this.$refs.folder_list) - 1]
+      const clickedItemId = this.$refs.folder_item.indexOf(clickedItem)
+      const menu = this.$refs.context_menu[clickedItemId]
       menu.style.left = e.layerX + 20 + 'px'
       menu.style.top = e.layerY + 'px'
       menu.classList.add('active')
