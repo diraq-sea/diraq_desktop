@@ -4,7 +4,7 @@
     <template v-else>
       <h1>Room: {{ roomInfo(roomId).name }}</h1>
       <div class="folder-main">
-        <div ref="folder_list" class="folder-list">
+        <div ref="folderList" class="folder-list">
           <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
 
           <bread-crumb-list :list="breadcrumbs" @select="selectFolder" />
@@ -23,10 +23,10 @@
             v-for="file in files"
             v-show="file.access"
             :key="file.id"
-            ref="folder_item"
+            ref="folderItem"
             class="folder-item"
             @click="openFile(file)"
-            @contextmenu.prevent="showContextmenu($event)"
+            @contextmenu="showContextmenu(file, $event)"
           >
             <img class="file-icon" :src="iconSrc(file)" />
             <div class="folder-name">{{ file.name }}</div>
@@ -34,8 +34,8 @@
               <div>Created: {{ birthTime(file) }}</div>
               <div>Modified: {{ mTime(file) }}</div>
             </div>
-            <div ref="context_menu" class="context-menu">
-              <div class="context-menu-item" @click="deleteFile(file.id, $event)">削除</div>
+            <div v-show="contextMenuVisibles[file.id]" ref="contextMenu" class="context-menu">
+              <div class="context-menu-item" @click.stop="deleteFile(file.id, $event)">削除</div>
             </div>
           </div>
         </div>
@@ -80,6 +80,7 @@ export default {
   data: () => ({
     loading: true,
     dialogVisible: false,
+    visibleContextmenu: null,
   }),
   computed: {
     ...mapState('tab', ['tabs']),
@@ -109,6 +110,16 @@ export default {
     },
     breadcrumbs() {
       return [this.roomInfo(this.roomId).name, ...this.tab.values.folder.split('/').slice(1)]
+    },
+    contextMenuVisibles() {
+      const visibles = this.files.reduce(
+        (obj, file) => Object.assign(obj, { [file.id]: false }),
+        {},
+      )
+      if (this.visibleContextmenu != null) {
+        visibles[this.visibleContextmenu] = true
+      }
+      return visibles
     },
   },
   async created() {
@@ -152,21 +163,16 @@ export default {
       this.dialogVisible = !this.dialogVisible
     },
     hideContextmenu() {
-      const allMenu = this.$refs.context_menu
-      if (allMenu) {
-        for (const item of allMenu) {
-          item.classList.remove('active')
-        }
-      }
+      this.visibleContextmenu = null
     },
-    showContextmenu(e) {
+    showContextmenu(file, e) {
       this.hideContextmenu()
-      const clickedItem = e.path[e.path.indexOf(this.$refs.folder_list) - 1]
-      const clickedItemId = this.$refs.folder_item.indexOf(clickedItem)
-      const menu = this.$refs.context_menu[clickedItemId]
+      const clickedItem = e.path[e.path.indexOf(this.$refs.folderList) - 1]
+      const clickedItemId = this.$refs.folderItem.indexOf(clickedItem)
+      const menu = this.$refs.contextMenu[clickedItemId]
       menu.style.left = e.layerX + 20 + 'px'
       menu.style.top = e.layerY + 'px'
-      menu.classList.add('active')
+      this.visibleContextmenu = file.id
     },
     async createNew({ name, extTypeId }) {
       this.loading = true
@@ -208,7 +214,6 @@ export default {
       this.loading = false
     },
     async deleteFile(fileId, e) {
-      e.stopPropagation()
       const roomId = this.roomId
       await this.$store.dispatch('room/deleteFileInRoom', { roomId, fileId })
       this.hideContextmenu()
@@ -301,7 +306,7 @@ h1 {
   left: 0;
   margin: 0;
   padding: 0;
-  display: none;
+  display: block;
   list-style: none;
   position: absolute;
   z-index: 2147483647;
@@ -316,10 +321,6 @@ h1 {
   padding: 8px 15px;
   align-items: center;
   border-bottom: 1px solid #ebebeb;
-}
-
-.context-menu.active {
-  display: block;
 }
 
 .context-menu-item:hover {
