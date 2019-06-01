@@ -3,7 +3,7 @@
     <transition name="modal">
       <div class="modal-mask">
         <div class="modal-wrapper" @click.self="closeModal()">
-          <div class="modal-container" @click.stop="">
+          <div class="modal-container">
             <div class="modal-body">
               <slot name="body">
                 {{ modalMessage }}
@@ -33,7 +33,13 @@
 
 <script>
 export default {
-  props: ['modalMessage'],
+  // props: ['modalMessage'],
+  props: {
+    modalMessage: {
+      type: Boolean,
+      required: true,
+    },
+  },
   mounted() {
     this.$refs.initialfocus.focus()
   },
