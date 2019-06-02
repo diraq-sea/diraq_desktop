@@ -130,10 +130,13 @@ export default {
     },
     onDrop(e) {
       this.onDragleave()
-      const [file] = e.dataTransfer.files
-
-      if (FILE_EXT_TYPES.find(type => type.extname === file.name.split('.').pop())) {
-        this.$emit('drop', file)
+      // const [file] = e.dataTransfer.files
+      const files = e.dataTransfer.files
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        if (FILE_EXT_TYPES.find(type => type.extname === file.name.split('.').pop())) {
+          this.$emit('drop', file)
+        }
       }
     },
     onChange(e) {
