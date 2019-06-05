@@ -68,7 +68,7 @@
     "babel-loader": "8.0.6",
     "babel-plugin-dynamic-import-node": "2.2.0",
     "chalk": "2.4.2",
-    "electron": "4.1.4",
+    "electron": "5.0.2",
     "electron-builder": "20.43.0",
     "electron-builder-squirrel-windows": "20.43.0",
     "electron-devtools-installer": "2.2.4",
