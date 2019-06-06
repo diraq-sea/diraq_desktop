@@ -34,7 +34,7 @@ export default {
       )
     }
 
-    proxyUrl = await ngrok.connect(+WINDOW_ORIGIN.split(':').pop())
+    proxyUrl = await ngrok.connect(+WINDOW_ORIGIN.replace(/^.+?:(\d+)\/?.*$/, '$1'))
   },
   get proxyUrl() {
     return proxyUrl
