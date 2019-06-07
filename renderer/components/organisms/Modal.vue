@@ -33,10 +33,9 @@
 
 <script>
 export default {
-  // props: ['modalMessage'],
   props: {
     modalMessage: {
-      type: Boolean,
+      type: String,
       required: true,
     },
   },
