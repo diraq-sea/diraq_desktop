@@ -3,11 +3,7 @@
     <div :class="CommitContainerObject">
       <div v-for="commit in file.commits" :key="commit.id">
         <div class="commit-graph">
-          <div
-            class="commit-circle"
-            :class="{ enhance: commit.id == viewingId }"
-            :style="circleStyle(user(commit.user).icon)"
-          />
+          <div class="commit-circle" :style="circleStyle(user(commit.user).icon)" />
           <div v-if="hasChild(commit.id)" class="commit-line" />
         </div>
         <div class="comments-panel">
@@ -32,28 +28,7 @@
             </div>
           </div>
           <div class="committer-message">{{ commit.message }}</div>
-
-          <div
-            v-show="!showcomments[commit.id]"
-            style="cursor: pointer; color: gray"
-            @click="toggle(commit.id)"
-          >
-            {{ commit.comments.length }} comments
-          </div>
-          <div
-            v-show="showcomments[commit.id] && commit.comments.length > 1"
-            style="cursor: pointer; color: gray"
-            @click="toggle(commit.id)"
-          >
-            hide comments
-          </div>
-
-          <div
-            v-for="comment in commit.comments"
-            v-show="showcomments[commit.id]"
-            :key="comment.id"
-            class="comment"
-          >
+          <div v-for="comment in commit.comments" :key="comment.id" class="comment">
             <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
             <div class="comment-body">
               <span class="comment-username">{{ user(comment.user).name }}</span>
@@ -62,7 +37,7 @@
             </div>
           </div>
 
-          <div v-show="showcomments[commit.id]" class="comment">
+          <div class="comment">
             <div class="comment-circle" :style="circleStyle(selfIcon)" />
             <div class="comment-body">
               <form class="comment-input" @submit.prevent="submitComment(commit.id)">
@@ -138,38 +113,18 @@ export default {
     },
   },
   data() {
-    const showcomments = this.file.commits.reduce(
-      (obj, commit) => Object.assign(obj, { [commit.id]: false }),
-      {},
-    )
-    for (const key in showcomments) {
-      if (this.file.commits.find(commit => commit.id === key).comments.length === 1) {
-        showcomments[key] = true
-      }
-    }
-    const viewingId = this.currentCommit.id
-    showcomments[viewingId] = true
     return {
       values: [],
       commitComment: '',
-      viewingId,
-      showcomments,
-      board_modified: false,
-      board_default: true,
+      // ismodal: false,
+      // modalMessage: '',
     }
   },
   computed: {
     CommitContainerObject() {
-      if (this.isModified) {
-        return {
-          'commit-container': true,
-          'commit-container-modified-true': false,
-        }
-      } else {
-        return {
-          'commit-container': false,
-          'commit-container-modified-true': true,
-        }
+      return {
+        'commit-container': !this.isModified,
+        'commit-container-modified-true': this.isModified,
       }
     },
     isModified() {
@@ -203,28 +158,12 @@ export default {
       return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
   },
-  mounted() {
-    const commits = this.file.commits
-    const commitId = commits[commits.length - 1].id
-    this.scrolltoaCommit(commitId)
-  },
+
   methods: {
-    scrolltoaCommit(commitId) {
-      let container = this.$el.querySelector('.commit-container')
-      if (container === null) {
-        container = this.$el.querySelector('.commit-container-modified-true')
-      }
-      const index = this.file.commits.findIndex(commit => commit.id === commitId)
-      this.$el.querySelectorAll('.commit-graph')[index].scrollIntoView()
-      container.scrollBy(0, -25)
-    },
     inputComment(commitId, e) {
       this.values = [...this.values]
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       this.values[index] = e.target.value
-    },
-    toggle(id) {
-      this.showcomments[id] = !this.showcomments[id]
     },
     async submitComment(commitId) {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
@@ -248,11 +187,13 @@ export default {
         await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
         await this.$store.dispatch('file/fetchFile', fileId)
         this.commitComment = ''
-        this.showcomments[this.currentCommit.id] = true
-        this.change_viewingCommit(this.currentCommit.id)
       }
     },
     async editFile(commit) {
+      if (this.isModified) {
+        this.editWarning()
+        return
+      }
       const fileId = commit.fileId
       const commitId = commit.id
       const extname = this.file.extname
@@ -268,22 +209,13 @@ export default {
         result,
       })
     },
-    change_viewingCommit(commitId) {
-      this.viewingId = commitId
-      for (const key in this.showcomments) {
-        if (key === commitId) {
-          this.showcomments[key] = true
-        } else {
-          this.showcomments[key] = false
-        }
-      }
-    },
     async viewFile(commit) {
       const fileId = this.file.id
       const commitId = commit.id
       await this.$store.dispatch('file/viewFile', { fileId, commitId })
-      this.change_viewingCommit(commitId)
-      this.scrolltoaCommit(commitId)
+    },
+    editWarning() {
+      this.$emit('openModal', 'You should upload your changes before editing other files.')
     },
   },
 }
@@ -293,14 +225,14 @@ export default {
 .commit-container {
   user-select: text;
   padding-top: 30px;
-  height: calc(100% - var(--commit-maker-height));
+  height: 100%;
   overflow: auto;
 }
 
 .commit-container-modified-true {
   user-select: text;
   padding-top: 30px;
-  height: 100%;
+  height: calc(100% - var(--commit-maker-height));
   overflow: auto;
 }
 
@@ -342,12 +274,6 @@ export default {
   height: var(--commit-circle-size);
   border-radius: 50%;
   background: center/cover no-repeat;
-}
-
-.enhance {
-  border-style: solid;
-  border-color: green;
-  border-width: 3pt;
 }
 
 .commit-line {
