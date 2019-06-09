@@ -8,6 +8,7 @@ export function defaultValues() {
       owner: 0,
       birthtime: Date.now() - 3600 * 1000,
       mtime: Date.now() - 3600 * 1000,
+      open: false,
     },
   ]
 }
@@ -19,6 +20,7 @@ export function create({ name }) {
     owner: 0,
     birthtime: Date.now(),
     mtime: Date.now(),
+    open: false,
   }
 }
 

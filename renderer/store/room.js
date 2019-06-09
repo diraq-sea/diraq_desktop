@@ -31,6 +31,9 @@ export const mutations = {
   setRoomId(state, roomId) {
     state.roomId = roomId
   },
+  toggleOpening(state, roomId) {
+    state.rooms[roomId].open = !state.rooms[roomId].open
+  },
 }
 
 export const actions = {
