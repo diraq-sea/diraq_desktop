@@ -21,7 +21,6 @@
 
           <div
             v-for="file in files"
-            v-show="file.access"
             :key="file.id"
             ref="folderItem"
             class="folder-item"
@@ -34,7 +33,7 @@
               <div>Created: {{ birthTime(file) }}</div>
               <div>Modified: {{ mTime(file) }}</div>
             </div>
-            <div v-show="contextMenuVisibles[file.id]" ref="contextMenu" class="context-menu">
+            <div v-show="visibleContextmenu === file.id" class="context-menu" :style="ctxMenuStyle">
               <div class="context-menu-item" @click.stop="deleteFile(file.id, $event)">削除</div>
             </div>
           </div>
@@ -81,6 +80,8 @@ export default {
     loading: true,
     dialogVisible: false,
     visibleContextmenu: null,
+    mouseX: 0,
+    mouseY: 0,
   }),
   computed: {
     ...mapState('tab', ['tabs']),
@@ -111,15 +112,11 @@ export default {
     breadcrumbs() {
       return [this.roomInfo(this.roomId).name, ...this.tab.values.folder.split('/').slice(1)]
     },
-    contextMenuVisibles() {
-      const visibles = this.files.reduce(
-        (obj, file) => Object.assign(obj, { [file.id]: false }),
-        {},
-      )
-      if (this.visibleContextmenu != null) {
-        visibles[this.visibleContextmenu] = true
+    ctxMenuStyle() {
+      return {
+        left: `${this.mouseX + 20}px`,
+        top: `${this.mouseY}px`,
       }
-      return visibles
     },
   },
   async created() {
@@ -167,11 +164,8 @@ export default {
     },
     showContextmenu(file, e) {
       this.hideContextmenu()
-      const clickedItem = e.path[e.path.indexOf(this.$refs.folderList) - 1]
-      const clickedItemId = this.$refs.folderItem.indexOf(clickedItem)
-      const menu = this.$refs.contextMenu[clickedItemId]
-      menu.style.left = e.layerX + 20 + 'px'
-      menu.style.top = e.layerY + 'px'
+      this.mouseX = e.layerX
+      this.mouseY = e.layerY
       this.visibleContextmenu = file.id
     },
     async createNew({ name, extTypeId }) {
