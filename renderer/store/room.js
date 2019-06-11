@@ -32,7 +32,8 @@ export const mutations = {
     state.roomId = roomId
   },
   toggleOpening(state, roomId) {
-    state.rooms[roomId].open = !state.rooms[roomId].open
+    const openingRoom = state.rooms.find(room => room.id === roomId)
+    openingRoom.open = !openingRoom.open
   },
 }
 
