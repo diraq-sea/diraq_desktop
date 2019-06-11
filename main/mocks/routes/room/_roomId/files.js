@@ -80,8 +80,19 @@ export default {
     }
   },
   delete: ({ fileId }) => {
-    let newData = mockStore.findByKey('file', 'id', fileId) // eslint-disable-line
-    newData.access = false
-    mockStore.update('file', newData)
+    let filename
+    const extname = mockStore.findById('file', fileId).extname
+    for (const commit of mockStore.filterByKey('commit', 'fileId', fileId)) {
+      for (const comment of mockStore.filterByKey('comment', 'commitId', commit.id)) {
+        mockStore.deleteById('comment', comment.id)
+      }
+      mockStore.deleteById('commit', commit.id)
+      filename = corrStore.hashToFilename(commit.id)
+    }
+    corrStore.deleteFileInfo(filename)
+    try {
+      fs.unlinkSync(path.join(TMP_FILES_DIR, `${filename}.${extname}`))
+    } catch (error) {}
+    mockStore.deleteById('file', fileId)
   },
 }
