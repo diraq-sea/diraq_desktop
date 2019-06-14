@@ -22,6 +22,7 @@ module.exports = {
     process.env.NODE_ENV === 'development'
       ? process.env._NUXT_URL_
       : `file://${__dirname}/index.html`,
-  API_BASE_URL: 'http://localhost:8080/v1',
+  API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:8080/v1',
   PLATFORM: { win32: 'win', darwin: 'mac', linux: 'linux' }[process.platform],
+  MOCK_ENABLED: process.env.MOCK_ENABLED || process.env.NODE_ENV === 'development',
 }

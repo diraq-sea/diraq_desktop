@@ -8,7 +8,7 @@ const watcherController = require('./modules/watcher/watcher.controller')
 const commitStore = require('./store/commit.store')
 const corrStore = require('./store/corr.store')
 const mkdirIfNotExists = require('./utils/mkdirIfNotExists')
-const { CONFIG_DIR } = require('./const')
+const { CONFIG_DIR, MOCK_ENABLED } = require('./const')
 const { setupAxiosMock } = require('./utils/axios')
 
 mkdirIfNotExists(CONFIG_DIR)
@@ -20,7 +20,7 @@ const ipcController = require('./modules/ipc/ipc.controller')
 if (squirrelStartup) app.quit()
 
 async function createWindow() {
-  if (process.env.NODE_ENV === 'development') await setupAxiosMock()
+  if (MOCK_ENABLED) await setupAxiosMock()
   configStore.init()
   authStore.init()
   tmpStore.init()
