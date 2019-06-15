@@ -22,13 +22,37 @@
     "files": [
       "dist"
     ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "diraq-sea",
+        "repo": "desktop-releases"
+      }
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
     "mac": {
-      "category": "public.app-category.developer-tools",
-      "icon": "main/static/icons/icon.icns",
-      "target": "zip"
+      "category": "public.app-category.productivity",
+      "icon": "main/static/icons/icon.icns"
     },
     "win": {
       "icon": "main/static/icons/icon.ico"
+    },
+    "linux": {
+      "icon": "main/static/icons"
     }
   },
   "husky": {
