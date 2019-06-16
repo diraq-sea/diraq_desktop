@@ -10,6 +10,8 @@ const mkdirIfNotExists = require('./utils/mkdirIfNotExists')
 const { CONFIG_DIR, MOCK_ENABLED } = require('./const')
 const { setupAxiosMock } = require('./utils/axios')
 
+require('./utils/autoUpdate')
+
 mkdirIfNotExists(CONFIG_DIR)
 
 // ipcServiceのaxios-mockがCONFIG_DIRを必要とするので注意
