@@ -36,6 +36,7 @@ const {
   DELETE_TMP_INFO,
   SAVE_INVITE_INFO,
   DELETE_FILE_IN_ROOM,
+  SIGNUP,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -56,7 +57,11 @@ module.exports = {
 
   [CHECK_LOGIN]: () => authStore.isLogin,
 
-  [LOGIN]: async loginToken => {
+  [LOGIN]: async ({ email, password }) => {
+    // eslint-disable-next-line
+    console.log(email, password, 'tokenをGET')
+    const loginToken =
+      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag'
     const { data } = await axios.post('/auth/login', null, {
       headers: { Authorization: `Bearer ${loginToken}` },
     })
@@ -191,5 +196,9 @@ module.exports = {
   },
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
     await axios.delete(`/room/${roomId}/files`, { data: { fileId } })
+  },
+  [SIGNUP]: ({ name, email, password }) => {
+    authStore.email = email
+    axios.post('user', { name, email, password })
   },
 }

@@ -1,7 +1,9 @@
 <template>
   <div class="body">
     <card title="Welcome to DiraQ">
-      <div class="signin">Login from here or <el-button @click="toSignup">Signup</el-button></div>
+      <div class="format">
+        <el-input v-model="name" placeholder="Please input user-name" type="name" clearable />
+      </div>
       <div class="format">
         <el-input v-model="email" placeholder="Please input e-mail" type="email" clearable />
       </div>
@@ -12,8 +14,21 @@
           type="password"
           clearable
         />
-        <el-button type="info" :disabled="notHaveEmail && notHavePassword" @click="login"
-          >login</el-button
+      </div>
+      <div class="format">
+        <el-input
+          v-model="confirmPassword"
+          placeholder="Please confirm your password"
+          type="password"
+          clearable
+        />
+      </div>
+      <div class="format">
+        <el-button
+          type="info"
+          :disabled="notHaveEmail && notHavePassword && notSamePassword"
+          @click="signup"
+          >Sign Up</el-button
         >
       </div>
     </card>
@@ -30,8 +45,10 @@ export default {
   },
   data() {
     return {
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     }
   },
   computed: {
@@ -44,16 +61,25 @@ export default {
     notHavePassword() {
       return this.password.length >= 8
     },
+    notSamePassword() {
+      return this.password === this.confirmPassword
+    },
   },
   methods: {
+    async prelogin() {
+      await this.$store.dispatch('login/prelogin', this.email)
+      this.$message('Please check your e-mail')
+    },
     async login() {
-      const email = this.email
-      const password = this.password
-      await this.$store.dispatch('login/login', { email, password })
+      await this.$store.dispatch('login/login', this.loginToken)
       this.$router.push('/')
     },
-    toSignup() {
-      this.$router.push('/signup')
+    async signup() {
+      const name = this.name
+      const email = this.email
+      const password = this.password
+      await this.$store.dispatch('signup/signup', { name, email, password })
+      this.$router.push('/')
     },
   },
 }
