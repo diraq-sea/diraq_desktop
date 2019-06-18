@@ -31,15 +31,16 @@ function compileMain() {
  */
 async function build() {
   const buildTargets = []
+  const publish = process.env.PUBLISH_ENABLED || 'never'
 
-  if (process.env.BUILD_LINUX) buildTargets.push(Platform.LINUX)
-  if (process.env.BUILD_MAC) buildTargets.push(Platform.MAC)
-  if (process.env.BUILD_WINDOWS) buildTargets.push(Platform.WINDOWS)
+  if (process.env.BUILD_LINUX === 'true') buildTargets.push(Platform.LINUX)
+  if (process.env.BUILD_MAC === 'true') buildTargets.push(Platform.MAC)
+  if (process.env.BUILD_WINDOWS === 'true') buildTargets.push(Platform.WINDOWS)
   if (buildTargets.length === 0) buildTargets.push(Platform.current())
 
   try {
     await compileMain()
-    await electronBuilder({ targets: createTargets(buildTargets) })
+    await electronBuilder({ publish, targets: createTargets(buildTargets) })
   } catch (err) {
     console.error(err.stack || err) // eslint-disable-line
     process.exit(1)
