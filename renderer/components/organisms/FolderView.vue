@@ -123,7 +123,7 @@ export default {
     const { roomId } = this.tab.values
     await Promise.all([
       this.$store.dispatch('room/fetchRoomInfo', roomId),
-      this.$store.dispatch('member/fetchMembers', roomId),
+      this.$store.dispatch('user/fetchUsers', roomId),
     ])
 
     this.loading = false
