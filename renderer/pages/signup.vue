@@ -26,7 +26,7 @@
       <div class="format">
         <el-button
           type="info"
-          :disabled="notHaveEmail && notHavePassword && notSamePassword"
+          :disabled="notHaveEmail || notHavePassword || notSamePassword"
           @click="signup"
           >Sign Up</el-button
         >
@@ -59,10 +59,10 @@ export default {
       )
     },
     notHavePassword() {
-      return this.password.length >= 8
+      return this.password.length < 8
     },
     notSamePassword() {
-      return this.password === this.confirmPassword
+      return this.password !== this.confirmPassword
     },
   },
   methods: {
