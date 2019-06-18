@@ -1,10 +1,11 @@
 import { app } from 'electron'
 import log from 'electron-log'
 import { autoUpdater } from 'electron-updater'
+import { send } from '~/store/window.store'
+import { CONFIRM_RESTART, UPDATE_NOTIFICATION } from '~~/common/ipcToWindowTypes'
 
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
-log.info('App starting...')
 
 function sendStatusToWindow(text) {
   log.info(text)
@@ -16,6 +17,7 @@ autoUpdater.on('checking-for-update', () => {
 
 autoUpdater.on('update-available', info => {
   sendStatusToWindow('Update available.')
+  send(UPDATE_NOTIFICATION, '最新バージョンをダウンロードします。')
 })
 
 autoUpdater.on('update-not-available', info => {
@@ -35,6 +37,7 @@ autoUpdater.on('download-progress', progressObj => {
 
 autoUpdater.on('update-downloaded', info => {
   sendStatusToWindow('Update downloaded')
+  send(CONFIRM_RESTART, '今すぐ再起動して更新しますか？')
 })
 
 app.on('ready', () => {

@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const { autoUpdater } = require('electron-updater')
 
 const {
   PRELOGIN,
@@ -37,6 +38,7 @@ const {
   DELETE_FILE_IN_ROOM,
   SIGNUP,
   GET_INVITE_USER_INFO,
+  QUIT_AND_INSTALL,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -190,6 +192,7 @@ module.exports = {
   [FETCH_TMP_INFO]: () => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.readFileInfo()
   },
+
   [DELETE_TMP_INFO]: extname => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.deleteFileInfo(extname)
   },
@@ -197,12 +200,19 @@ module.exports = {
   [SAVE_INVITE_INFO]: async ({ email, roomId }) => {
     await axios.post(`/invite`, { email, roomId })
   },
+
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
     await axios.delete(`/room/${roomId}/file`, { data: { fileId } })
   },
+
   [SIGNUP]: ({ name, email, password }) => {
     authStore.email = email
     axios.post('user', { name, email, password })
   },
+
   [GET_INVITE_USER_INFO]: async inviteMail => (await axios.get(`/invite/${inviteMail}`)).data,
+
+  [QUIT_AND_INSTALL]: () => {
+    autoUpdater.quitAndInstall()
+  },
 }
