@@ -13,7 +13,7 @@ export default {
       online: user.id === 0 || Math.random() > 0.5,
     }))
     return sampleUsersList
-  }, // has_many, belong_to がないのでとりあえずの処置
+  }, // has_many, belong_to がないのでとりあえずの処置, このリレーションは一位である必要あり、バックエンドで調整
   post({ userId, role }, { roomId }) {
     mockStore.add('member', create({ userId, roomId, role }))
   },

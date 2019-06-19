@@ -8,7 +8,6 @@ const {
   LOGOUT,
   GET_USER_INFO,
   GET_AUTH_EMAIL,
-  GET_INVITE_TOKEN,
   FETCH_ROOMS,
   FETCH_ROOM_INFO,
   FETCH_MEMBERS,
@@ -37,6 +36,7 @@ const {
   SAVE_INVITE_INFO,
   DELETE_FILE_IN_ROOM,
   SIGNUP,
+  GET_INVITE_USER_INFO,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -61,7 +61,7 @@ module.exports = {
     // eslint-disable-next-line
     console.log(email, password, 'tokenをGET')
     const loginToken =
-      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag'
+      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag' // JWTでtoken返す
     const { data } = await axios.post('/auth/login', null, {
       headers: { Authorization: `Bearer ${loginToken}` },
     })
@@ -73,8 +73,6 @@ module.exports = {
   [GET_USER_INFO]: async () => (await axios.get('/user')).data,
 
   [GET_AUTH_EMAIL]: () => ({ email: authStore.email }),
-
-  [GET_INVITE_TOKEN]: async () => (await axios.get('/auth/invite')).data.token,
 
   [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
 
@@ -190,9 +188,8 @@ module.exports = {
     if (fs.existsSync(TMP_FILE)) return tmpStore.deleteFileInfo(extname)
   },
 
-  [SAVE_INVITE_INFO]: async ({ email, roomId, token }) => {
-    console.log(email, roomId, token) // eslint-disable-line
-    await axios.post(`/invite`, { email, roomId, token })
+  [SAVE_INVITE_INFO]: async ({ email, roomId }) => {
+    await axios.post(`/invite`, { email, roomId })
   },
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
     await axios.delete(`/room/${roomId}/files`, { data: { fileId } })
@@ -201,4 +198,5 @@ module.exports = {
     authStore.email = email
     axios.post('user', { name, email, password })
   },
+  [GET_INVITE_USER_INFO]: async email => (await axios.post('/auth/invite', { email })).data,
 }
