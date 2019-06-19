@@ -6,9 +6,11 @@
   "main": "dist/main.js",
   "private": true,
   "scripts": {
-    "build": "nuxt generate && node --require esm --require dotenv/config scripts/build.js",
+    "build": "npm run build:renderer && npm run build:main && electron-builder",
+    "build:main": "node --require dotenv/config --require esm scripts/build.js",
+    "build:renderer": "nuxt generate",
     "prebuild": "rimraf build dist",
-    "dev": "node --require esm --require dotenv/config scripts/dev.js",
+    "dev": "node --require dotenv/config --require esm scripts/dev.js",
     "lint": "npm run lint:script && npm run lint:style",
     "lint:script": "eslint --cache --ext .js,.vue --ignore-path .gitignore .",
     "lint:style": "stylelint --cache **/*.{css,vue}"
