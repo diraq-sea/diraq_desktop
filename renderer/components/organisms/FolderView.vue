@@ -1,10 +1,10 @@
 <template>
-  <div class="folder-container">
+  <div class="folder-container" @click="hideContextmenu">
     <loading-panel v-if="loading" />
     <template v-else>
       <h1>Room: {{ roomInfo(roomId).name }}</h1>
       <div class="folder-main">
-        <div class="folder-list">
+        <div ref="folderList" class="folder-list">
           <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
 
           <bread-crumb-list :list="breadcrumbs" @select="selectFolder" />
@@ -21,17 +21,20 @@
 
           <div
             v-for="file in files"
-            v-show="file.access"
             :key="file.id"
+            ref="folderItem"
             class="folder-item"
             @click="openFile(file)"
-            @click.right="deleteFile(roomId, file.id)"
+            @contextmenu="showContextmenu(file, $event)"
           >
             <img class="file-icon" :src="iconSrc(file)" />
             <div class="folder-name">{{ file.name }}</div>
             <div class="folder-date">
               <div>Created: {{ birthTime(file) }}</div>
               <div>Modified: {{ mTime(file) }}</div>
+            </div>
+            <div v-show="visibleContextmenu === file.id" class="context-menu" :style="ctxMenuStyle">
+              <div class="context-menu-item" @click.stop="deleteFile(file.id, $event)">削除</div>
             </div>
           </div>
         </div>
@@ -76,6 +79,9 @@ export default {
   data: () => ({
     loading: true,
     dialogVisible: false,
+    visibleContextmenu: null,
+    mouseX: 0,
+    mouseY: 0,
   }),
   computed: {
     ...mapState('tab', ['tabs']),
@@ -105,6 +111,12 @@ export default {
     },
     breadcrumbs() {
       return [this.roomInfo(this.roomId).name, ...this.tab.values.folder.split('/').slice(1)]
+    },
+    ctxMenuStyle() {
+      return {
+        left: `${this.mouseX + 20}px`,
+        top: `${this.mouseY}px`,
+      }
     },
   },
   async created() {
@@ -147,6 +159,15 @@ export default {
     openDialog() {
       this.dialogVisible = !this.dialogVisible
     },
+    hideContextmenu() {
+      this.visibleContextmenu = null
+    },
+    showContextmenu(file, e) {
+      this.hideContextmenu()
+      this.mouseX = e.layerX
+      this.mouseY = e.layerY
+      this.visibleContextmenu = file.id
+    },
     async createNew({ name, extTypeId }) {
       this.loading = true
       this.dialogVisible = false
@@ -186,10 +207,10 @@ export default {
       await this.openFile(item)
       this.loading = false
     },
-
-    async deleteFile(roomId, fileId) {
+    async deleteFile(fileId, e) {
+      const roomId = this.roomId
       await this.$store.dispatch('room/deleteFileInRoom', { roomId, fileId })
-      // ページリロード必要
+      this.hideContextmenu()
     },
   },
 }
@@ -272,6 +293,32 @@ h1 {
   width: var(--members-opening-width);
   max-height: 100%;
   overflow: auto;
+}
+
+.context-menu {
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+  list-style: none;
+  position: absolute;
+  z-index: 2147483647;
+  background-color: white;
+  border: 1px solid #ebebeb;
+  border-bottom-width: 0;
+}
+
+.context-menu-item {
+  display: flex;
+  cursor: pointer;
+  padding: 8px 15px;
+  align-items: center;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.context-menu-item:hover {
+  background-color: #ebebeb;
 }
 
 .dialog >>> .el-dialog__body {
