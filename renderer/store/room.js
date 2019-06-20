@@ -57,8 +57,9 @@ export const actions = {
     return item
   },
 
-  async dropFile(store, params) {
+  async dropFile({ dispatch }, params) {
     const item = await this.$ipc(DROP_FILE, params)
+    await dispatch('fetchRoomInfo', params.roomId)
     return item
   },
 

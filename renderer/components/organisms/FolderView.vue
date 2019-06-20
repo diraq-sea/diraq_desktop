@@ -168,23 +168,23 @@ export default {
 
       this.loading = false
     },
-    async dropFile(file) {
-      this.loading = true
-      this.dialogVisible = false
-
-      const item = await this.$store.dispatch('room/dropFile', {
-        roomId: this.roomId,
-        folder: this.tab.values.folder,
-        name: file.name
-          .split('.')
-          .slice(0, -1)
-          .join('.'),
-        extname: file.name.split('.').pop(),
-        path: file.path,
-      })
-
-      await this.openFile(item)
-      this.loading = false
+    dropFile(entryList) {
+      for (let i = 0; i < entryList.length; i++) {
+        const entryInfo = entryList[i]
+        this.loading = true
+        this.dialogVisible = false
+        this.$store.dispatch('room/dropFile', {
+          roomId: this.roomId,
+          folder: this.tab.values.folder + entryInfo.endPath,
+          name: entryInfo.name
+            .split('.')
+            .slice(0, -1)
+            .join('.'),
+          extname: entryInfo.name.split('.').pop(),
+          path: entryInfo.path,
+        })
+        this.loading = false
+      }
     },
 
     async deleteFile(roomId, fileId) {
