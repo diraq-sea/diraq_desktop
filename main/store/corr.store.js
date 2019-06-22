@@ -36,7 +36,9 @@ module.exports = {
     if (judgeId >= 0) {
       return corrlist[judgeId].filename
     }
-    return undefined
+    const filename = `${Date.now()}_${commitId}`
+    this.writeFileInfo(filename, commitId)
+    return filename
   },
   filenameToHash(name) {
     checkInit()
