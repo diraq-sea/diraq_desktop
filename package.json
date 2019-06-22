@@ -6,9 +6,9 @@
   "main": "dist/main.js",
   "private": true,
   "scripts": {
-    "build": "nuxt generate && node --require=esm scripts/build.js",
+    "build": "nuxt generate && node --require esm --require dotenv/config scripts/build.js",
     "prebuild": "rimraf build dist",
-    "dev": "node --require=esm scripts/dev.js",
+    "dev": "node --require esm --require dotenv/config scripts/dev.js",
     "lint": "npm run lint:script && npm run lint:style",
     "lint:script": "eslint --cache --ext .js,.vue --ignore-path .gitignore .",
     "lint:style": "stylelint --cache **/*.{css,vue}"
@@ -68,6 +68,7 @@
     "babel-loader": "8.0.6",
     "babel-plugin-dynamic-import-node": "2.2.0",
     "chalk": "2.4.2",
+    "dotenv": "8.0.0",
     "electron": "5.0.3",
     "electron-builder": "20.43.0",
     "electron-builder-squirrel-windows": "20.43.0",
