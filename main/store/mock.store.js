@@ -34,7 +34,7 @@ export default {
       )
     }
 
-    proxyUrl = await ngrok.connect(+WINDOW_ORIGIN.split(':').pop())
+    proxyUrl = await ngrok.connect(+WINDOW_ORIGIN.replace(/^.+?:(\d+)\/?.*$/, '$1'))
   },
   get proxyUrl() {
     return proxyUrl
@@ -54,5 +54,11 @@ export default {
     mock[modelName] = mock[modelName].map(data => (data.id === newData.id ? newData : data))
     save()
     return newData
+  },
+  deleteById(modelName, id) {
+    const dataId = mock[modelName].findIndex(data => data.id === id)
+    mock[modelName].splice(dataId, 1)
+    save()
+    return mock
   },
 }

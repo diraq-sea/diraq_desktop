@@ -17,6 +17,10 @@ async function init() {
     height,
     frame: false,
     titleBarStyle: 'hidden',
+    webPreferences: {
+      nodeIntegration: true,
+      webviewTag: true,
+    },
   })
 
   if (process.env.NODE_ENV === 'development') {
