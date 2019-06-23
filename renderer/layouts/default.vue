@@ -2,17 +2,20 @@
   <div class="root">
     <title-bar><file-tab /></title-bar>
     <nuxt class="nuxt" />
+    <side-menu />
   </div>
 </template>
 
 <script>
 import TitleBar from '~/components/molecules/TitleBar'
+import SideMenu from '~/components/molecules/SideMenu'
 import FileTab from '~/components/organisms/FileTab'
 
 export default {
   middleware: ['isLogin', 'fetchData'],
   components: {
     TitleBar,
+    SideMenu,
     FileTab,
   },
 }
@@ -36,7 +39,7 @@ export default {
 .nuxt {
   position: absolute;
   top: 0;
-  left: 2px;
+  left: var(--sidemenu-width);
   right: 2px;
   bottom: 2px;
   background: var(--color-page);
