@@ -32,7 +32,6 @@
             </div>
           </div>
           <div class="committer-message">{{ commit.message }}</div>
-
           <div
             v-show="!showcomments[commit.id]"
             style="cursor: pointer; color: gray"
@@ -117,6 +116,7 @@
 <script>
 import { mapState } from 'vuex'
 import { DATE_FORMAT_TYPE } from '~/utils/const'
+import { TMP_FILES_DIR } from '../../../main/const'
 
 export default {
   props: {
@@ -152,6 +152,8 @@ export default {
     return {
       values: [],
       commitComment: '',
+      // ismodal: false,
+      // modalMessage: '',
       viewingId,
       showcomments,
       board_modified: false,
@@ -196,7 +198,6 @@ export default {
       return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
   },
-
   mounted() {
     const commits = this.file.commits
     const commitId = commits[commits.length - 1].id
@@ -248,10 +249,14 @@ export default {
     },
     async editFile(commit) {
       if (this.isModified) {
-        this.editWarning()
+        this.Warning('You should upload your changes before editing other files.')
         return
       }
-
+      const isOpened = await this.$store.dispatch('file/checkOpenedFile', { TMP_FILES_DIR })
+      if (isOpened) {
+        this.Warning('You should close opened files.')
+        return
+      }
       const fileId = commit.fileId
       const commitId = commit.id
       const extname = this.file.extname
@@ -284,8 +289,8 @@ export default {
       this.change_viewingCommit(commitId)
       this.scrolltoaCommit(commitId)
     },
-    editWarning() {
-      this.$emit('openModal', 'You should upload your changes before editing other files.')
+    Warning(warningText) {
+      this.$emit('openModal', warningText)
     },
   },
 }
