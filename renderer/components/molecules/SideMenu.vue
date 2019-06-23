@@ -41,6 +41,7 @@ import { TAB_TYPES } from '~/utils/const'
 import UploadDialog from '~/components/organisms/UploadDialog'
 import SideMenuItem from '~/components/atoms/SideMenuItem'
 import fileExtTypes from '~~/common/fileExtTypes'
+import { ITEM_TYPES } from '~~/common/sideMenuItemTypes'
 
 export default {
   components: {
@@ -71,7 +72,7 @@ export default {
           for (const item of this.roomInfo(id).items) {
             let paths
             if (item.name) {
-              paths = [...item.folder.split('/'), { ...item, children: [], type: 'file' }]
+              paths = [...item.folder.split('/'), { ...item, children: [], type: ITEM_TYPES.FILE }]
                 .slice(1)
                 .reverse()
             } else {
@@ -79,10 +80,10 @@ export default {
                 .split('/')
                 .slice(1)
                 .reverse()
-              paths.splice(0, 1, { name: paths[0], children: [], type: 'folder' })
+              paths.splice(0, 1, { name: paths[0], children: [], type: ITEM_TYPES.FOLDER })
             }
             while (paths.length >= 2) {
-              paths.splice(0, 2, { name: paths[1], children: [paths[0]], type: 'folder' })
+              paths.splice(0, 2, { name: paths[1], children: [paths[0]], type: ITEM_TYPES.FOLDER })
             }
             items = [...items, paths[0]]
           }
@@ -200,6 +201,8 @@ export default {
 <style scoped>
 .side-menu {
   width: var(--sidemenu-width);
+
+  /* resize: horizontal; */
   position: absolute;
   top: 0;
   display: block;
@@ -207,6 +210,7 @@ export default {
   background: var(--color-page);
   height: 100%;
   overflow: hidden;
+  white-space: nowrap;
   color: var(--font-base);
   border: black;
 }

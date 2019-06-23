@@ -24,6 +24,7 @@
 import { mapState } from 'vuex'
 import { TAB_TYPES } from '~/utils/const'
 import SideMenuItem from '~/components/atoms/SideMenuItem'
+import { ITEM_TYPES } from '~~/common/sideMenuItemTypes'
 
 export default {
   name: 'SideMenuItem',
@@ -47,19 +48,19 @@ export default {
   computed: {
     ...mapState('tab', ['tabs']),
     arrowClass() {
-      return type => ({ opening: this.open, isFile: type === 'file' })
+      return type => ({ opening: this.open, isFile: type === ITEM_TYPES.FILE })
     },
   },
   methods: {
     toggleItem(type) {
-      if (type === 'folder') {
+      if (type === ITEM_TYPES.FOLDER) {
         this.open = !this.open
       } else {
         this.openItem()
       }
     },
     async openItem() {
-      if (this.item.type === 'file') {
+      if (this.item.type === ITEM_TYPES.FILE) {
         const targetTab = this.tabs.find(
           tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === this.item.id,
         )
@@ -74,7 +75,7 @@ export default {
             values: { fileId: this.item.id, name: this.item.name, extname: this.item.extname },
           })
         }
-      } else if (this.item.type === 'folder') {
+      } else if (this.item.type === ITEM_TYPES.FOLDER) {
         this.$store.dispatch('tab/addNewTab')
         await this.$store.dispatch('tab/changeTabType', {
           id: this.tabs[this.tabs.length - 1].id + 1,
