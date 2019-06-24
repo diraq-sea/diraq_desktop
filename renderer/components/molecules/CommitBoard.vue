@@ -115,8 +115,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import { DATE_FORMAT_TYPE } from '~/utils/const'
 import { TMP_FILES_DIR } from '../../../main/const'
+import { DATE_FORMAT_TYPE } from '~/utils/const'
 
 export default {
   props: {

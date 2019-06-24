@@ -1,3 +1,5 @@
+import { DELETE_FILE_IN_ROOM } from '../../common/ipcTypes'
+import { ROLE_TYPES } from '../../common/roleTypes'
 import {
   FETCH_ROOMS,
   FETCH_ROOM_INFO,
@@ -6,8 +8,6 @@ import {
   DROP_FILE,
   ADD_MEMBERS,
 } from '~~/common/ipcTypes'
-import { DELETE_FILE_IN_ROOM } from '../../common/ipcTypes'
-import { ROLE_TYPES } from '../../common/roleTypes'
 
 export const state = () => ({
   rooms: null,
