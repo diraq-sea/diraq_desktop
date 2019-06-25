@@ -48,7 +48,8 @@
     },
     "mac": {
       "category": "public.app-category.productivity",
-      "icon": "main/static/icons/icon.icns"
+      "icon": "main/static/icons/icon.icns",
+      "gatekeeperAssess": false
     },
     "win": {
       "icon": "main/static/icons/icon.ico"
