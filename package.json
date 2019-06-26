@@ -17,7 +17,7 @@
   },
   "build": {
     "productName": "DiraQ",
-    "appId": "com.example.yourapp",
+    "appId": "com.diraq.desktop",
     "directories": {
       "output": "build"
     },
