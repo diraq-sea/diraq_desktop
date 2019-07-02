@@ -92,7 +92,7 @@ module.exports = {
 
   [EDIT_FILE]: async ({ extname, commit, result }) => {
     let filename = corrStore.hashToFilename(commit.id)
-    const filepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
+    const filepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`).replace(/ /g, '\\ ')
     const mockpath = path.join(MOCK_FILES_DIR, `${commit.id}.${extname}`)
     if (result === 'initialCommit') {
       if (!fs.existsSync(filepath)) {
