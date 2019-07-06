@@ -78,7 +78,9 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch('file/fetchFile', this.currentTab.values.fileId)
+    const roomId = this.currentTab.values.roomId
+    const fileId = this.currentTab.values.fileId
+    await this.$store.dispatch('file/fetchFile', { roomId, fileId })
 
     await Promise.all([
       this.$store.dispatch('room/fetchRoomInfo', this.roomId),

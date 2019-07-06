@@ -1,15 +1,15 @@
 import fs from 'fs'
 import path from 'path'
-import mockStore from '../../../../store/mock.store'
-import corrStore from '../../../../store/corr.store'
+import mockStore from '../../../../../store/mock.store'
+import corrStore from '../../../../../store/corr.store'
 import {
   FIRST_CREATED_MESSAGE,
   FIRST_DROPPED_MESSAGE,
   MOCK_FILES_DIR,
   TMP_FILES_DIR,
-} from '../../../../const'
-import { create as createFileModel } from '../../../models/file'
-import { create as createCommitModel } from '../../../models/commit'
+} from '../../../../../const'
+import { create as createFileModel } from '../../../../models/file'
+import { create as createCommitModel } from '../../../../models/commit'
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),

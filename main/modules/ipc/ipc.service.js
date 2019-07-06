@@ -83,12 +83,13 @@ module.exports = {
   [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
 
   [CREATE_NEW]: async ({ roomId, ...params }) =>
-    (await axios.post(`/room/${roomId}/files`, params)).data,
+    (await axios.post(`/room/${roomId}/file`, params)).data,
 
   [DROP_FILE]: async ({ roomId, ...params }) =>
-    (await axios.post(`/room/${roomId}/files`, params)).data,
+    (await axios.post(`/room/${roomId}/file`, params)).data,
 
-  [FETCH_FILE]: async fileId => (await axios.get(`/file/${fileId}`)).data,
+  [FETCH_FILE]: async ({ roomId, fileId }) =>
+    (await axios.get(`room/${roomId}/file/${fileId}`)).data,
 
   [EDIT_FILE]: async ({ extname, commit, result }) => {
     let filename = corrStore.hashToFilename(commit.id)
@@ -115,10 +116,11 @@ module.exports = {
     }
   },
 
-  [SAVE_COMMIT_FILE]: async ({ fileId, commitId, extname }) => {
+  [SAVE_COMMIT_FILE]: async ({ roomId, fileId, commitId, extname }) => {
     const filename = corrStore.hashToFilename(commitId)
     const filePath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
-    const newcommitId = (await axios.post(`file/${fileId}`, { filePath, extname })).data
+    // prettier-ignore
+    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, { filePath, extname })).data
     corrStore.replaceFileInfo(commitId, newcommitId)
   },
 
@@ -127,11 +129,12 @@ module.exports = {
 
   [FETCH_COMMIT_ID]: fileId => commitStore.readInfo(fileId),
 
-  [ADD_COMMENT]: async ({ commitId, comment }) =>
-    (await axios.post(`/commit/${commitId}/comments`, { comment })).data,
+  [ADD_COMMENT]: async ({ roomId, fileId, commitId, comment }) =>
+    // prettier-ignore
+    (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment`, { comment })).data,
 
-  [ADD_COMMIT]: async ({ fileId, message }) =>
-    (await axios.post(`/file/${fileId}/commits`, { message })).data,
+  [ADD_COMMIT]: async ({ roomId, fileId, message }) =>
+    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { message })).data,
 
   [CLOSE_WIN]: () => windowStore.close(),
 
@@ -190,6 +193,6 @@ module.exports = {
     await axios.post(`/invite`, { email, roomId, token })
   },
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
-    await axios.delete(`/room/${roomId}/files`, { data: { fileId } })
+    await axios.delete(`/room/${roomId}/file`, { data: { fileId } })
   },
 }

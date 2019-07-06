@@ -72,7 +72,12 @@ export default {
           await this.$store.dispatch('tab/changeTabType', {
             id: this.tabs[this.tabs.length - 1].id + 1,
             type: TAB_TYPES.FILE,
-            values: { fileId: this.item.id, name: this.item.name, extname: this.item.extname },
+            values: {
+              roomId: this.item.roomId,
+              fileId: this.item.id,
+              name: this.item.name,
+              extname: this.item.extname,
+            },
           })
         }
       } else if (this.item.type === ITEM_TYPES.FOLDER) {
