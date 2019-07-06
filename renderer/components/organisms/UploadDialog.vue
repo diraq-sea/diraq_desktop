@@ -141,7 +141,9 @@ export default {
     },
     onChange(e) {
       if (e.status === 'success') {
-        this.$emit('drop', e.raw)
+        const endPath = ''
+        const entryList = [{ name: e.raw.name, path: e.raw.path, endPath }]
+        this.$emit('drop', entryList)
       }
     },
   },
