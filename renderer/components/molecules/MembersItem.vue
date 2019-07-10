@@ -6,12 +6,12 @@
       </div>
       <div v-if="roomName" class="member-room">Room: {{ roomName }}</div>
     </div>
-    <div v-for="member in sortedMembers(roomId)" :key="member.id" class="member-item">
+    <div v-for="user in sortedUsers(roomId)" :key="user.id" class="member-item">
       <div class="member-icon">
-        <div :class="memberIconClass(member.online)" :style="memberIconStyle(member.icon)" />
+        <div :class="userIconClass(user.online)" :style="userIconStyle(user.icon)" />
       </div>
-      <div class="member-name">{{ member.name }}</div>
-      <div class="member-role">{{ roleLabel(member.role) }}</div>
+      <div class="member-name">{{ user.name }}</div>
+      <!-- <div class="member-role">{{ roleLabel(user.role) }}</div> -->
     </div>
     <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" class="dialog">
       <add-dialog :visible="dialogVisible" />
@@ -42,11 +42,11 @@ export default {
     dialogVisible: false,
   }),
   computed: {
-    ...mapGetters('member', ['sortedMembers', 'roleLabel']),
-    memberIconStyle() {
+    ...mapGetters('user', ['sortedUsers']),
+    userIconStyle() {
       return icon => ({ backgroundImage: `url(${icon})` })
     },
-    memberIconClass() {
+    userIconClass() {
       return isOnline => ({ isOnline })
     },
   },
@@ -133,14 +133,14 @@ export default {
   padding-left: 10px;
 }
 
-.member-role {
+/* .member-role {
   width: 60px;
   border-bottom: var(--color-border) solid 1px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 12px;
-}
+} */
 
 .dialog >>> .el-dialog__body {
   padding: 20px 40px 50px;

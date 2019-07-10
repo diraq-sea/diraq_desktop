@@ -5,49 +5,31 @@ export function defaultValues() {
   return [
     {
       id: 0,
-      name: 'mitsuhide',
-      icon: '/images/user1.png',
+      userId: 0,
+      roomId: 0,
       role: ROLE_TYPES[0].id,
-      roomIds: [0],
     },
     {
       id: 1,
-      name: 'kento',
-      icon: '/images/user2.png',
+      userId: 1,
+      roomId: 0,
       role: ROLE_TYPES[1].id,
-      roomIds: [0],
-    },
-    {
-      id: 2,
-      name: 'hisanori',
-      icon: '/images/user3.png',
-      role: ROLE_TYPES[2].id,
-      roomIds: [0],
     },
     {
       id: 3,
-      name: 'ryoko',
-      icon: '/images/user4.jpg',
-      role: ROLE_TYPES[2].id,
-      roomIds: [0],
-    },
-    {
-      id: 4,
-      name: 'taichi',
-      icon: '/images/user5.png',
-      role: ROLE_TYPES[3].id,
-      roomIds: [0],
+      userId: 3,
+      roomId: 0,
+      role: ROLE_TYPES[1].id,
     },
   ]
 }
 
-export function create({ name, icon, role, roomId }) {
+export function create({ userId, roomId, role }) {
   return {
     id: mockStore.get('member').length,
-    name,
-    icon,
+    userId,
+    roomId,
     role,
-    roomIds: [roomId],
   }
 }
 

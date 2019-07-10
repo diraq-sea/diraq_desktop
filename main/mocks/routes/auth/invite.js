@@ -1,6 +1,5 @@
+import mockStore from '../../../store/mock.store'
+
 export default {
-  get: () => ({
-    token:
-      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag', // DiraQアプリケーションを持っていない場合、インストールとユーザー登録を要請する
-  }),
+  post: ({ email }) => mockStore.findByKey('user', 'email', email).id,
 }
