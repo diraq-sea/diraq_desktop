@@ -71,7 +71,7 @@ export const actions = {
     const result = await this.$ipc(SAVE_COMMIT_ID, { commitpanel, fileId, commitId })
     return result
   },
-  checkOpenedFile(store, { TMP_FILES_DIR }) {
+  checkOpenedFile(store, { TMP_FILES_DIR, fileId }) {
     const paths = fs.readdirSync(TMP_FILES_DIR)
     let flag = false
     paths.forEach(function(path) {
@@ -79,7 +79,11 @@ export const actions = {
       try {
         fs.renameSync(filepath, filepath)
       } catch (err) {
-        flag = true
+        const id_ = String(path.match(/id.*_/))
+        if (id_.slice(2, -1) === String(fileId)) {
+          flag = true
+        }
+        // flag = true
       }
     })
     return flag

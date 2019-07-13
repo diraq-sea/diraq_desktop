@@ -252,12 +252,12 @@ export default {
         this.Warning('You should upload your changes before editing other files.')
         return
       }
-      const isOpened = await this.$store.dispatch('file/checkOpenedFile', { TMP_FILES_DIR })
+      const fileId = commit.fileId
+      const isOpened = await this.$store.dispatch('file/checkOpenedFile', { TMP_FILES_DIR, fileId })
       if (isOpened) {
         this.Warning('You should close opened files.')
         return
       }
-      const fileId = commit.fileId
       const commitId = commit.id
       const extname = this.file.extname
       const commitpanel = this.isModified
