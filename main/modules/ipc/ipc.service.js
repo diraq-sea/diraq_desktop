@@ -201,5 +201,5 @@ module.exports = {
     authStore.email = email
     axios.post('user', { name, email, password })
   },
-  [GET_INVITE_USER_INFO]: async email => (await axios.post('/auth/invite', { email })).data,
+  [GET_INVITE_USER_INFO]: async inviteMail => (await axios.get(`/invite/${inviteMail}`)).data,
 }

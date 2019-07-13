@@ -1,5 +1,5 @@
-import mockStore from '../../store/mock.store'
-import { create } from '../models/invite'
+import mockStore from '../../../store/mock.store'
+import { create } from '../../models/invite'
 
 export default {
   get: () => mockStore.get('invite'),
