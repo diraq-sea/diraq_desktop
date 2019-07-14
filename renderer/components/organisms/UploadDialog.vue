@@ -70,6 +70,7 @@
 <script>
 import FILE_EXT_TYPES from '~~/common/fileExtTypes'
 import getEntryList from '../utils/getEntryList.js'
+const platform = require('../../../common/platform')
 
 export default {
   props: {
@@ -135,7 +136,10 @@ export default {
       const entrys = data.items
       const endPath = ''
 
-      const absoluteFliePath = data.files[0].path.slice(0, data.files[0].path.lastIndexOf('/'))
+      const absoluteFliePath = data.files[0].path.slice(
+        0,
+        data.files[0].path.lastIndexOf({ win: '\\', mac: '/', linux: '/' }[platform.default]),
+      )
       const entryList = await getEntryList(entrys, endPath, absoluteFliePath)
       this.$emit('drop', entryList)
     },
