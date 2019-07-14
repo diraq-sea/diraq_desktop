@@ -69,6 +69,8 @@
 
 <script>
 import FILE_EXT_TYPES from '~~/common/fileExtTypes'
+import getEntryList from '../utils/getEntryList.js'
+const platform = require('../../../common/platform')
 
 export default {
   props: {
@@ -128,17 +130,24 @@ export default {
     onDragleave() {
       this.dragging = false
     },
-    onDrop(e) {
+    async onDrop(e) {
       this.onDragleave()
-      const [file] = e.dataTransfer.files
+      const data = e.dataTransfer
+      const entrys = data.items
+      const endPath = ''
 
-      if (FILE_EXT_TYPES.find(type => type.extname === file.name.split('.').pop())) {
-        this.$emit('drop', file)
-      }
+      const absoluteFliePath = data.files[0].path.slice(
+        0,
+        data.files[0].path.lastIndexOf({ win: '\\', mac: '/', linux: '/' }[platform.default]),
+      )
+      const entryList = await getEntryList(entrys, endPath, absoluteFliePath)
+      this.$emit('drop', entryList)
     },
     onChange(e) {
       if (e.status === 'success') {
-        this.$emit('drop', e.raw)
+        const endPath = ''
+        const entryList = [{ name: e.raw.name, path: e.raw.path, endPath }]
+        this.$emit('drop', entryList)
       }
     },
   },
