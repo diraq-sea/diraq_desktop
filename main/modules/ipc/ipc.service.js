@@ -97,7 +97,11 @@ module.exports = {
     if (result === 'initialCommit') {
       if (!fs.existsSync(filepath)) {
         console.log('初コミット') // eslint-disable-line
-        await fetchAndSaveFile(commit.url, filepath) // ここのif文の意図？
+        if (fs.existsSync(mockpath)) {
+          fs.copyFileSync(mockpath, filepath)
+        } else {
+          await fetchAndSaveFile(commit.url, filepath) // change this function as work
+        }
       }
       await open(filepath)
     } else if (result === 'mustCommit') {
@@ -111,6 +115,9 @@ module.exports = {
       await open(newfilepath) // fileがないとき追加通知のみで開かれない
     } else {
       console.log('そのまま', filepath) // eslint-disable-line
+      if (!fs.existsSync(filepath)) {
+        fs.copyFileSync(mockpath, filepath)
+      }
       await open(filepath)
     }
   },
