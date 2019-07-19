@@ -1,11 +1,10 @@
-const http = require('http')
+const https = require('https')
 const fs = require('fs')
 
 module.exports = (url, dist) =>
   new Promise((resolve, reject) => {
     const outFile = fs.createWriteStream(dist)
-
-    http
+    https
       .get(url, res => {
         res.pipe(outFile)
 
