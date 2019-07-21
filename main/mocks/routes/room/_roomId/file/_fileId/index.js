@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import mockStore from '../../../../store/mock.store'
-import { MOCK_FILES_DIR } from '../../../../const'
-import commitsRoute from './commits'
+import mockStore from '../../../../../../store/mock.store'
+import { MOCK_FILES_DIR } from '../../../../../../const'
+import commitsRoute from './commit'
 
 export default {
   get: ({ fileId }) => ({

@@ -123,7 +123,7 @@ export default {
     const { roomId } = this.tab.values
     await Promise.all([
       this.$store.dispatch('room/fetchRoomInfo', roomId),
-      this.$store.dispatch('member/fetchMembers', roomId),
+      this.$store.dispatch('user/fetchUsers', roomId),
     ])
 
     this.loading = false
@@ -140,7 +140,7 @@ export default {
         await this.$store.dispatch('tab/changeTabType', {
           id: this.tab.id,
           type: TAB_TYPES.FILE,
-          values: { fileId: item.id, name: item.name, extname: item.extname },
+          values: { roomId: item.roomId, fileId: item.id, name: item.name, extname: item.extname },
         })
       }
     },

@@ -1,6 +1,6 @@
-import mockStore from '../../../../store/mock.store'
-import commitRoute from '../../commit/_commitId'
-import { create } from '../../../models/commit'
+import mockStore from '../../../../../../../store/mock.store'
+import { create } from '../../../../../../models/commit'
+import commitRoute from './_commitId'
 
 export default {
   get: ({ fileId }) =>

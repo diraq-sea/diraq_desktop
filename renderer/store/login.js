@@ -24,7 +24,7 @@ export const actions = {
   prelogin(store, email) {
     return this.$ipc(PRELOGIN, email)
   },
-  login(store, loginToken) {
-    return this.$ipc(LOGIN, loginToken)
+  login(store, { email, password }) {
+    return this.$ipc(LOGIN, { email, password })
   },
 }

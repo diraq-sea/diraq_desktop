@@ -8,7 +8,6 @@ const {
   LOGOUT,
   GET_USER_INFO,
   GET_AUTH_EMAIL,
-  GET_INVITE_TOKEN,
   FETCH_ROOMS,
   FETCH_ROOM_INFO,
   FETCH_MEMBERS,
@@ -36,6 +35,8 @@ const {
   DELETE_TMP_INFO,
   SAVE_INVITE_INFO,
   DELETE_FILE_IN_ROOM,
+  SIGNUP,
+  GET_INVITE_USER_INFO,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -56,7 +57,11 @@ module.exports = {
 
   [CHECK_LOGIN]: () => authStore.isLogin,
 
-  [LOGIN]: async loginToken => {
+  [LOGIN]: async ({ email, password }) => {
+    // eslint-disable-next-line
+    console.log(email, password, 'tokenをGET')
+    const loginToken =
+      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag' // JWTでtoken返す
     const { data } = await axios.post('/auth/login', null, {
       headers: { Authorization: `Bearer ${loginToken}` },
     })
@@ -68,8 +73,6 @@ module.exports = {
   [GET_USER_INFO]: async () => (await axios.get('/user')).data,
 
   [GET_AUTH_EMAIL]: () => ({ email: authStore.email }),
-
-  [GET_INVITE_TOKEN]: async () => (await axios.get('/auth/invite')).data.token,
 
   [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
 
@@ -83,12 +86,13 @@ module.exports = {
   [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
 
   [CREATE_NEW]: async ({ roomId, ...params }) =>
-    (await axios.post(`/room/${roomId}/files`, params)).data,
+    (await axios.post(`/room/${roomId}/file`, params)).data,
 
   [DROP_FILE]: async ({ roomId, ...params }) =>
-    (await axios.post(`/room/${roomId}/files`, params)).data,
+    (await axios.post(`/room/${roomId}/file`, params)).data,
 
-  [FETCH_FILE]: async fileId => (await axios.get(`/file/${fileId}`)).data,
+  [FETCH_FILE]: async ({ roomId, fileId }) =>
+    (await axios.get(`room/${roomId}/file/${fileId}`)).data,
 
   [EDIT_FILE]: async ({ extname, commit, result }) => {
     let filename = corrStore.hashToFilename(commit.id)
@@ -118,10 +122,11 @@ module.exports = {
     }
   },
 
-  [SAVE_COMMIT_FILE]: async ({ fileId, commitId, extname }) => {
+  [SAVE_COMMIT_FILE]: async ({ roomId, fileId, commitId, extname }) => {
     const filename = corrStore.hashToFilename(commitId)
     const filePath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
-    const newcommitId = (await axios.post(`file/${fileId}`, { filePath, extname })).data
+    // prettier-ignore
+    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, { filePath, extname })).data
     corrStore.replaceFileInfo(commitId, newcommitId)
   },
 
@@ -130,11 +135,12 @@ module.exports = {
 
   [FETCH_COMMIT_ID]: fileId => commitStore.readInfo(fileId),
 
-  [ADD_COMMENT]: async ({ commitId, comment }) =>
-    (await axios.post(`/commit/${commitId}/comments`, { comment })).data,
+  [ADD_COMMENT]: async ({ roomId, fileId, commitId, comment }) =>
+    // prettier-ignore
+    (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment`, { comment })).data,
 
-  [ADD_COMMIT]: async ({ fileId, message }) =>
-    (await axios.post(`/file/${fileId}/commits`, { message })).data,
+  [ADD_COMMIT]: async ({ roomId, fileId, message }) =>
+    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { message })).data,
 
   [CLOSE_WIN]: () => windowStore.close(),
 
@@ -188,11 +194,15 @@ module.exports = {
     if (fs.existsSync(TMP_FILE)) return tmpStore.deleteFileInfo(extname)
   },
 
-  [SAVE_INVITE_INFO]: async ({ email, roomId, token }) => {
-    console.log(email, roomId, token) // eslint-disable-line
-    await axios.post(`/invite`, { email, roomId, token })
+  [SAVE_INVITE_INFO]: async ({ email, roomId }) => {
+    await axios.post(`/invite`, { email, roomId })
   },
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
-    await axios.delete(`/room/${roomId}/files`, { data: { fileId } })
+    await axios.delete(`/room/${roomId}/file`, { data: { fileId } })
   },
+  [SIGNUP]: ({ name, email, password }) => {
+    authStore.email = email
+    axios.post('user', { name, email, password })
+  },
+  [GET_INVITE_USER_INFO]: async inviteMail => (await axios.get(`/invite/${inviteMail}`)).data,
 }

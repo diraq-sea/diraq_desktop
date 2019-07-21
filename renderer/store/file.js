@@ -38,8 +38,8 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchFile({ commit }, id) {
-    const file = await this.$ipc(FETCH_FILE, id)
+  async fetchFile({ commit }, { roomId, fileId }) {
+    const file = await this.$ipc(FETCH_FILE, { roomId, fileId })
     commit('setFile', file)
     commit('setCurrentCommitId', {
       fileId: file.id,
@@ -49,23 +49,23 @@ export const actions = {
   async editFile(store, params) {
     await this.$ipc(EDIT_FILE, params)
   },
-  async addComment(store, { commitId, comment }) {
-    await this.$ipc(ADD_COMMENT, { commitId, comment })
+  async addComment(store, { roomId, fileId, commitId, comment }) {
+    await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, comment })
   },
-  async addCommit(store, { fileId, message }) {
-    await this.$ipc(ADD_COMMIT, { fileId, message }) // commit.jsonからcommitId取得してtmp.jspn消す方向
+  async addCommit(store, { roomId, fileId, message }) {
+    await this.$ipc(ADD_COMMIT, { roomId, fileId, message })
   },
-  async viewFile({ commit }, { fileId, commitId }) {
-    const file = await this.$ipc(FETCH_FILE, fileId)
+  async viewFile({ commit }, { roomId, fileId, commitId }) {
+    const file = await this.$ipc(FETCH_FILE, { roomId, fileId })
     commit('setFile', file)
     commit('setCurrentCommitId', {
       fileId,
       id: commitId,
     })
   },
-  async saveCommitFile(store, { fileId, extname }) {
+  async saveCommitFile(store, { roomId, fileId, extname }) {
     const commitId = await this.$ipc(FETCH_COMMIT_ID, fileId)
-    await this.$ipc(SAVE_COMMIT_FILE, { fileId, commitId, extname })
+    await this.$ipc(SAVE_COMMIT_FILE, { roomId, fileId, commitId, extname })
   },
   async saveCommitId(store, { commitpanel, fileId, commitId }) {
     const result = await this.$ipc(SAVE_COMMIT_ID, { commitpanel, fileId, commitId })

@@ -2,11 +2,13 @@
   <div class="dialog-container">
     <div class="invite-member">
       <div>
-        <h1 class="title">Welcome</h1>
-        メールアドレス
-        <p><input v-model="invitee_email" type="text" /></p>
-        <p><button>追加</button></p>
-        <p><button @click="invite">招待</button></p>
+        <h1 class="title">Invite box</h1>
+        <div class="format">
+          <el-input v-model="email" placeholder="Please input e-mail" type="email" clearable />
+        </div>
+        <div class="format">
+          <el-button type="info" :disabled="notHaveEmail" @click="invite">Invite</el-button>
+        </div>
         <h3>{{ comment }}</h3>
       </div>
     </div>
@@ -17,21 +19,24 @@
 export default {
   data() {
     return {
-      invitee_email: '',
+      email: '',
       comment: '',
     }
   },
-
+  computed: {
+    notHaveEmail() {
+      // eslint-disable-next-line no-useless-escape
+      return !/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        this.email,
+      )
+    },
+  },
   methods: {
     async invite() {
-      const email = this.invitee_email
+      const email = this.email
       const roomId = this.$store.state.room.roomId
-      if (!email) {
-        this.comment = 'メールアドレスを入力してください'
-      } else {
-        this.comment = await this.$store.dispatch('invite/getUserInfo', { email, roomId })
-      }
-      this.invitee_email = ''
+      this.comment = await this.$store.dispatch('invite/getUserInfo', { email, roomId })
+      this.email = ''
     },
   },
 }
@@ -53,5 +58,10 @@ export default {
   font-size: 20px;
   color: #303133;
   margin-bottom: 30px;
+}
+.format {
+  display: flex;
+  margin-bottom: 25px;
+  width: 100%;
 }
 </style>

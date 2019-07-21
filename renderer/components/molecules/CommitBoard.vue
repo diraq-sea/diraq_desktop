@@ -224,24 +224,26 @@ export default {
     async submitComment(commitId) {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       const comment = this.values[index]
+      const roomId = this.file.roomId
       const fileId = this.file.id
 
       if (comment) {
-        await this.$store.dispatch('file/addComment', { commitId, comment })
-        await this.$store.dispatch('file/fetchFile', fileId)
+        await this.$store.dispatch('file/addComment', { roomId, fileId, commitId, comment })
+        await this.$store.dispatch('file/fetchFile', { roomId, fileId })
         this.values = [...this.values]
         this.values[index] = ''
       }
     },
     async submitCommit() {
+      const roomId = this.file.roomId
       const fileId = this.file.id
       const message = this.commitComment
       const extname = this.file.extname
       if (message) {
-        await this.$store.dispatch('file/saveCommitFile', { fileId, extname })
-        await this.$store.dispatch('file/addCommit', { fileId, message })
+        await this.$store.dispatch('file/saveCommitFile', { roomId, fileId, extname })
+        await this.$store.dispatch('file/addCommit', { roomId, fileId, message })
         await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
-        await this.$store.dispatch('file/fetchFile', fileId)
+        await this.$store.dispatch('file/fetchFile', { roomId, fileId })
         this.commitComment = ''
         this.showcomments[this.currentCommit.id] = true
         this.change_viewingCommit(this.currentCommit.id)
@@ -283,9 +285,10 @@ export default {
       }
     },
     async viewFile(commit) {
+      const roomId = this.file.roomId
       const fileId = this.file.id
       const commitId = commit.id
-      await this.$store.dispatch('file/viewFile', { fileId, commitId })
+      await this.$store.dispatch('file/viewFile', { roomId, fileId, commitId })
       this.change_viewingCommit(commitId)
       this.scrolltoaCommit(commitId)
     },

@@ -7,6 +7,7 @@ import {
   ADD_MEMBERS,
 } from '~~/common/ipcTypes'
 import { DELETE_FILE_IN_ROOM } from '../../common/ipcTypes'
+import { ROLE_TYPES } from '../../common/roleTypes'
 
 export const state = () => ({
   rooms: null,
@@ -50,7 +51,7 @@ export const actions = {
   async createRoom({ dispatch }, name) {
     const room = await this.$ipc(CREATE_ROOM, name)
     await dispatch('fetchRooms')
-    const params = { roomId: room.id, memberIds: [room.owner] }
+    const params = { userId: 0, roomId: room.id, role: ROLE_TYPES[0].id } // 自分のユーザー情報をどう取ってくるか
     await this.$ipc(ADD_MEMBERS, params)
     return room
   },

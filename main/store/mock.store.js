@@ -61,4 +61,8 @@ export default {
     save()
     return mock
   },
+  deleteByKey(modelName, key, val) {
+    mock[modelName] = mock[modelName].filter(data => data[key] !== val)
+    save()
+  },
 }

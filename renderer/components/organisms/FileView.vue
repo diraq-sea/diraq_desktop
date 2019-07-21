@@ -9,7 +9,7 @@
         <commit-board
           :file="file(fileId)"
           :current-commit="currentCommit(fileId)"
-          :users="members(roomId)"
+          :users="users(roomId)"
           :self-icon="icon"
           class="commit-board"
           @openModal="openModal"
@@ -51,7 +51,7 @@ export default {
   }),
   computed: {
     ...mapState('user', ['icon']),
-    ...mapGetters('member', ['members']),
+    ...mapGetters('user', ['users']),
     ...mapGetters('file', ['file', 'currentCommit']),
     ...mapGetters('tab', ['currentTab']),
     viewerSrc() {
@@ -78,11 +78,13 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch('file/fetchFile', this.currentTab.values.fileId)
+    const roomId = this.currentTab.values.roomId
+    const fileId = this.currentTab.values.fileId
+    await this.$store.dispatch('file/fetchFile', { roomId, fileId })
 
     await Promise.all([
       this.$store.dispatch('room/fetchRoomInfo', this.roomId),
-      this.$store.dispatch('member/fetchMembers', this.roomId),
+      this.$store.dispatch('user/fetchUsers', this.roomId),
     ])
 
     this.loading = false

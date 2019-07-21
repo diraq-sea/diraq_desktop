@@ -3,17 +3,15 @@ export function defaultValues() {
     {
       email: 'aaa@sample.com',
       roomId: 0,
-      token: 'sampletoken',
       inviteetime: Date.now() - 3600 * 1000,
     },
   ]
 }
 
-export function create({ email, roomId, token }) {
+export function create({ email, roomId }) {
   return {
     email,
     roomId,
-    token,
     inviteetime: Date.now(),
   }
 }
