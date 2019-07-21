@@ -54,7 +54,7 @@ export default {
 
       if (dropped) {
         const hashname = commit.id
-        const filename = `${Date.now()}_${name}`
+        const filename = `${Date.now()}id${file.id}_${name}`
         fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${filename}.${extname}`))
         fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${hashname}.${extname}`))
         corrStore.writeFileInfo(filename, hashname)
