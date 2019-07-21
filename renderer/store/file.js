@@ -79,7 +79,7 @@ export const actions = {
       try {
         fs.renameSync(filepath, filepath)
       } catch (err) {
-        const id_ = String(path.match(/id.*_/))
+        const id_ = String(path.match(/id.\d*_/))
         if (id_.slice(2, -1) === String(fileId)) {
           flag = true
         }
