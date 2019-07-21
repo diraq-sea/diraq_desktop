@@ -96,14 +96,14 @@ module.exports = {
 
   [EDIT_FILE]: async ({ extname, commit, result }) => {
     let filename = corrStore.hashToFilename(commit.id)
-    const filepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`).replace(/ /g, '\\ ')
+    const filepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
     const mockpath = path.join(MOCK_FILES_DIR, `${commit.id}.${extname}`)
     if (result === 'initialCommit') {
       if (!fs.existsSync(filepath)) {
         console.log('初コミット') // eslint-disable-line
         await fetchAndSaveFile(commit.url, filepath) // ここのif文の意図？
       }
-      await open(filepath)
+      await open(filepath.replace(/ /g, '\\ '))
     } else if (result === 'mustCommit') {
       console.log('commitしてから') // eslint-disable-line
     } else if (result === 'anotherFileCommit') {
@@ -112,10 +112,10 @@ module.exports = {
       const newfilepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
       corrStore.writeFileInfo(filename, commit.id)
       fs.copyFileSync(mockpath, newfilepath)
-      await open(newfilepath) // fileがないとき追加通知のみで開かれない
+      await open(newfilepath.replace(/ /g, '\\ ')) // fileがないとき追加通知のみで開かれない
     } else {
       console.log('そのまま', filepath) // eslint-disable-line
-      await open(filepath)
+      await open(filepath.replace(/ /g, '\\ '))
     }
   },
 

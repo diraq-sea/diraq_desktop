@@ -8,6 +8,8 @@ import {
   FETCH_COMMIT_ID,
 } from '~~/common/ipcTypes'
 
+const fs = require('fs')
+
 export const state = () => ({
   fileList: {},
   currentCommitIdList: {},
@@ -68,5 +70,22 @@ export const actions = {
   async saveCommitId(store, { commitpanel, fileId, commitId }) {
     const result = await this.$ipc(SAVE_COMMIT_ID, { commitpanel, fileId, commitId })
     return result
+  },
+  checkOpenedFile(store, { TMP_FILES_DIR, fileId }) {
+    const paths = fs.readdirSync(TMP_FILES_DIR)
+    let flag = false
+    paths.forEach(function(path) {
+      const filepath = TMP_FILES_DIR + '\\' + path
+      try {
+        fs.renameSync(filepath, filepath)
+      } catch (err) {
+        const id_ = String(path.match(/id.*_/))
+        if (id_.slice(2, -1) === String(fileId)) {
+          flag = true
+        }
+        // flag = true
+      }
+    })
+    return flag
   },
 }
