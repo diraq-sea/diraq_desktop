@@ -96,6 +96,6 @@
     "stylelint-config-standard": "18.3.0",
     "stylelint-order": "3.0.0",
     "stylelint-webpack-plugin": "0.10.5",
-    "webpack": "4.33.0"
+    "webpack": "4.36.1"
   }
 }
