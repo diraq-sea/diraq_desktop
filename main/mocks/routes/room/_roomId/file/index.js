@@ -50,7 +50,7 @@ export default {
       const mtime = Date.now() + ''
       const shasum = crypto.createHash('sha1')
       shasum.update(name + mtime)
-      const commitId = `${shasum.digest('hex')}-id${file.id}` // hashの取り方は後々変える
+      const commitId = `${shasum.digest('hex')}-id${file.id}`
 
       const commit = createCommitModel({
         id: commitId,

@@ -20,7 +20,7 @@ export default {
     const mtime = file.mtime + ''
     const shasum = crypto.createHash('sha1')
     shasum.update(filename + mtime)
-    const commitId = `${shasum.digest('hex')}-id${fileId}` // hashの取り方は後々変える
+    const commitId = `${shasum.digest('hex')}-id${fileId}`
     fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${commitId}.${extname}`))
     return commitId
   },
