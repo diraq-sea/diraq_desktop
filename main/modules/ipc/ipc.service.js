@@ -126,8 +126,9 @@ module.exports = {
     const filename = corrStore.hashToFilename(commitId)
     const filePath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
     // prettier-ignore
-    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, { filePath, extname })).data
+    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, {fileId, filePath, extname })).data
     corrStore.replaceFileInfo(commitId, newcommitId)
+    return newcommitId
   },
 
   [SAVE_COMMIT_ID]: ({ commitpanel, fileId, commitId }) =>
@@ -139,8 +140,8 @@ module.exports = {
     // prettier-ignore
     (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment`, { comment })).data,
 
-  [ADD_COMMIT]: async ({ roomId, fileId, message }) =>
-    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { message })).data,
+  [ADD_COMMIT]: async ({ roomId, fileId, id, message }) =>
+    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { id, message })).data,
 
   [CLOSE_WIN]: () => windowStore.close(),
 
