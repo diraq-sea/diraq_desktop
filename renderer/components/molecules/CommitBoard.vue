@@ -250,6 +250,7 @@ export default {
       }
     },
     async editFile(commit) {
+      this.viewFile(commit)
       if (this.isModified) {
         this.Warning('You should upload your changes before editing other files.')
         return
