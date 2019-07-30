@@ -240,8 +240,12 @@ export default {
       const message = this.commitComment
       const extname = this.file.extname
       if (message) {
-        await this.$store.dispatch('file/saveCommitFile', { roomId, fileId, extname })
-        await this.$store.dispatch('file/addCommit', { roomId, fileId, message })
+        const commitId = await this.$store.dispatch('file/saveCommitFile', {
+          roomId,
+          fileId,
+          extname,
+        })
+        await this.$store.dispatch('file/addCommit', { roomId, fileId, id: commitId, message })
         await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
         await this.$store.dispatch('file/fetchFile', { roomId, fileId })
         this.commitComment = ''

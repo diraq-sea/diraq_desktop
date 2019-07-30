@@ -11,6 +11,8 @@ import {
 import { create as createFileModel } from '../../../../models/file'
 import { create as createCommitModel } from '../../../../models/commit'
 
+const crypto = require('crypto')
+
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
   post({ folder, name, extname, path: filePath }, { roomId }) {
@@ -45,7 +47,13 @@ export default {
               }),
             )
 
+      const mtime = Date.now() + ''
+      const shasum = crypto.createHash('sha1')
+      shasum.update(name + mtime)
+      const commitId = `${shasum.digest('hex')}-id${file.id}`
+
       const commit = createCommitModel({
+        id: commitId,
         fileId: file.id,
         message: dropped ? FIRST_DROPPED_MESSAGE(name) : FIRST_CREATED_MESSAGE(name),
       })

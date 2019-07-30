@@ -7,5 +7,5 @@ export default {
     mockStore
       .filterByKey('commit', 'fileId', fileId)
       .map(({ id }) => commitRoute.get({ commitId: id })),
-  post: ({ message }, { fileId }) => mockStore.add('commit', create({ fileId, message })),
+  post: ({ id, message }, { fileId }) => mockStore.add('commit', create({ id, fileId, message })),
 }
