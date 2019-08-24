@@ -103,9 +103,10 @@ module.exports = {
     if (result === 'initialCommit') {
       if (!fs.existsSync(filepath)) {
         console.log('初コミット') // eslint-disable-line
-        await fetchAndSaveFile(commit.url, filepath) // change this function as work
+        await fetchAndSaveFile(commit.url, filepath)
       }
       await open(filepath.replace(/ /g, '\\ '))
+      tmpStore.deleteFileInfo(commit.id, extname)
     } else if (result === 'mustCommit') {
       console.log('commitしてから') // eslint-disable-line
     } else if (result === 'anotherFileCommit') {
@@ -115,12 +116,14 @@ module.exports = {
       corrStore.writeFileInfo(filename, commit.id)
       fs.copyFileSync(mockpath, newfilepath)
       await open(newfilepath.replace(/ /g, '\\ ')) // fileがないとき追加通知のみで開かれない
+      tmpStore.deleteFileInfo(commit.id, extname)
     } else {
       console.log('そのまま', filepath) // eslint-disable-line
       if (!fs.existsSync(filepath)) {
         await fetchAndSaveFile(commit.url, filepath)
       }
       await open(filepath.replace(/ /g, '\\ '))
+      tmpStore.deleteFileInfo(commit.id, extname)
     }
   },
 

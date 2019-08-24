@@ -278,6 +278,7 @@ export default {
         commit,
         result,
       })
+      await this.$store.dispatch('fetchTmpInfo')
     },
     change_viewingCommit(commitId) {
       this.viewingId = commitId
