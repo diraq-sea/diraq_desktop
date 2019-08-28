@@ -1,3 +1,6 @@
+import fs from 'fs'
+import path from 'path'
+import mockStore from './store/mock.store'
 const { app } = require('electron')
 const configStore = require('./store/config.store')
 const authStore = require('./store/auth.store')
@@ -7,7 +10,7 @@ const watcherController = require('./modules/watcher/watcher.controller')
 const commitStore = require('./store/commit.store')
 const corrStore = require('./store/corr.store')
 const mkdirIfNotExists = require('./utils/mkdirIfNotExists')
-const { CONFIG_DIR, MOCK_ENABLED } = require('./const')
+const { CONFIG_DIR, MOCK_ENABLED, TMP_FILES_DIR } = require('./const')
 const { setupAxiosMock } = require('./utils/axios')
 
 require('./utils/autoUpdate')
@@ -27,7 +30,17 @@ async function createWindow() {
   ipcController.init()
   watcherController.init()
   commitStore.init()
-  corrStore.init()
+  const corrlist = corrStore.init()
+  for (const corr of corrlist) {
+    const commit = mockStore.findById('commit', corr.hashname)
+    const file = mockStore.findById('file', commit.fileId)
+    if (Date.now() - file.mtime > 30 * 24 * 60 * 60 * 1000) {
+      try {
+        fs.unlinkSync(path.join(TMP_FILES_DIR, `${corr.filename}.${file.extname}`))
+        corrStore.deleteFileInfo(corr.filename)
+      } catch (error) {}
+    }
+  }
 }
 
 app.on('ready', createWindow)
