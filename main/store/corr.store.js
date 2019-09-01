@@ -12,7 +12,6 @@ module.exports = {
   init() {
     writeFileIfNotExists(CORR_FILE, corrfile)
     isInit = true
-    return JSON.parse(fs.readFileSync(CORR_FILE))
   },
   writeFileInfo(filename, hashname) {
     checkInit()
