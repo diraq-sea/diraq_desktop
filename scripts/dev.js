@@ -16,9 +16,6 @@ const logProcesses = { electron: 'Electron', main: 'Main Process', renderer: 'Re
 let electronProcess = null
 let manualRestart = false
 
-/**
- * Nuxt.js によるファイルのビルド、開発用サーバーの起動と、ファイルの監視を開始する。
- */
 async function startRenderer() {
   rendererConfig.dev = true
   rendererConfig.build.quiet = true
@@ -43,10 +40,6 @@ async function startRenderer() {
   await new Builder(nuxt).build()
 }
 
-/**
- * webpack による ECMAScript から CommonJS へのトランスコンパイルと、ファイルの監視を開始する。
- * @returns {Promise}
- */
 function startMain() {
   return new Promise(resolve => {
     mainConfig.mode = process.env.NODE_ENV
@@ -78,9 +71,6 @@ function startMain() {
   })
 }
 
-/**
- * Electron を起動する。
- */
 function startElectron() {
   electronProcess = spawn(electron, [path.join(process.cwd(), pkg.main)])
 
@@ -97,16 +87,9 @@ function startElectron() {
   })
 }
 
-/**
- * 開発用のスクリプトを実行する。
- * 1. レンダラープロセスとして Nuxt.js の処理を実行
- *    ファイルのビルド、開発用サーバーの起動、ファイルの変更監視
- * 2. メインプロセスとして webpack の処理を実行
- *    ファイルのトランスコンパイル、ファイルの変更監視
- * 3. Electron の起動
- */
 async function dev() {
-  console.log(`  ${chalk.blue.bold('Getting ready for DiraQ desktop')}\n`) // eslint-disable-line
+  // eslint-disable-next-line
+  console.log(`${chalk.blue.bold('Getting ready for DiraQ desktop')}\n`)
 
   try {
     await startRenderer()

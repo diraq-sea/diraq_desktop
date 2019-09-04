@@ -1,4 +1,3 @@
-import mockStore from '~/store/mock.store'
 import { FIRST_CREATED_MESSAGE } from '~/const'
 
 export function defaultValues() {
@@ -30,9 +29,9 @@ export function defaultValues() {
   ]
 }
 
-export function create({ fileId, message }) {
+export function create({ id, fileId, message }) {
   return {
-    id: `hash-${mockStore.get('commit').length}`,
+    id,
     fileId,
     message,
     user: 0,

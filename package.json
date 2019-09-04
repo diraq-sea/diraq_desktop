@@ -6,33 +6,56 @@
   "main": "dist/main.js",
   "private": true,
   "scripts": {
-    "build": "nuxt generate && node --require esm --require dotenv/config scripts/build.js",
+    "build": "npm run build:renderer && npm run build:main && electron-builder",
+    "build:main": "node --require dotenv/config --require esm scripts/build.js",
+    "build:renderer": "nuxt generate",
     "prebuild": "rimraf build dist",
-    "dev": "node --require esm --require dotenv/config scripts/dev.js",
+    "dev": "node --require dotenv/config --require esm scripts/dev.js",
     "lint": "npm run lint:script && npm run lint:style",
     "lint:script": "eslint --cache --ext .js,.vue --ignore-path .gitignore .",
     "lint:style": "stylelint --cache **/*.{css,vue}"
   },
   "build": {
     "productName": "DiraQ",
-    "appId": "com.example.yourapp",
+    "appId": "com.diraq.desktop",
     "directories": {
       "output": "build"
     },
     "files": [
       "dist"
     ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "diraq-sea",
+        "repo": "desktop-releases"
+      }
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
     "mac": {
-      "category": "public.app-category.developer-tools",
+      "category": "public.app-category.productivity",
       "icon": "main/static/icons/icon.icns",
-      "target": "zip"
+      "gatekeeperAssess": false
     },
     "win": {
-      "icon": "main/static/icons/icon.ico",
-      "target": "squirrel"
+      "icon": "main/static/icons/icon.ico"
     },
-    "squirrelWindows": {
-      "loadingGif": "main/static/images/install-spinner.gif"
+    "linux": {
+      "icon": "main/static/icons"
     }
   },
   "husky": {
@@ -53,7 +76,8 @@
   "dependencies": {
     "axios": "0.19.0",
     "chokidar": "3.0.2",
-    "electron-squirrel-startup": "1.0.0",
+    "electron-log": "3.0.6",
+    "electron-updater": "4.0.6",
     "element-ui": "2.9.1",
     "moment-timezone": "0.5.25",
     "nuxt": "2.8.1"
@@ -71,7 +95,6 @@
     "dotenv": "8.0.0",
     "electron": "5.0.3",
     "electron-builder": "20.43.0",
-    "electron-builder-squirrel-windows": "20.43.0",
     "electron-devtools-installer": "2.2.4",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.3.0",
@@ -96,6 +119,6 @@
     "stylelint-config-standard": "18.3.0",
     "stylelint-order": "3.0.0",
     "stylelint-webpack-plugin": "0.10.5",
-    "webpack": "4.33.0"
+    "webpack": "4.36.1"
   }
 }

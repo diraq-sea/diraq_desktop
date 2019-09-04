@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const { autoUpdater } = require('electron-updater')
 
 const {
   PRELOGIN,
@@ -37,6 +38,7 @@ const {
   DELETE_FILE_IN_ROOM,
   SIGNUP,
   GET_INVITE_USER_INFO,
+  QUIT_AND_INSTALL,
 } = require('../../../common/ipcTypes')
 const axios = require('../../utils/axios').default
 const authStore = require('../../store/auth.store')
@@ -100,9 +102,10 @@ module.exports = {
     if (result === 'initialCommit') {
       if (!fs.existsSync(filepath)) {
         console.log('初コミット') // eslint-disable-line
-        await fetchAndSaveFile(commit.url, filepath) // change this function as work
+        await fetchAndSaveFile(commit.url, filepath)
       }
       await open(filepath.replace(/ /g, '\\ '))
+      tmpStore.deleteFileInfo(commit.id, extname)
     } else if (result === 'mustCommit') {
       console.log('commitしてから') // eslint-disable-line
     } else if (result === 'anotherFileCommit') {
@@ -112,12 +115,14 @@ module.exports = {
       corrStore.writeFileInfo(filename, commit.id)
       fs.copyFileSync(mockpath, newfilepath)
       await open(newfilepath.replace(/ /g, '\\ ')) // fileがないとき追加通知のみで開かれない
+      tmpStore.deleteFileInfo(commit.id, extname)
     } else {
       console.log('そのまま', filepath) // eslint-disable-line
       if (!fs.existsSync(filepath)) {
         await fetchAndSaveFile(commit.url, filepath)
       }
       await open(filepath.replace(/ /g, '\\ '))
+      tmpStore.deleteFileInfo(commit.id, extname)
     }
   },
 
@@ -125,8 +130,9 @@ module.exports = {
     const filename = corrStore.hashToFilename(commitId)
     const filePath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
     // prettier-ignore
-    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, { filePath, extname })).data
+    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, {fileId, filePath, extname })).data
     corrStore.replaceFileInfo(commitId, newcommitId)
+    return newcommitId
   },
 
   [SAVE_COMMIT_ID]: ({ commitpanel, fileId, commitId }) =>
@@ -138,8 +144,8 @@ module.exports = {
     // prettier-ignore
     (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment`, { comment })).data,
 
-  [ADD_COMMIT]: async ({ roomId, fileId, message }) =>
-    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { message })).data,
+  [ADD_COMMIT]: async ({ roomId, fileId, id, message }) =>
+    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { id, message })).data,
 
   [CLOSE_WIN]: () => windowStore.close(),
 
@@ -189,6 +195,7 @@ module.exports = {
   [FETCH_TMP_INFO]: () => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.readFileInfo()
   },
+
   [DELETE_TMP_INFO]: extname => {
     if (fs.existsSync(TMP_FILE)) return tmpStore.deleteFileInfo(extname)
   },
@@ -196,12 +203,19 @@ module.exports = {
   [SAVE_INVITE_INFO]: async ({ email, roomId }) => {
     await axios.post(`/invite`, { email, roomId })
   },
+
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
     await axios.delete(`/room/${roomId}/file`, { data: { fileId } })
   },
+
   [SIGNUP]: ({ name, email, password }) => {
     authStore.email = email
     axios.post('/user', { name, email, password })
   },
+
   [GET_INVITE_USER_INFO]: async inviteMail => (await axios.get(`/invite/${inviteMail}`)).data,
+
+  [QUIT_AND_INSTALL]: () => {
+    autoUpdater.quitAndInstall()
+  },
 }

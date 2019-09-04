@@ -52,8 +52,8 @@ export const actions = {
   async addComment(store, { roomId, fileId, commitId, comment }) {
     await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, comment })
   },
-  async addCommit(store, { roomId, fileId, message }) {
-    await this.$ipc(ADD_COMMIT, { roomId, fileId, message })
+  async addCommit(store, { roomId, fileId, id, message }) {
+    await this.$ipc(ADD_COMMIT, { roomId, fileId, id, message })
   },
   async viewFile({ commit }, { roomId, fileId, commitId }) {
     const file = await this.$ipc(FETCH_FILE, { roomId, fileId })
@@ -65,7 +65,8 @@ export const actions = {
   },
   async saveCommitFile(store, { roomId, fileId, extname }) {
     const commitId = await this.$ipc(FETCH_COMMIT_ID, fileId)
-    await this.$ipc(SAVE_COMMIT_FILE, { roomId, fileId, commitId, extname })
+    const newcommitId = await this.$ipc(SAVE_COMMIT_FILE, { roomId, fileId, commitId, extname })
+    return newcommitId
   },
   async saveCommitId(store, { commitpanel, fileId, commitId }) {
     const result = await this.$ipc(SAVE_COMMIT_ID, { commitpanel, fileId, commitId })
