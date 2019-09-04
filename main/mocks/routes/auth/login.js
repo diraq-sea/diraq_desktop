@@ -1,6 +1,3 @@
 export default {
-  post: () => ({
-    token:
-      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag',
-  }),
+  post: ({ email, password }) => console.log(email, password), // eslint-disable-line
 }

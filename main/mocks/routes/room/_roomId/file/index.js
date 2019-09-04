@@ -51,32 +51,33 @@ export default {
       })
 
       mockStore.add('commit', commit)
-
+      const hashname = commit.id
+      const filename = `${Date.now()}id${file.id}_${name}`
       if (dropped) {
-        const hashname = commit.id
-        const filename = `${Date.now()}id${file.id}_${name}`
         fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${filename}.${extname}`))
         fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${hashname}.${extname}`))
-        corrStore.writeFileInfo(filename, hashname)
       }
-
-      return file
+      const fileandhash = { file, filename, hashname: commit.id }
+      return fileandhash
     } else {
       // folder
       const newFolder = `${folder}/${name}`
 
-      return target && !target.name
-        ? mockStore.update('file', {
-            ...target,
-            folder: newFolder,
-          })
-        : mockStore.add(
-            'file',
-            createFileModel({
-              roomId,
+      const file =
+        target && !target.name
+          ? mockStore.update('file', {
+              ...target,
               folder: newFolder,
-            }),
-          )
+            })
+          : mockStore.add(
+              'file',
+              createFileModel({
+                roomId,
+                folder: newFolder,
+              }),
+            )
+      const fileandhash = { file, filename: null, hashname: null }
+      return fileandhash
     }
   },
   delete: ({ fileId }) => {

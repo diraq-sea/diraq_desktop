@@ -15,7 +15,7 @@
           class="fas fa-caret-right arrow"
           @click.stop="toggleRoom(room)"
         />
-        <span>{{ room.name }}</span>
+        <span>{{ room.room_name }}</span>
         <!-- <i class="fas fa-plus plus" title="Create new file or folder" @click.stop="toggleDialog" /> -->
       </div>
       <side-menu-item

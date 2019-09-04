@@ -58,14 +58,8 @@ module.exports = {
   [CHECK_LOGIN]: () => authStore.isLogin,
 
   [LOGIN]: async ({ email, password }) => {
-    // eslint-disable-next-line
-    console.log(email, password, 'tokenをGET')
-    const loginToken =
-      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag' // JWTでtoken返す
-    const { data } = await axios.post('/auth/login', null, {
-      headers: { Authorization: `Bearer ${loginToken}` },
-    })
-    authStore.token = data.token
+    const token = (await axios.post('/auth/login', { email, password })).data.access_token
+    authStore.token = token
   },
 
   [LOGOUT]: () => (authStore.token = null),
@@ -74,7 +68,7 @@ module.exports = {
 
   [GET_AUTH_EMAIL]: () => ({ email: authStore.email }),
 
-  [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
+  [FETCH_ROOMS]: async () => (await axios.get('/room')).data,
 
   [FETCH_ROOM_INFO]: async roomId => (await axios.get(`/room/${roomId}`)).data,
 
@@ -83,13 +77,18 @@ module.exports = {
   [ADD_MEMBERS]: async ({ roomId, ...params }) =>
     (await axios.post(`/room/${roomId}/members`, params)).data,
 
-  [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
+  [CREATE_ROOM]: async name => (await axios.post('/room', { name })).data,
 
   [CREATE_NEW]: async ({ roomId, ...params }) =>
     (await axios.post(`/room/${roomId}/file`, params)).data,
 
-  [DROP_FILE]: async ({ roomId, ...params }) =>
-    (await axios.post(`/room/${roomId}/file`, params)).data,
+  [DROP_FILE]: async ({ roomId, ...params }) => {
+    const fileandhash = (await axios.post(`/room/${roomId}/file`, params)).data
+    if (fileandhash.hashname != null) {
+      corrStore.writeFileInfo(fileandhash.filename, fileandhash.hashname)
+    }
+    return fileandhash.file
+  },
 
   [FETCH_FILE]: async ({ roomId, fileId }) =>
     (await axios.get(`room/${roomId}/file/${fileId}`)).data,
@@ -202,7 +201,7 @@ module.exports = {
   },
   [SIGNUP]: ({ name, email, password }) => {
     authStore.email = email
-    axios.post('user', { name, email, password })
+    axios.post('/user', { name, email, password })
   },
   [GET_INVITE_USER_INFO]: async inviteMail => (await axios.get(`/invite/${inviteMail}`)).data,
 }

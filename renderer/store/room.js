@@ -51,7 +51,7 @@ export const actions = {
   async createRoom({ dispatch }, name) {
     const room = await this.$ipc(CREATE_ROOM, name)
     await dispatch('fetchRooms')
-    const params = { userId: 0, roomId: room.id, role: ROLE_TYPES[0].id } // 自分のユーザー情報をどう取ってくるか
+    const params = { userId: room.owner_id, roomId: room.id, role: ROLE_TYPES[0].id }
     await this.$ipc(ADD_MEMBERS, params)
     return room
   },

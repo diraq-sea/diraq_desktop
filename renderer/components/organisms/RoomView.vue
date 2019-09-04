@@ -11,7 +11,7 @@
           <div>
             <div class="room-info" @click="enterRoom(room.id)">
               <div class="room-thumbnail"><div /></div>
-              <div class="room-name">{{ room.name }}</div>
+              <div class="room-name">{{ room.room_name }}</div>
             </div>
           </div>
         </div>
