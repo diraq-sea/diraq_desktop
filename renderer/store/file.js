@@ -49,11 +49,11 @@ export const actions = {
   async editFile(store, params) {
     await this.$ipc(EDIT_FILE, params)
   },
-  async addComment(store, { roomId, fileId, commitId, comment }) {
-    await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, comment })
+  async addComment(store, { roomId, fileId, commitId, userId, comment }) {
+    await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, userId, comment })
   },
-  async addCommit(store, { roomId, fileId, id, message }) {
-    await this.$ipc(ADD_COMMIT, { roomId, fileId, id, message })
+  async addCommit(store, { roomId, fileId, id, message, userId }) {
+    await this.$ipc(ADD_COMMIT, { roomId, fileId, id, message, userId })
   },
   async viewFile({ commit }, { roomId, fileId, commitId }) {
     const file = await this.$ipc(FETCH_FILE, { roomId, fileId })

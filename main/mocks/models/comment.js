@@ -53,14 +53,15 @@ export function defaultValues() {
   ]
 }
 
-export function create({ commitId, comment }) {
+export function create({ userId, commitId, comment }) {
   return {
     id: mockStore.get('comment').length,
     commitId,
-    user: 0,
+    user: userId,
     birthtime: Date.now(),
     mtime: Date.now(),
     comment,
+    watchedBy: [userId],
   }
 }
 

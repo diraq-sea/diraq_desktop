@@ -29,14 +29,15 @@ export function defaultValues() {
   ]
 }
 
-export function create({ id, fileId, message }) {
+export function create({ id, fileId, message, userId }) {
   return {
     id,
     fileId,
     message,
-    user: 0,
+    userId,
     birthtime: Date.now(),
     mtime: Date.now(),
+    watchedBy: [userId],
   }
 }
 

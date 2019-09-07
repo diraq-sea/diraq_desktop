@@ -4,7 +4,7 @@
     <template v-else>
       <h1>Room: {{ roomInfo(roomId).name }}</h1>
       <div class="folder-main">
-        <div ref="folderList" class="folder-list">
+        <div class="folder-list">
           <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
 
           <bread-crumb-list :list="breadcrumbs" @select="selectFolder" />
@@ -22,7 +22,6 @@
           <div
             v-for="file in files"
             :key="file.id"
-            ref="folderItem"
             class="folder-item"
             @click="openFile(file)"
             @contextmenu="showContextmenu(file, $event)"
@@ -179,6 +178,7 @@ export default {
         ...(extTypeId !== undefined
           ? { extname: fileExtTypes.find(({ id }) => id === extTypeId).extname }
           : {}),
+        userId: this.$store.state.user.id,
       })
 
       if (extTypeId !== undefined) {
@@ -203,6 +203,7 @@ export default {
             .join('.'),
           extname: entryInfo.name.split('.').pop(),
           path: entryInfo.path,
+          userId: this.$store.state.user.id,
         })
         this.loading = false
       }

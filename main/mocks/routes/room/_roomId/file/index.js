@@ -15,7 +15,7 @@ const crypto = require('crypto')
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
-  post({ folder, name, extname, path: filePath }, { roomId }) {
+  post({ folder, name, extname, path: filePath, userId }, { roomId }) {
     const target = mockStore.findByKey('file', 'folder', folder)
     const dropped = !!filePath
     const access = true
@@ -56,6 +56,7 @@ export default {
         id: commitId,
         fileId: file.id,
         message: dropped ? FIRST_DROPPED_MESSAGE(name) : FIRST_CREATED_MESSAGE(name),
+        userId,
       })
 
       mockStore.add('commit', commit)
