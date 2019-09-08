@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const { autoUpdater } = require('electron-updater')
+const FormData = require('form-data')
 
 const {
   PRELOGIN,
@@ -60,7 +61,7 @@ module.exports = {
   [CHECK_LOGIN]: () => authStore.isLogin,
 
   [LOGIN]: async ({ email, password }) => {
-    const token = (await axios.post('/auth/login', { email, password })).data.access_token
+    const token = (await axios.post('/auth/login', { email, password })).data.access_token // mockに繋ぐ時はpropertyのaccess_token削除
     authStore.token = token
   },
 
@@ -85,6 +86,24 @@ module.exports = {
     (await axios.post(`/room/${roomId}/file`, params)).data,
 
   [DROP_FILE]: async ({ roomId, ...params }) => {
+    // console.log(params)
+    // const formData = {
+    //   file: {
+    //     value: fs.createReadStream(params.path),
+    //     options: {
+    //       filename: params.name,
+    //       contentType: params.type,
+    //     },
+    //   },
+    // }
+    const form = new FormData()
+    form.append('file', fs.createReadStream(params.path))
+    params.formData = form
+
+    // const config = {
+    //   headers: form.getHeaders(),
+    // }
+    // console.log(params)
     const fileandhash = (await axios.post(`/room/${roomId}/file`, params)).data
     if (fileandhash.hashname != null) {
       corrStore.writeFileInfo(fileandhash.filename, fileandhash.hashname)

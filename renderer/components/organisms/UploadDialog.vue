@@ -135,7 +135,6 @@ export default {
       const data = e.dataTransfer
       const entrys = data.items
       const endPath = ''
-
       const absoluteFliePath = data.files[0].path.slice(
         0,
         data.files[0].path.lastIndexOf({ win: '\\', mac: '/', linux: '/' }[platform.default]),
@@ -146,7 +145,7 @@ export default {
     onChange(e) {
       if (e.status === 'success') {
         const endPath = ''
-        const entryList = [{ name: e.raw.name, path: e.raw.path, endPath }]
+        const entryList = [{ name: e.raw.name, path: e.raw.path, endPath, content: e.raw }]
         this.$emit('drop', entryList)
       }
     },

@@ -15,11 +15,11 @@ const crypto = require('crypto')
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
-  post({ folder, name, extname, path: filePath }, { roomId }) {
+  post({ folder, name, extname, path: filePath, type }, { roomId }) {
     const target = mockStore.findByKey('file', 'folder', folder)
     const dropped = !!filePath
     const access = true
-
+    console.log(type) //eslint-disable-line
     if (extname) {
       // file
       const file =
@@ -47,7 +47,7 @@ export default {
               }),
             )
 
-      const mtime = Date.now() + ''
+      const mtime = `${Date.now()}`
       const shasum = crypto.createHash('sha1')
       shasum.update(name + mtime)
       const commitId = `${shasum.digest('hex')}-id${file.id}`

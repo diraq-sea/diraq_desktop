@@ -194,6 +194,7 @@ export default {
         const entryInfo = entryList[i]
         this.loading = true
         this.dialogVisible = false
+        const type = entryInfo.content.type
         this.$store.dispatch('room/dropFile', {
           roomId: this.roomId,
           folder: this.tab.values.folder + entryInfo.endPath,
@@ -203,6 +204,7 @@ export default {
             .join('.'),
           extname: entryInfo.name.split('.').pop(),
           path: entryInfo.path,
+          type,
         })
         this.loading = false
       }
