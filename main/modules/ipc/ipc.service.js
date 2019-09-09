@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const { autoUpdater } = require('electron-updater')
 const FormData = require('form-data')
+const mime = require('mime-types')
 
 const {
   PRELOGIN,
@@ -86,25 +87,23 @@ module.exports = {
     (await axios.post(`/room/${roomId}/file`, params)).data,
 
   [DROP_FILE]: async ({ roomId, ...params }) => {
-    // console.log(params)
-    // const formData = {
-    //   file: {
-    //     value: fs.createReadStream(params.path),
-    //     options: {
-    //       filename: params.name,
-    //       contentType: params.type,
-    //     },
-    //   },
-    // }
+    const type = mime.lookup(params.path)
     const form = new FormData()
-    form.append('file', fs.createReadStream(params.path))
-    params.formData = form
-
-    // const config = {
-    //   headers: form.getHeaders(),
-    // }
-    // console.log(params)
-    const fileandhash = (await axios.post(`/room/${roomId}/file`, params)).data
+    const buffer = fs.readFileSync(params.path)
+    form.append('file', buffer, {
+      filename: params.name,
+      contentType: type,
+      knownLength: buffer.length,
+    })
+    form.append('extname', params.extname)
+    form.append('folder', params.folder)
+    form.append('name', params.name)
+    form.append('path', params.path)
+    form.append('type', type)
+    const config = {
+      headers: form.getHeaders(),
+    }
+    const fileandhash = (await axios.post(`/room/${roomId}/file`, form, config)).data
     if (fileandhash.hashname != null) {
       corrStore.writeFileInfo(fileandhash.filename, fileandhash.hashname)
     }
