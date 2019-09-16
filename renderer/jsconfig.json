@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./renderer/*"],
+      "@/*": ["./renderer/*"],
+      "~~/*": ["./*"],
+      "@@/*": ["./*"]
+    }
+  },
+  "extends": "../jsconfig"
+}
