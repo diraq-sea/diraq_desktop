@@ -96,6 +96,7 @@
       "icon": "main/static/icons/icon.ico"
     },
     "linux": {
+      "category": "Network",
       "icon": "main/static/icons"
     }
   },
