@@ -15,6 +15,47 @@
     "lint:script": "eslint --cache --ext .js,.vue --ignore-path .gitignore .",
     "lint:style": "stylelint --cache **/*.{css,vue}"
   },
+  "dependencies": {
+    "axios": "0.19.0",
+    "chokidar": "3.0.2",
+    "electron-log": "3.0.8",
+    "electron-updater": "4.1.2",
+    "element-ui": "2.12.0",
+    "moment-timezone": "0.5.26",
+    "nuxt": "2.9.2"
+  },
+  "devDependencies": {
+    "@babel/core": "7.6.0",
+    "@babel/preset-env": "7.6.0",
+    "@fortawesome/fontawesome-free": "5.10.2",
+    "@nuxtjs/eslint-config": "1.1.2",
+    "axios-mock-adapter": "1.17.0",
+    "babel-eslint": "10.0.3",
+    "babel-loader": "8.0.6",
+    "babel-plugin-dynamic-import-node": "2.3.0",
+    "chalk": "2.4.2",
+    "dotenv": "8.1.0",
+    "electron": "6.0.9",
+    "electron-builder": "21.2.0",
+    "electron-devtools-installer": "2.2.4",
+    "eslint": "6.4.0",
+    "eslint-config-prettier": "6.3.0",
+    "eslint-loader": "3.0.0",
+    "eslint-plugin-nuxt": "0.4.3",
+    "eslint-plugin-prettier": "3.1.0",
+    "esm": "3.2.25",
+    "husky": "3.0.5",
+    "lint-staged": "9.2.5",
+    "ngrok": "3.2.5",
+    "prettier": "1.18.2",
+    "rimraf": "3.0.0",
+    "stylelint": "11.0.0",
+    "stylelint-config-prettier": "5.2.0",
+    "stylelint-config-standard": "19.0.0",
+    "stylelint-order": "3.1.0",
+    "stylelint-webpack-plugin": "0.10.5",
+    "webpack": "4.40.2"
+  },
   "build": {
     "productName": "DiraQ",
     "appId": "com.diraq.desktop",
@@ -73,45 +114,25 @@
       "git add"
     ]
   },
-  "dependencies": {
-    "axios": "0.19.0",
-    "chokidar": "3.0.2",
-    "electron-log": "3.0.8",
-    "electron-updater": "4.1.2",
-    "element-ui": "2.12.0",
-    "moment-timezone": "0.5.26",
-    "nuxt": "2.9.2"
+  "prettier": {
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all"
   },
-  "devDependencies": {
-    "@babel/core": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "@fortawesome/fontawesome-free": "5.10.2",
-    "@nuxtjs/eslint-config": "1.1.2",
-    "axios-mock-adapter": "1.17.0",
-    "babel-eslint": "10.0.3",
-    "babel-loader": "8.0.6",
-    "babel-plugin-dynamic-import-node": "2.3.0",
-    "chalk": "2.4.2",
-    "dotenv": "8.1.0",
-    "electron": "6.0.9",
-    "electron-builder": "21.2.0",
-    "electron-devtools-installer": "2.2.4",
-    "eslint": "6.4.0",
-    "eslint-config-prettier": "6.3.0",
-    "eslint-loader": "3.0.0",
-    "eslint-plugin-nuxt": "0.4.3",
-    "eslint-plugin-prettier": "3.1.0",
-    "esm": "3.2.25",
-    "husky": "3.0.5",
-    "lint-staged": "9.2.5",
-    "ngrok": "3.2.5",
-    "prettier": "1.18.2",
-    "rimraf": "3.0.0",
-    "stylelint": "11.0.0",
-    "stylelint-config-prettier": "5.2.0",
-    "stylelint-config-standard": "19.0.0",
-    "stylelint-order": "3.1.0",
-    "stylelint-webpack-plugin": "0.10.5",
-    "webpack": "4.40.2"
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-prettier"
+    ],
+    "plugins": [
+      "stylelint-order"
+    ],
+    "rules": {
+      "order/order": [
+        "custom-properties",
+        "declarations"
+      ]
+    }
   }
 }
