@@ -27,7 +27,7 @@ export default {
     ...mapState('tab', ['tabs', 'currentTabId']),
     ...mapGetters('tab', ['isRoomTab', 'isFolderTab', 'isFileTab']),
     filteredTabs() {
-      return this.tabs.filter(tab => this.hadOpenedTabIds.indexOf(tab.id) > -1)
+      return this.tabs.filter(tab => this.hadOpenedTabIds.includes(tab.id))
     },
     roomTabs() {
       return this.filteredTabs.filter(tab => this.isRoomTab(tab))
@@ -44,7 +44,7 @@ export default {
   },
   watch: {
     currentTabId(id) {
-      if (this.hadOpenedTabIds.indexOf(id) > -1) return
+      if (this.hadOpenedTabIds.includes(id)) return
       this.hadOpenedTabIds = [...this.hadOpenedTabIds, id]
     },
   },
