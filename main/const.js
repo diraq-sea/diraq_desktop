@@ -24,4 +24,5 @@ module.exports = {
   API_BASE_URL: API_BASE_URL || 'http://localhost:8080/v1',
   PLATFORM: { win32: 'win', darwin: 'mac', linux: 'linux' }[process.platform],
   MOCK_ENABLED: MOCK_ENABLED ? MOCK_ENABLED === 'true' : NODE_ENV === 'development',
+  // MINIO_PORT: 9000,
 }

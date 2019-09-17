@@ -140,7 +140,7 @@ export default {
         await this.$store.dispatch('tab/changeTabType', {
           id: this.tab.id,
           type: TAB_TYPES.FILE,
-          values: { roomId: item.roomId, fileId: item.id, name: item.name, extname: item.extname },
+          values: { roomId: item.room_id, fileId: item.id, name: item.name, extname: item.extname },
         })
       }
     },

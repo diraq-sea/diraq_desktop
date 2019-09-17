@@ -1,6 +1,8 @@
 const path = require('path')
 const fs = require('fs')
 const { autoUpdater } = require('electron-updater')
+const FormData = require('form-data')
+const mime = require('mime-types')
 
 const {
   PRELOGIN,
@@ -47,6 +49,7 @@ const windowStore = require('../../store/window.store')
 const tmpStore = require('../../store/tmpfile.store')
 const commitStore = require('../../store/commit.store')
 const corrStore = require('../../store/corr.store')
+// const ngrok = require('../../store/ngrok')
 const { TMP_FILES_DIR, TMP_FILE, MOCK_FILES_DIR } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
@@ -60,14 +63,8 @@ module.exports = {
   [CHECK_LOGIN]: () => authStore.isLogin,
 
   [LOGIN]: async ({ email, password }) => {
-    // eslint-disable-next-line
-    console.log(email, password, 'tokenをGET')
-    const loginToken =
-      'qawfawgagahatgaaaghahahata.gawtawgawaga.hatawfagagahagafafggsgsegrsgsgeseshsehesgesgesgsegreshsehserbsebsgeghstehehsrtjrsnsbnesghsdherbnesbesbesbesbnhhsdgagagrafewafwafeafwagwagagahahahahahagafgag' // JWTでtoken返す
-    const { data } = await axios.post('/auth/login', null, {
-      headers: { Authorization: `Bearer ${loginToken}` },
-    })
-    authStore.token = data.token
+    const token = (await axios.post('/auth/login', { email, password })).data.access_token // mockに繋ぐ時はpropertyのaccess_token削除
+    authStore.token = token
   },
 
   [LOGOUT]: () => (authStore.token = null),
@@ -76,7 +73,7 @@ module.exports = {
 
   [GET_AUTH_EMAIL]: () => ({ email: authStore.email }),
 
-  [FETCH_ROOMS]: async () => (await axios.get('/rooms')).data,
+  [FETCH_ROOMS]: async () => (await axios.get('/room')).data,
 
   [FETCH_ROOM_INFO]: async roomId => (await axios.get(`/room/${roomId}`)).data,
 
@@ -85,16 +82,46 @@ module.exports = {
   [ADD_MEMBERS]: async ({ roomId, ...params }) =>
     (await axios.post(`/room/${roomId}/members`, params)).data,
 
-  [CREATE_ROOM]: async name => (await axios.post('/rooms', { name })).data,
+  [CREATE_ROOM]: async name => (await axios.post('/room', { name })).data,
 
   [CREATE_NEW]: async ({ roomId, ...params }) =>
     (await axios.post(`/room/${roomId}/file`, params)).data,
 
-  [DROP_FILE]: async ({ roomId, ...params }) =>
-    (await axios.post(`/room/${roomId}/file`, params)).data,
+  [DROP_FILE]: async ({ roomId, ...params }) => {
+    const type = mime.lookup(params.path)
+    const form = new FormData()
+    const buffer = fs.readFileSync(params.path)
+    form.append('file', buffer, {
+      filename: params.name,
+      contentType: type,
+      knownLength: buffer.length,
+    })
+    form.append('extname', params.extname)
+    form.append('folder', params.folder)
+    form.append('name', params.name)
+    form.append('path', params.path)
+    form.append('type', type)
+    const config = {
+      headers: form.getHeaders(),
+    }
+    const fileandhash = (await axios.post(`/room/${roomId}/file`, form, config)).data
+    if (fileandhash.hashname != null) {
+      fs.copyFileSync(
+        params.path,
+        path.join(TMP_FILES_DIR, `${fileandhash.filename}.${params.extname}`),
+      )
+      corrStore.writeFileInfo(fileandhash.filename, fileandhash.hashname)
+    }
+    return fileandhash.file
+  },
 
-  [FETCH_FILE]: async ({ roomId, fileId }) =>
-    (await axios.get(`room/${roomId}/file/${fileId}`)).data,
+  [FETCH_FILE]: async ({ roomId, fileId }) => {
+    const filedata = (await axios.get(`room/${roomId}/file/${fileId}`)).data
+    // const url = ngrok.proxyUrl
+    // filedata.commits[0].url = `${url}/mybucket/1/1DiraQ_DB1568361631.pdf`
+    // console.log(filedata.commits[0].url)
+    return filedata
+  },
 
   [EDIT_FILE]: async ({ extname, commit, result }) => {
     let filename = corrStore.hashToFilename(commit.id)
@@ -211,7 +238,7 @@ module.exports = {
 
   [SIGNUP]: ({ name, email, password }) => {
     authStore.email = email
-    axios.post('user', { name, email, password })
+    axios.post('/user', { name, email, password })
   },
 
   [GET_INVITE_USER_INFO]: async inviteMail => (await axios.get(`/invite/${inviteMail}`)).data,

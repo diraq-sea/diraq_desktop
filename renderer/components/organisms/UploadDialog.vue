@@ -135,7 +135,6 @@ export default {
       const data = e.dataTransfer
       const entrys = data.items
       const endPath = ''
-
       const absoluteFliePath = data.files[0].path.slice(
         0,
         data.files[0].path.lastIndexOf({ win: '\\', mac: '/', linux: '/' }[platform.default]),

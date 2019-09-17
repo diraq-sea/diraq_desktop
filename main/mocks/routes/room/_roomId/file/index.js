@@ -15,11 +15,11 @@ const crypto = require('crypto')
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
-  post({ folder, name, extname, path: filePath }, { roomId }) {
+  post({ folder, name, extname, path: filePath, type }, { roomId }) {
     const target = mockStore.findByKey('file', 'folder', folder)
     const dropped = !!filePath
     const access = true
-
+    console.log(type) //eslint-disable-line
     if (extname) {
       // file
       const file =
@@ -47,7 +47,7 @@ export default {
               }),
             )
 
-      const mtime = Date.now() + ''
+      const mtime = `${Date.now()}`
       const shasum = crypto.createHash('sha1')
       shasum.update(name + mtime)
       const commitId = `${shasum.digest('hex')}-id${file.id}`
@@ -59,32 +59,33 @@ export default {
       })
 
       mockStore.add('commit', commit)
-
+      const hashname = commit.id
+      const filename = `${Date.now()}id${file.id}_${name}`
       if (dropped) {
-        const hashname = commit.id
-        const filename = `${Date.now()}id${file.id}_${name}`
         fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${filename}.${extname}`))
         fs.copyFileSync(filePath, path.join(MOCK_FILES_DIR, `${hashname}.${extname}`))
-        corrStore.writeFileInfo(filename, hashname)
       }
-
-      return file
+      const fileandhash = { file, filename, hashname: commit.id }
+      return fileandhash
     } else {
       // folder
       const newFolder = `${folder}/${name}`
 
-      return target && !target.name
-        ? mockStore.update('file', {
-            ...target,
-            folder: newFolder,
-          })
-        : mockStore.add(
-            'file',
-            createFileModel({
-              roomId,
+      const file =
+        target && !target.name
+          ? mockStore.update('file', {
+              ...target,
               folder: newFolder,
-            }),
-          )
+            })
+          : mockStore.add(
+              'file',
+              createFileModel({
+                roomId,
+                folder: newFolder,
+              }),
+            )
+      const fileandhash = { file, filename: null, hashname: null }
+      return fileandhash
     }
   },
   delete: ({ fileId }) => {

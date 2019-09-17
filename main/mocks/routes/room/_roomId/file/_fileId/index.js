@@ -15,7 +15,6 @@ export default {
     const file = mockStore.findById('file', fileId)
     file.mtime = Date.now()
     mockStore.update('file', file)
-
     const filename = file.name
     const mtime = file.mtime + ''
     const shasum = crypto.createHash('sha1')

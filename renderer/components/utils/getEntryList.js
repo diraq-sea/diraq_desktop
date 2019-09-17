@@ -1,6 +1,5 @@
 export default async function getEntryList(entrys, endPath, absoluteFliePath) {
   let listEntry = []
-
   for (let i = 0; i < entrys.length; i++) {
     let entry
     if (entrys[i][Symbol.toStringTag] === 'DataTransferItem') {

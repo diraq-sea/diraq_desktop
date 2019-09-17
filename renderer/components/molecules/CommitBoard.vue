@@ -6,13 +6,13 @@
           <div
             class="commit-circle"
             :class="{ enhance: commit.id == viewingId }"
-            :style="circleStyle(user(commit.user).icon)"
+            :style="circleStyle(user(commit.user_id).icon)"
           />
           <div v-if="hasChild(commit.id)" class="commit-line" />
         </div>
         <div class="comments-panel">
           <div class="committer-info">
-            <span class="committer-name">{{ user(commit.user).name }}</span>
+            <span class="committer-name">{{ user(commit.user_id).name }}</span>
             <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
               <div class="file-controls-icon" title="View file" @click="viewFile(commit)">
@@ -53,11 +53,11 @@
             :key="comment.id"
             class="comment"
           >
-            <div class="comment-circle" :style="circleStyle(user(comment.user).icon)" />
+            <div class="comment-circle" :style="circleStyle(user(comment.user_id).icon)" />
             <div class="comment-body">
-              <span class="comment-username">{{ user(comment.user).name }}</span>
+              <span class="comment-username">{{ user(comment.user_id).name }}</span>
               <span class="comment-date">{{ formattedDate(comment.date) }}</span>
-              <div class="comment-message">{{ comment.comment }}</div>
+              <div class="comment-message">{{ comment.content }}</div>
             </div>
           </div>
 
@@ -143,7 +143,7 @@ export default {
       {},
     )
     for (const key in showcomments) {
-      if (this.file.commits.find(commit => commit.id === key).comments.length === 1) {
+      if (this.file.commits.find(commit => String(commit.id) === key).comments.length === 1) {
         showcomments[key] = true
       }
     }
@@ -171,7 +171,7 @@ export default {
       for (const commit in this.file.commits) {
         for (const id in this.committed) {
           if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
-            return true // commit後tmp.json削除
+            return true
           }
         }
       }
@@ -224,7 +224,7 @@ export default {
     async submitComment(commitId) {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
       const comment = this.values[index]
-      const roomId = this.file.roomId
+      const roomId = this.file.room_id
       const fileId = this.file.id
 
       if (comment) {
@@ -235,7 +235,7 @@ export default {
       }
     },
     async submitCommit() {
-      const roomId = this.file.roomId
+      const roomId = this.file.room_id
       const fileId = this.file.id
       const message = this.commitComment
       const extname = this.file.extname
@@ -268,7 +268,7 @@ export default {
       const commitId = commit.id
       const extname = this.file.extname
       const commitpanel = this.isModified
-      const result = await this.$store.dispatch('file/saveCommitId', {
+      const result = await this.$store.dispatch('file/savecommitId', {
         commitpanel,
         fileId,
         commitId,
@@ -291,7 +291,7 @@ export default {
       }
     },
     async viewFile(commit) {
-      const roomId = this.file.roomId
+      const roomId = this.file.room_id
       const fileId = this.file.id
       const commitId = commit.id
       await this.$store.dispatch('file/viewFile', { roomId, fileId, commitId })

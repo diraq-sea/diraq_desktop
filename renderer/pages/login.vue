@@ -50,7 +50,7 @@ export default {
       const email = this.email
       const password = this.password
       await this.$store.dispatch('login/login', { email, password })
-      this.$router.push('/')
+      this.$router.push('/room')
     },
     toSignup() {
       this.$router.push('/signup')
