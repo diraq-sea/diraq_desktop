@@ -73,7 +73,7 @@ export default {
             id: this.tabs[this.tabs.length - 1].id + 1,
             type: TAB_TYPES.FILE,
             values: {
-              roomId: this.item.roomId,
+              roomId: this.item.room_id,
               fileId: this.item.id,
               name: this.item.name,
               extname: this.item.extname,

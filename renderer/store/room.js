@@ -29,7 +29,7 @@ export const mutations = {
       [roomInfo.id]: roomInfo,
     }
   },
-  setRoomId(state, roomId) {
+  setroomId(state, roomId) {
     state.roomId = roomId
   },
   toggleOpening(state, roomId) {
@@ -68,8 +68,8 @@ export const actions = {
     return item
   },
 
-  getRoomId({ commit }, roomId) {
-    commit('setRoomId', roomId)
+  getroomId({ commit }, roomId) {
+    commit('setroomId', roomId)
   },
   async deleteFileInRoom({ dispatch }, { roomId, fileId }) {
     await this.$ipc(DELETE_FILE_IN_ROOM, { roomId, fileId })

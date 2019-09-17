@@ -49,6 +49,7 @@ const windowStore = require('../../store/window.store')
 const tmpStore = require('../../store/tmpfile.store')
 const commitStore = require('../../store/commit.store')
 const corrStore = require('../../store/corr.store')
+// const ngrok = require('../../store/ngrok')
 const { TMP_FILES_DIR, TMP_FILE, MOCK_FILES_DIR } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
@@ -105,13 +106,22 @@ module.exports = {
     }
     const fileandhash = (await axios.post(`/room/${roomId}/file`, form, config)).data
     if (fileandhash.hashname != null) {
+      fs.copyFileSync(
+        params.path,
+        path.join(TMP_FILES_DIR, `${fileandhash.filename}.${params.extname}`),
+      )
       corrStore.writeFileInfo(fileandhash.filename, fileandhash.hashname)
     }
     return fileandhash.file
   },
 
-  [FETCH_FILE]: async ({ roomId, fileId }) =>
-    (await axios.get(`room/${roomId}/file/${fileId}`)).data,
+  [FETCH_FILE]: async ({ roomId, fileId }) => {
+    const filedata = (await axios.get(`room/${roomId}/file/${fileId}`)).data
+    // const url = ngrok.proxyUrl
+    // filedata.commits[0].url = `${url}/mybucket/1/1DiraQ_DB1568361631.pdf`
+    // console.log(filedata.commits[0].url)
+    return filedata
+  },
 
   [EDIT_FILE]: async ({ extname, commit, result }) => {
     let filename = corrStore.hashToFilename(commit.id)

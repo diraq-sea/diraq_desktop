@@ -63,7 +63,7 @@ export default {
       return this.tab.values.fileId
     },
     roomId() {
-      return this.file(this.fileId).roomId
+      return this.file(this.fileId).room_id
     },
     extname() {
       return this.file(this.fileId).extname
@@ -86,7 +86,6 @@ export default {
       this.$store.dispatch('room/fetchRoomInfo', this.roomId),
       this.$store.dispatch('user/fetchUsers', this.roomId),
     ])
-
     this.loading = false
   },
   methods: {

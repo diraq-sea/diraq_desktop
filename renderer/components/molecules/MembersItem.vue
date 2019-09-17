@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     async openDialog() {
-      await this.$store.dispatch('room/getRoomId', this.roomId)
+      await this.$store.dispatch('room/getroomId', this.roomId)
       this.dialogVisible = !this.dialogVisible
     },
   },

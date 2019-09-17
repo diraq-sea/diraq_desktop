@@ -62,7 +62,7 @@ export default {
       await this.$store.dispatch('tab/changeTabType', {
         id: this.currentTabId,
         type: TAB_TYPES.FOLDER,
-        values: { roomId, folder: '' },
+        values: { roomId, folder: `` },
       })
     },
   },
