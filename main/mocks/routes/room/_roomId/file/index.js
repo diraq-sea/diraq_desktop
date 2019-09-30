@@ -10,6 +10,7 @@ import {
 } from '../../../../../const'
 import { create as createFileModel } from '../../../../models/file'
 import { create as createCommitModel } from '../../../../models/commit'
+import { create as createCommentModel } from '../../../../models/comment'
 
 const crypto = require('crypto')
 
@@ -60,6 +61,8 @@ export default {
       })
 
       mockStore.add('commit', commit)
+      const commitMessage = commit.message
+      mockStore.add('comment', createCommentModel({ userId, commitId, comment: commitMessage }))
 
       if (dropped) {
         const hashname = commit.id

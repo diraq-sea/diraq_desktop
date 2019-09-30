@@ -31,7 +31,6 @@
               </a>
             </div>
           </div>
-          <div class="committer-message">{{ commit.message }}</div>
           <div
             v-show="!showcomments[commit.id]"
             style="cursor: pointer; color: gray"

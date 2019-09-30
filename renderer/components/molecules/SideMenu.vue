@@ -3,6 +3,21 @@
     <div class="controls">
       <i class="fas fa-folder-plus" title="Create new room" @click="openRoomNamePrompt" />
     </div>
+    <div v-for="room in rooms" :key="'upd' + room.id">
+      <div v-if="updatedFiles(room.id)">
+        <div
+          v-for="item in updatedFiles(room.id)"
+          :key="item.id"
+          class="menu-item"
+          @click="openFile(item)"
+        >
+          <span
+            ><font style="font-weight:bold">{{ item.name }}</font>
+            <font color="gray">{{ room.name + item.folder }}</font>
+          </span>
+        </div>
+      </div>
+    </div>
     <div
       v-for="room in rooms"
       :key="room.id"
@@ -57,6 +72,7 @@ export default {
     ...mapState('room', ['rooms', 'roomId']),
     ...mapState('tab', ['tabs']),
     ...mapGetters('room', ['roomInfo']),
+    ...mapGetters('file', ['file']),
     itemClass() {
       return id => ({ current: this.roomId === id })
     },
@@ -102,6 +118,26 @@ export default {
         return items.reduce(additem, [])
       }
     },
+    updatedFiles() {
+      return roomId => {
+        if (this.roomInfo(roomId)) {
+          // for (const item of this.roomInfo(roomId).items) {
+          //   const fileId = item.id
+          //   await this.$store.dispatch('file/fetchFile', { roomId, fileId })
+          // }
+          return this.roomInfo(roomId).items.filter(item => {
+            return this.file(item.id)
+              ? this.file(item.id).commits.some(commit =>
+                  commit.comments.some(comment => {
+                    return !comment.watchedBy.includes(this.$store.state.user.id)
+                  }),
+                )
+              : false
+          })
+        }
+        return undefined
+      }
+    },
   },
   async created() {
     await this.$store.dispatch('room/fetchRooms')
@@ -140,15 +176,30 @@ export default {
       const targetTab = this.tabs.find(
         tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === item.id,
       )
+      const roomId = item.roomId
+      const fileId = item.id
       if (targetTab) {
         await this.$store.dispatch('tab/changeCurrentTab', targetTab.id)
       } else {
-        this.$store.dispatch('tab/addNewTab')
+        await this.$store.dispatch('tab/addNewTab')
         await this.$store.dispatch('tab/changeTabType', {
           id: this.tabs[this.tabs.length - 1].id,
           type: TAB_TYPES.FILE,
-          values: { roomId: item.roomId, fileId: item.id, name: item.name, extname: item.extname },
+          values: { roomId, fileId, name: item.name, extname: item.extname },
         })
+      }
+
+      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
+      for (const commit of this.file(fileId).commits) {
+        for (const comment of commit.comments) {
+          await this.$store.dispatch('file/watchComment', {
+            roomId,
+            fileId,
+            commitId: commit.id,
+            commentId: comment.id,
+            userId: this.$store.state.user.id,
+          })
+        }
       }
     },
     async createNew({ name, extTypeId }) {

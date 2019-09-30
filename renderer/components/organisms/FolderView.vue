@@ -85,6 +85,7 @@ export default {
   computed: {
     ...mapState('tab', ['tabs']),
     ...mapGetters('room', ['roomInfo']),
+    ...mapGetters('file', ['file']),
     iconSrc() {
       return item => (item.extname ? this.$fileIcon(item.extname) : folderIcon)
     },
@@ -141,6 +142,18 @@ export default {
           type: TAB_TYPES.FILE,
           values: { roomId: item.roomId, fileId: item.id, name: item.name, extname: item.extname },
         })
+      }
+
+      for (const commit of this.file(item.id).commits) {
+        for (const comment of commit.comments) {
+          await this.$store.dispatch('file/watchComment', {
+            roomId: item.roomId,
+            fileId: item.id,
+            commitId: commit.id,
+            commentId: comment.id,
+            userId: this.$store.state.user.id,
+          })
+        }
       }
     },
     changeFolder(folder) {

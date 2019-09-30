@@ -37,7 +37,6 @@ export function create({ id, fileId, message, userId }) {
     userId,
     birthtime: Date.now(),
     mtime: Date.now(),
-    watchedBy: [userId],
   }
 }
 

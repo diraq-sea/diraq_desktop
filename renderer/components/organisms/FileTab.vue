@@ -8,7 +8,7 @@
         :key="tab.id"
         :class="itemClass(tab.id)"
         class="ft-tab"
-        @mousedown="changeCurrentTab(tab.id)"
+        @mousedown="changeCurrentTab(tab)"
       >
         <div class="tab-content">
           <template v-if="isFileTab(tab)">
@@ -46,6 +46,7 @@ export default {
     ...mapState('tab', ['tabs', 'currentTabId']),
     ...mapState('user', ['name', 'icon']),
     ...mapGetters('tab', ['isFileTab']),
+    ...mapGetters('file', ['file']),
     containerClass() {
       return { isMac: this.$platform === 'mac' }
     },
@@ -62,10 +63,26 @@ export default {
       this.$router.push('/login')
     },
 
-    async changeCurrentTab(id) {
-      if (this.currentTabId === id) return
+    async changeCurrentTab(tab) {
+      if (this.currentTabId === tab.id) return
 
-      await this.$store.dispatch('tab/changeCurrentTab', id)
+      await this.$store.dispatch('tab/changeCurrentTab', tab.id)
+      if (this.isFileTab(tab)) {
+        const roomId = tab.values.roomId
+        const fileId = tab.values.fileId
+        await this.$store.dispatch('file/fetchFile', { roomId, fileId })
+        for (const commit of this.file(fileId).commits) {
+          for (const comment of commit.comments) {
+            await this.$store.dispatch('file/watchComment', {
+              roomId,
+              fileId,
+              commitId: commit.id,
+              commentId: comment.id,
+              userId: this.$store.state.user.id,
+            })
+          }
+        }
+      }
     },
   },
 }
