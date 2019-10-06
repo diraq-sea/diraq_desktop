@@ -30,6 +30,13 @@ export function defaultValues() {
       icon: '/images/user2.png',
       password: 'hashkasitapasswordwoireru',
     },
+    {
+      id: 4,
+      name: 'diraq4',
+      email: 'diraq_test_4@diraq.io',
+      icon: '/images/user2.png',
+      password: 'hashkasitapasswordwoireru',
+    },
   ]
 }
 

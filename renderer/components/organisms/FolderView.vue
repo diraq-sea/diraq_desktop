@@ -130,8 +130,10 @@ export default {
   },
   methods: {
     async openFile(item) {
+      const roomId = item.roomId
+      const fileId = item.id
       const targetTab = this.tabs.find(
-        tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === item.id,
+        tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === fileId,
       )
 
       if (targetTab) {
@@ -140,21 +142,22 @@ export default {
         await this.$store.dispatch('tab/changeTabType', {
           id: this.tab.id,
           type: TAB_TYPES.FILE,
-          values: { roomId: item.roomId, fileId: item.id, name: item.name, extname: item.extname },
+          values: { roomId, fileId, name: item.name, extname: item.extname },
         })
       }
 
-      for (const commit of this.file(item.id).commits) {
+      for (const commit of this.file(fileId).commits) {
         for (const comment of commit.comments) {
           await this.$store.dispatch('file/watchComment', {
-            roomId: item.roomId,
-            fileId: item.id,
+            roomId,
+            fileId,
             commitId: commit.id,
             commentId: comment.id,
             userId: this.$store.state.user.id,
           })
         }
       }
+      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
     },
     changeFolder(folder) {
       return this.$store.dispatch('tab/changeTabType', {

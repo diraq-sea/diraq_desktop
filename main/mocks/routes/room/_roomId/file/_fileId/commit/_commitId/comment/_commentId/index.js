@@ -5,7 +5,7 @@ export default {
   post: ({ userId }, { commentId }) => {
     const comment = mockStore.findById('comment', commentId)
     if (!comment.watchedBy.includes(userId)) {
-      comment.watchedBy.add(userId)
+      comment.watchedBy = [...comment.watchedBy, userId]
     }
     mockStore.update('comment', comment)
   },

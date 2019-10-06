@@ -121,10 +121,6 @@ export default {
     updatedFiles() {
       return roomId => {
         if (this.roomInfo(roomId)) {
-          // for (const item of this.roomInfo(roomId).items) {
-          //   const fileId = item.id
-          //   await this.$store.dispatch('file/fetchFile', { roomId, fileId })
-          // }
           return this.roomInfo(roomId).items.filter(item => {
             return this.file(item.id)
               ? this.file(item.id).commits.some(commit =>
@@ -142,7 +138,12 @@ export default {
   async created() {
     await this.$store.dispatch('room/fetchRooms')
     for (const room of this.rooms) {
-      await this.$store.dispatch('room/fetchRoomInfo', room.id)
+      const roomId = room.id
+      await this.$store.dispatch('room/fetchRoomInfo', roomId)
+      for (const item of this.roomInfo(roomId).items) {
+        const fileId = item.id
+        await this.$store.dispatch('file/fetchFile', { roomId, fileId })
+      }
     }
   },
   methods: {
@@ -189,7 +190,6 @@ export default {
         })
       }
 
-      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
       for (const commit of this.file(fileId).commits) {
         for (const comment of commit.comments) {
           await this.$store.dispatch('file/watchComment', {
@@ -201,6 +201,7 @@ export default {
           })
         }
       }
+      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
     },
     async createNew({ name, extTypeId }) {
       this.loading = true

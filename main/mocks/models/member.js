@@ -16,10 +16,22 @@ export function defaultValues() {
       role: ROLE_TYPES[1].id,
     },
     {
+      id: 2,
+      userId: 2,
+      roomId: 0,
+      role: ROLE_TYPES[2].id,
+    },
+    {
       id: 3,
       userId: 3,
       roomId: 0,
       role: ROLE_TYPES[1].id,
+    },
+    {
+      id: 4,
+      userId: 4,
+      roomId: 0,
+      role: ROLE_TYPES[3].id,
     },
   ]
 }
