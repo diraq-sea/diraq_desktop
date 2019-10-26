@@ -9,8 +9,7 @@ export const state = () => ({
 
 export const getters = {
   users: state => roomId => state.usersList[roomId],
-  sortedUsers: (state, getters) => roomId =>
-    [...getters.users(roomId)].sort((a, b) => +b.online - a.online),
+  sortedUsers: (state, getters) => roomId => [...getters.users(roomId)],
   // roleLabel: () => roleId => ROLE_TYPES.find(role => role.id === roleId).label,
 }
 

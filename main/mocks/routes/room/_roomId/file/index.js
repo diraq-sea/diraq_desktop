@@ -19,7 +19,6 @@ export default {
     const target = mockStore.findByKey('file', 'folder', folder)
     const dropped = !!filePath
     const access = true
-    console.log(type) //eslint-disable-line
     if (extname) {
       // file
       const file =
@@ -57,7 +56,6 @@ export default {
         fileId: file.id,
         message: dropped ? FIRST_DROPPED_MESSAGE(name) : FIRST_CREATED_MESSAGE(name),
       })
-
       mockStore.add('commit', commit)
       const hashname = commit.id
       const filename = `${Date.now()}id${file.id}_${name}`
@@ -96,7 +94,7 @@ export default {
         mockStore.deleteById('comment', comment.id)
       }
       mockStore.deleteById('commit', commit.id)
-      filename = corrStore.hashToFilename(commit.id)
+      filename = corrStore.commitIdToFilename(commit.id)
     }
     corrStore.deleteFileInfo(filename)
     try {

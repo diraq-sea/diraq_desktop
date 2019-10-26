@@ -62,6 +62,7 @@ export default {
     },
     arrowClass() {
       return id => {
+        this.rooms.find(room => room.id === id).open = true
         return { opening: this.rooms.find(room => room.id === id).open }
       }
     },
@@ -107,6 +108,7 @@ export default {
     await this.$store.dispatch('room/fetchRooms')
     for (const room of this.rooms) {
       await this.$store.dispatch('room/fetchRoomInfo', room.id)
+      room.open = false
     }
   },
   methods: {
@@ -155,7 +157,7 @@ export default {
       this.loading = true
       this.dialogVisible = false
 
-      const item = await this.$store.dispatch('room/createNew', {
+      await this.$store.dispatch('room/createNew', {
         roomId: this.roomId,
         folder: '',
         name,
@@ -164,9 +166,7 @@ export default {
           : {}),
       })
 
-      if (extTypeId !== undefined) {
-        await this.openFile(item)
-      } else {
+      if (extTypeId === undefined) {
         await this.openFolder(name)
       }
 

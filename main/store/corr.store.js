@@ -13,35 +13,35 @@ module.exports = {
     writeFileIfNotExists(CORR_FILE, corrfile)
     isInit = true
   },
-  writeFileInfo(filename, hashname) {
+  writeFileInfo(filename, commitId) {
     checkInit()
     const corrlist = JSON.parse(fs.readFileSync(CORR_FILE))
-    const newcorrlist = { filename, hashname }
+    const newcorrlist = { filename, commitId }
     corrlist.push(newcorrlist)
     fs.writeFileSync(CORR_FILE, JSON.stringify(corrlist)) // corr.jsonは一定時間たったら、tmp fileの fileが消える時に連動させて消す
   },
   replaceFileInfo(commitId, newcommitId) {
     checkInit()
     const corrlist = JSON.parse(fs.readFileSync(CORR_FILE))
-    const replaceId = corrlist.findIndex(corr => corr.hashname === commitId)
+    const replaceId = corrlist.findIndex(corr => corr.commitId === commitId)
     if (replaceId >= 0) {
-      corrlist[replaceId].hashname = newcommitId
+      corrlist[replaceId].commitId = newcommitId
       fs.writeFileSync(CORR_FILE, JSON.stringify(corrlist))
     }
   },
-  deleteFileInfo(filename) {
+  deleteFileInfo(commitId) {
     checkInit()
     const corrlist = JSON.parse(fs.readFileSync(CORR_FILE))
-    const deleteId = corrlist.findIndex(corr => corr.filename === filename)
+    const deleteId = corrlist.findIndex(corr => corr.commitId === commitId)
     if (deleteId >= 0) {
       corrlist.splice(deleteId, 1)
       fs.writeFileSync(CORR_FILE, JSON.stringify(corrlist))
     }
   },
-  hashToFilename(commitId) {
+  commitIdToFilename(commitId) {
     checkInit()
     const corrlist = JSON.parse(fs.readFileSync(CORR_FILE))
-    const judgeId = corrlist.findIndex(corr => corr.hashname === commitId)
+    const judgeId = corrlist.findIndex(corr => corr.commitId === commitId)
     if (judgeId >= 0) {
       return corrlist[judgeId].filename
     }
@@ -54,7 +54,7 @@ module.exports = {
     const corrlist = JSON.parse(fs.readFileSync(CORR_FILE))
     const judgeId = corrlist.findIndex(corr => corr.filename === name)
     if (judgeId >= 0) {
-      return corrlist[judgeId].hashname
+      return corrlist[judgeId].commitId
     }
     return undefined
   },

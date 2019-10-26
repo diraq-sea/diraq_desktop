@@ -49,8 +49,8 @@ const windowStore = require('../../store/window.store')
 const tmpStore = require('../../store/tmpfile.store')
 const commitStore = require('../../store/commit.store')
 const corrStore = require('../../store/corr.store')
-// const ngrok = require('../../store/ngrok')
-const { TMP_FILES_DIR, TMP_FILE, MOCK_FILES_DIR } = require('../../const')
+const ngrok = require('../../store/ngrok')
+const { TMP_FILES_DIR, TMP_FILE } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
 
@@ -84,8 +84,13 @@ module.exports = {
 
   [CREATE_ROOM]: async name => (await axios.post('/room', { name })).data,
 
-  [CREATE_NEW]: async ({ roomId, ...params }) =>
-    (await axios.post(`/room/${roomId}/file`, params)).data,
+  [CREATE_NEW]: async ({ roomId, ...params }) => {
+    // fs.copyFileSync(filePath, path.join(TMP_FILES_DIR, `${name}.${extname}`))
+    // const type = params.extname
+    // const form = new FormData()
+    const fileandhash = (await axios.post(`/room/${roomId}/file`, params)).data
+    return fileandhash
+  },
 
   [DROP_FILE]: async ({ roomId, ...params }) => {
     const type = mime.lookup(params.path)
@@ -110,26 +115,26 @@ module.exports = {
         params.path,
         path.join(TMP_FILES_DIR, `${fileandhash.filename}.${params.extname}`),
       )
-      corrStore.writeFileInfo(fileandhash.filename, fileandhash.hashname)
+      corrStore.writeFileInfo(fileandhash.filename, fileandhash.commitId)
     }
     return fileandhash.file
   },
 
   [FETCH_FILE]: async ({ roomId, fileId }) => {
     const filedata = (await axios.get(`room/${roomId}/file/${fileId}`)).data
-    // const url = ngrok.proxyUrl
-    // filedata.commits[0].url = `${url}/mybucket/1/1DiraQ_DB1568361631.pdf`
-    // console.log(filedata.commits[0].url)
+    const url = ngrok.proxyUrl
+    for (let i = 0; i < filedata.commits.length; i++) {
+      filedata.commits[i].url = `${url}/mybucket/${filedata.commits[i].url}`
+    }
     return filedata
   },
 
   [EDIT_FILE]: async ({ extname, commit, result }) => {
-    let filename = corrStore.hashToFilename(commit.id)
+    let filename = corrStore.commitIdToFilename(commit.id)
     const filepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
-    const mockpath = path.join(MOCK_FILES_DIR, `${commit.id}.${extname}`)
+    const remotepath = commit.url
     if (result === 'initialCommit') {
       if (!fs.existsSync(filepath)) {
-        console.log('初コミット') // eslint-disable-line
         await fetchAndSaveFile(commit.url, filepath)
       }
       await open(filepath.replace(/ /g, '\\ '))
@@ -141,7 +146,7 @@ module.exports = {
       filename = `${Date.now()}_${commit.id}`
       const newfilepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
       corrStore.writeFileInfo(filename, commit.id)
-      fs.copyFileSync(mockpath, newfilepath)
+      fs.copyFileSync(remotepath, newfilepath)
       await open(newfilepath.replace(/ /g, '\\ ')) // fileがないとき追加通知のみで開かれない
       tmpStore.deleteFileInfo(commit.id, extname)
     } else {
@@ -155,16 +160,31 @@ module.exports = {
   },
 
   [SAVE_COMMIT_FILE]: async ({ roomId, fileId, commitId, extname }) => {
-    const filename = corrStore.hashToFilename(commitId)
+    const filename = corrStore.commitIdToFilename(commitId)
     const filePath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
+    const type = mime.lookup(filePath)
+    const form = new FormData()
+    const buffer = fs.readFileSync(filePath)
+    form.append('file', buffer, {
+      filename,
+      contentType: type,
+      knownLength: buffer.length,
+    })
+    form.append('extname', extname)
+    form.append('fileId', fileId)
+    const config = {
+      headers: form.getHeaders(),
+    }
+    config.headers['X-HTTP-Method-Override'] = 'PATCH'
     // prettier-ignore
-    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, {fileId, filePath, extname })).data
+    const newcommitId = (await axios.post(`room/${roomId}/file/${fileId}`, form, config)).data
     corrStore.replaceFileInfo(commitId, newcommitId)
     return newcommitId
   },
 
-  [SAVE_COMMIT_ID]: ({ commitpanel, fileId, commitId }) =>
-    commitStore.writeInfo({ commitpanel, fileId, commitId }),
+  [SAVE_COMMIT_ID]: ({ commitpanel, fileId, commitId }) => {
+    return commitStore.writeInfo({ commitpanel, fileId, commitId })
+  },
 
   [FETCH_COMMIT_ID]: fileId => commitStore.readInfo(fileId),
 
@@ -233,7 +253,10 @@ module.exports = {
   },
 
   [DELETE_FILE_IN_ROOM]: async ({ roomId, fileId }) => {
-    await axios.delete(`/room/${roomId}/file`, { data: { fileId } })
+    const commitIds = (await axios.delete(`/room/${roomId}/file/${fileId}`)).data
+    for (const commitId of commitIds) {
+      corrStore.deleteFileInfo(commitId)
+    }
   },
 
   [SIGNUP]: ({ name, email, password }) => {

@@ -1,5 +1,4 @@
 const ngrok = require('ngrok')
-const { WINDOW_ORIGIN } = require('../const')
 
 let proxyUrl = null
 let isInit = false
@@ -9,7 +8,7 @@ function checkInit() {
 }
 module.exports = {
   async init() {
-    proxyUrl = await ngrok.connect(+WINDOW_ORIGIN.replace(/^.+?:(\d+)\/?.*$/, '$1'))
+    proxyUrl = await ngrok.connect(9000)
     isInit = true
   },
   get proxyUrl() {

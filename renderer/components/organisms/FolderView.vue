@@ -33,9 +33,9 @@
               <div>Created: {{ birthTime(file) }}</div>
               <div>Modified: {{ mTime(file) }}</div>
             </div>
-            <div v-show="visibleContextmenu === file.id" class="context-menu" :style="ctxMenuStyle">
+            <!-- <div v-show="visibleContextmenu === file.id" class="context-menu" :style="ctxMenuStyle">
               <div class="context-menu-item" @click.stop="deleteFile(file.id, $event)">削除</div>
-            </div>
+            </div> -->
           </div>
         </div>
         <members-item :room-id="roomId" class="folder-members" />
@@ -171,8 +171,7 @@ export default {
     async createNew({ name, extTypeId }) {
       this.loading = true
       this.dialogVisible = false
-
-      const item = await this.$store.dispatch('room/createNew', {
+      await this.$store.dispatch('room/createNew', {
         roomId: this.roomId,
         folder: this.tab.values.folder,
         name,
@@ -181,9 +180,7 @@ export default {
           : {}),
       })
 
-      if (extTypeId !== undefined) {
-        await this.openFile(item)
-      } else {
+      if (extTypeId === undefined) {
         await this.openFolder(name)
       }
 

@@ -170,7 +170,7 @@ export default {
     isModified() {
       for (const commit in this.file.commits) {
         for (const id in this.committed) {
-          if (this.committed[id].name.indexOf(this.file.commits[commit].id) === 0) {
+          if (this.committed[id].name === this.file.commits[commit].id) {
             return true
           }
         }
@@ -259,7 +259,7 @@ export default {
         this.Warning('You should upload your changes before editing other files.')
         return
       }
-      const fileId = commit.fileId
+      const fileId = commit.file_id
       const isOpened = await this.$store.dispatch('file/checkOpenedFile', { TMP_FILES_DIR, fileId })
       if (isOpened) {
         this.Warning('You should close opened files.')
@@ -268,7 +268,7 @@ export default {
       const commitId = commit.id
       const extname = this.file.extname
       const commitpanel = this.isModified
-      const result = await this.$store.dispatch('file/savecommitId', {
+      const result = await this.$store.dispatch('file/saveCommitId', {
         commitpanel,
         fileId,
         commitId,

@@ -8,7 +8,7 @@
     </div>
     <div v-for="user in sortedUsers(roomId)" :key="user.id" class="member-item">
       <div class="member-icon">
-        <div :class="userIconClass(user.online)" :style="userIconStyle(user.icon)" />
+        <div :class="userIconClass(user.name)" :style="userIconStyle(user.icon)" />
       </div>
       <div class="member-name">{{ user.name }}</div>
       <!-- <div class="member-role">{{ roleLabel(user.role) }}</div> -->
@@ -47,7 +47,7 @@ export default {
       return icon => ({ backgroundImage: `url(${icon})` })
     },
     userIconClass() {
-      return isOnline => ({ isOnline })
+      return name => ({ name })
     },
   },
   methods: {
@@ -102,7 +102,6 @@ export default {
   border-radius: 50%;
   background: center/cover no-repeat;
   cursor: pointer;
-  filter: grayscale(100%);
   opacity: 0.7;
 }
 

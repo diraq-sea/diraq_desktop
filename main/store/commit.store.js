@@ -18,7 +18,7 @@ module.exports = {
     const commitlist = JSON.parse(fs.readFileSync(COMMIT_FILE))
     const newcommitlist = { fileId, commitId }
     const partcommitlist = commitlist.filter(obj => obj.fileId === fileId)
-    const filename = corrStore.hashToFilename(commitId)
+    const filename = corrStore.commitIdToFilename(commitId)
     let result = ''
     if (partcommitlist[0] === undefined) {
       console.log('最初のcommit') // eslint-disable-line

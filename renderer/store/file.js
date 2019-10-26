@@ -9,6 +9,7 @@ import {
 } from '~~/common/ipcTypes'
 
 const fs = require('fs')
+const platform = require('../../common/platform')
 
 export const state = () => ({
   fileList: {},
@@ -75,8 +76,9 @@ export const actions = {
   checkOpenedFile(store, { TMP_FILES_DIR, fileId }) {
     const paths = fs.readdirSync(TMP_FILES_DIR)
     let flag = false
+    const slash = { win: '\\', mac: '/', linux: '/' }[platform.default]
     paths.forEach(function(path) {
-      const filepath = TMP_FILES_DIR + '\\' + path
+      const filepath = TMP_FILES_DIR + slash + path
       try {
         fs.renameSync(filepath, filepath)
       } catch (err) {
@@ -87,6 +89,7 @@ export const actions = {
         // flag = true
       }
     })
+    flag = false
     return flag
   },
 }
