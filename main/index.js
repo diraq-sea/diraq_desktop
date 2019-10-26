@@ -8,6 +8,7 @@ const commitStore = require('./store/commit.store')
 const corrStore = require('./store/corr.store')
 const ngrok = require('./store/ngrok')
 const mkdirIfNotExists = require('./utils/mkdirIfNotExists')
+const autoDelete = require('./utils/autoDelete')
 const { CONFIG_DIR, MOCK_ENABLED } = require('./const')
 const { setupAxiosMock } = require('./utils/axios')
 
@@ -30,6 +31,7 @@ async function createWindow() {
   commitStore.init()
   corrStore.init()
   ngrok.init()
+  autoDelete()
 }
 
 app.on('ready', createWindow)
