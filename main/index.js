@@ -7,6 +7,7 @@ const watcherController = require('./modules/watcher/watcher.controller')
 const commitStore = require('./store/commit.store')
 const corrStore = require('./store/corr.store')
 const mkdirIfNotExists = require('./utils/mkdirIfNotExists')
+const autoDelete = require('./utils/autoDelete')
 const { CONFIG_DIR, MOCK_ENABLED } = require('./const')
 const { setupAxiosMock } = require('./utils/axios')
 
@@ -28,6 +29,7 @@ async function createWindow() {
   watcherController.init()
   commitStore.init()
   corrStore.init()
+  autoDelete()
 }
 
 app.on('ready', createWindow)
