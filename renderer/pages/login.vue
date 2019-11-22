@@ -12,7 +12,7 @@
           type="password"
           clearable
         />
-        <el-button type="info" :disabled="notHaveEmail && notHavePassword" @click="login"
+        <el-button type="info" :disabled="!(notHaveEmail && notHavePassword)" @click="login"
           >login</el-button
         >
       </div>
@@ -37,7 +37,7 @@ export default {
   computed: {
     notHaveEmail() {
       // eslint-disable-next-line no-useless-escape
-      return !/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+      return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
         this.email,
       )
     },
