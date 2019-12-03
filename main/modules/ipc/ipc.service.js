@@ -137,8 +137,7 @@ module.exports = {
       if (!fs.existsSync(filepath)) {
         await fetchAndSaveFile(commit.url, filepath)
       }
-      await open(filepath.replace(/ /g, '\\ '))
-      tmpStore.deleteFileInfo(commit.id, extname)
+      await open(filepath, commit.id, extname)
     } else if (result === 'mustCommit') {
       console.log('commitしてから') // eslint-disable-line
     } else if (result === 'anotherFileCommit') {
@@ -147,15 +146,13 @@ module.exports = {
       const newfilepath = path.join(TMP_FILES_DIR, `${filename}.${extname}`)
       corrStore.writeFileInfo(filename, commit.id)
       fs.copyFileSync(remotepath, newfilepath)
-      await open(newfilepath.replace(/ /g, '\\ ')) // fileがないとき追加通知のみで開かれない
-      tmpStore.deleteFileInfo(commit.id, extname)
+      await open(newfilepath, commit.id, extname) // fileがないとき追加通知のみで開かれない
     } else {
       console.log('そのまま', filepath) // eslint-disable-line
       if (!fs.existsSync(filepath)) {
         await fetchAndSaveFile(commit.url, filepath)
       }
-      await open(filepath.replace(/ /g, '\\ '))
-      tmpStore.deleteFileInfo(commit.id, extname)
+      await open(filepath, commit.id, extname)
     }
   },
 
