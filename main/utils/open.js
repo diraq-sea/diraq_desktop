@@ -11,7 +11,6 @@ module.exports = (filepath, commitId, extname) =>
       )}"`,
       resolve,
     ),
-  ).then(resolve => {
+  ).finally(() => {
     tmpStore.deleteFileInfo(commitId, extname)
-    return resolve
   })
