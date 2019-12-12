@@ -158,6 +158,7 @@ export default {
       showcomments,
       board_modified: false,
       board_default: true,
+      intervalId: null,
     }
   },
   computed: {
@@ -198,10 +199,19 @@ export default {
       return date => this.$moment(date).format(DATE_FORMAT_TYPE)
     },
   },
-  mounted() {
+  async mounted() {
     const commits = this.file.commits
     const commitId = commits[commits.length - 1].id
     this.scrolltoaCommit(commitId)
+
+    this.intervalId = await setInterval(async () => {
+      const roomId = this.file.room_id
+      const fileId = this.file.id
+      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
+    }, 3000)
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalId)
   },
   methods: {
     scrolltoaCommit(commitId) {
