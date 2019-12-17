@@ -10,12 +10,13 @@ import {
 } from '../../../../../const'
 import { create as createFileModel } from '../../../../models/file'
 import { create as createCommitModel } from '../../../../models/commit'
+import { create as createCommentModel } from '../../../../models/comment'
 
 const crypto = require('crypto')
 
 export default {
   get: ({ roomId }) => mockStore.filterByKey('file', 'roomId', roomId),
-  post({ folder, name, extname, path: filePath }, { roomId }) {
+  post({ folder, name, extname, path: filePath, userId }, { roomId }) {
     const target = mockStore.findByKey('file', 'folder', folder)
     const dropped = !!filePath
     const access = true
@@ -56,9 +57,12 @@ export default {
         id: commitId,
         fileId: file.id,
         message: dropped ? FIRST_DROPPED_MESSAGE(name) : FIRST_CREATED_MESSAGE(name),
+        userId,
       })
 
       mockStore.add('commit', commit)
+      const commitMessage = commit.message
+      mockStore.add('comment', createCommentModel({ userId, commitId, comment: commitMessage }))
 
       if (dropped) {
         const hashname = commit.id

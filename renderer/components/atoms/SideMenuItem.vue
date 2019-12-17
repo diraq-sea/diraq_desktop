@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { TAB_TYPES } from '~/utils/const'
 import SideMenuItem from '~/components/atoms/SideMenuItem'
 import { ITEM_TYPES } from '~~/common/sideMenuItemTypes'
@@ -47,6 +47,7 @@ export default {
   },
   computed: {
     ...mapState('tab', ['tabs']),
+    ...mapGetters('file', ['file']),
     arrowClass() {
       return type => ({ opening: this.open, isFile: type === ITEM_TYPES.FILE })
     },
@@ -61,8 +62,10 @@ export default {
     },
     async openItem() {
       if (this.item.type === ITEM_TYPES.FILE) {
+        const roomId = this.item.roomId
+        const fileId = this.item.id
         const targetTab = this.tabs.find(
-          tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === this.item.id,
+          tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === fileId,
         )
 
         if (targetTab) {
@@ -73,13 +76,25 @@ export default {
             id: this.tabs[this.tabs.length - 1].id + 1,
             type: TAB_TYPES.FILE,
             values: {
-              roomId: this.item.roomId,
-              fileId: this.item.id,
+              roomId,
+              fileId,
               name: this.item.name,
               extname: this.item.extname,
             },
           })
         }
+        for (const commit of this.file(fileId).commits) {
+          for (const comment of commit.comments) {
+            await this.$store.dispatch('file/watchComment', {
+              roomId,
+              fileId,
+              commitId: commit.id,
+              commentId: comment.id,
+              userId: this.$store.state.user.id,
+            })
+          }
+        }
+        await this.$store.dispatch('file/fetchFile', { roomId, fileId })
       } else if (this.item.type === ITEM_TYPES.FOLDER) {
         this.$store.dispatch('tab/addNewTab')
         await this.$store.dispatch('tab/changeTabType', {

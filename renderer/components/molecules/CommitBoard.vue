@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div :class="CommitContainerObject">
+    <div ref="container" :class="CommitContainerObject">
       <div v-for="commit in file.commits" :key="commit.id">
-        <div class="commit-graph">
+        <div ref="commitGraph" class="commit-graph">
           <div
             class="commit-circle"
             :class="{ enhance: commit.id == viewingId }"
-            :style="circleStyle(user(commit.user).icon)"
+            :style="circleStyle(user(commit.userId).icon)"
           />
           <div v-if="hasChild(commit.id)" class="commit-line" />
         </div>
         <div class="comments-panel">
           <div class="committer-info">
-            <span class="committer-name">{{ user(commit.user).name }}</span>
+            <span class="committer-name">{{ user(commit.userId).name }}</span>
             <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
               <div class="file-controls-icon" title="View file" @click="viewFile(commit)">
@@ -31,7 +31,6 @@
               </a>
             </div>
           </div>
-          <div class="committer-message">{{ commit.message }}</div>
           <div
             v-show="!showcomments[commit.id]"
             style="cursor: pointer; color: gray"
@@ -205,13 +204,13 @@ export default {
   },
   methods: {
     scrolltoaCommit(commitId) {
-      let container = this.$el.querySelector('.commit-container')
-      if (container === null) {
-        container = this.$el.querySelector('.commit-container-modified-true')
-      }
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
-      this.$el.querySelectorAll('.commit-graph')[index].scrollIntoView()
-      container.scrollBy(0, -25)
+      if (this.$refs.commitGraph) {
+        this.$refs.commitGraph[index].scrollIntoView()
+      }
+      if (this.$refs.container) {
+        this.$refs.container.scrollBy(0, -25)
+      }
     },
     inputComment(commitId, e) {
       this.values = [...this.values]
@@ -219,7 +218,7 @@ export default {
       this.values[index] = e.target.value
     },
     toggle(id) {
-      this.showcomments[id] = !this.showcomments[id]
+      this.$set(this.showcomments, id, !this.showcomments[id])
     },
     async submitComment(commitId) {
       const index = this.file.commits.findIndex(commit => commit.id === commitId)
@@ -228,7 +227,13 @@ export default {
       const fileId = this.file.id
 
       if (comment) {
-        await this.$store.dispatch('file/addComment', { roomId, fileId, commitId, comment })
+        await this.$store.dispatch('file/addComment', {
+          roomId,
+          fileId,
+          commitId,
+          userId: this.$store.state.user.id,
+          comment,
+        })
         await this.$store.dispatch('file/fetchFile', { roomId, fileId })
         this.values = [...this.values]
         this.values[index] = ''
@@ -245,11 +250,17 @@ export default {
           fileId,
           extname,
         })
-        await this.$store.dispatch('file/addCommit', { roomId, fileId, id: commitId, message })
+        await this.$store.dispatch('file/addCommit', {
+          roomId,
+          fileId,
+          id: commitId,
+          message,
+          userId: this.$store.state.user.id,
+        })
         await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
         await this.$store.dispatch('file/fetchFile', { roomId, fileId })
         this.commitComment = ''
-        this.showcomments[this.currentCommit.id] = true
+        this.$set(this.showcomments, this.currentCommit.id, true)
         this.change_viewingCommit(this.currentCommit.id)
       }
     },

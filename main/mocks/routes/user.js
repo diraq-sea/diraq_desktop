@@ -2,9 +2,10 @@ import mockStore from '../../store/mock.store'
 import { create } from '../models/user'
 import { ROLE_TYPES } from '~~/common/roleTypes'
 const user = {
+  id: 0,
   name: 'user1',
   email: 'aaa@test.com',
-  icon: '/images/user1.png',
+  icon: '/images/user2.png',
 }
 
 export default {

@@ -28,6 +28,7 @@ const {
   REMOVE_TAB,
   CHANGE_TAB_TYPE,
   ADD_COMMENT,
+  WATCH_COMMENT,
   ADD_COMMIT,
   FETCH_TMP_INFO,
   SAVE_COMMIT_FILE,
@@ -141,12 +142,17 @@ module.exports = {
 
   [FETCH_COMMIT_ID]: fileId => commitStore.readInfo(fileId),
 
-  [ADD_COMMENT]: async ({ roomId, fileId, commitId, comment }) =>
+  [ADD_COMMENT]: async ({ roomId, fileId, commitId, userId, comment }) =>
     // prettier-ignore
-    (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment`, { comment })).data,
+    (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment`, { userId, comment })).data,
 
-  [ADD_COMMIT]: async ({ roomId, fileId, id, message }) =>
-    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { id, message })).data,
+  [WATCH_COMMENT]: async ({ roomId, fileId, commitId, commentId, userId }) =>
+    (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment/${commentId}`, {
+      userId,
+    })).data,
+
+  [ADD_COMMIT]: async ({ roomId, fileId, id, message, userId }) =>
+    (await axios.post(`room/${roomId}/file/${fileId}/commit`, { id, message, userId })).data,
 
   [CLOSE_WIN]: () => windowStore.close(),
 

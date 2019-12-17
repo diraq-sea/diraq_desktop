@@ -2,6 +2,7 @@ import {
   FETCH_FILE,
   EDIT_FILE,
   ADD_COMMENT,
+  WATCH_COMMENT,
   ADD_COMMIT,
   SAVE_COMMIT_FILE,
   SAVE_COMMIT_ID,
@@ -49,11 +50,15 @@ export const actions = {
   async editFile(store, params) {
     await this.$ipc(EDIT_FILE, params)
   },
-  async addComment(store, { roomId, fileId, commitId, comment }) {
-    await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, comment })
+  async addComment(store, { roomId, fileId, commitId, userId, comment }) {
+    await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, userId, comment })
   },
-  async addCommit(store, { roomId, fileId, id, message }) {
-    await this.$ipc(ADD_COMMIT, { roomId, fileId, id, message })
+  async watchComment(store, { roomId, fileId, commitId, commentId, userId }) {
+    await this.$ipc(WATCH_COMMENT, { roomId, fileId, commitId, commentId, userId })
+  },
+  async addCommit(store, { roomId, fileId, id, message, userId }) {
+    await this.$ipc(ADD_COMMIT, { roomId, fileId, id, message, userId })
+    await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId: id, userId, comment: message })
   },
   async viewFile({ commit }, { roomId, fileId, commitId }) {
     const file = await this.$ipc(FETCH_FILE, { roomId, fileId })
