@@ -10,6 +10,10 @@ module.exports = {
     const watcher = chokidar.watch(TMP_FILES_DIR, {
       ignored: /(^~)|(^\.)|(\.tmp)/g,
       persistent: true, // 監視を継続するかどうか
+      awaitWriteFinish: {
+        stabilityThreshold: 2000,
+        pollInterval: 100,
+      },
     })
     Object.values(watcherTypes).forEach(type => {
       watcher.on(type, watcherService(type))
