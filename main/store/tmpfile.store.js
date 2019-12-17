@@ -42,7 +42,7 @@ module.exports = {
     checkInit()
     return JSON.parse(fs.readFileSync(TMP_FILE))
   },
-  deleteFileInfo({ commitId, extname }) {
+  deleteFileInfo(commitId, extname) {
     checkInit()
     const filename = `${commitId}.${extname}`
     const tmplist = JSON.parse(fs.readFileSync(TMP_FILE))
