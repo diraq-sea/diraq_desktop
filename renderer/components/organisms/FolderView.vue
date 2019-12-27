@@ -4,7 +4,7 @@
     <template v-else>
       <h1>Room: {{ roomInfo(roomId).name }}</h1>
       <div class="folder-main">
-        <div ref="folderList" class="folder-list">
+        <div class="folder-list">
           <el-button type="primary" size="small" plain @click="openDialog">Create new</el-button>
 
           <bread-crumb-list :list="breadcrumbs" @select="selectFolder" />
@@ -22,7 +22,6 @@
           <div
             v-for="file in files"
             :key="file.id"
-            ref="folderItem"
             class="folder-item"
             @click="openFile(file)"
             @contextmenu="showContextmenu(file, $event)"
@@ -86,6 +85,7 @@ export default {
   computed: {
     ...mapState('tab', ['tabs']),
     ...mapGetters('room', ['roomInfo']),
+    ...mapGetters('file', ['file']),
     iconSrc() {
       return item => (item.extname ? this.$fileIcon(item.extname) : folderIcon)
     },
@@ -130,8 +130,10 @@ export default {
   },
   methods: {
     async openFile(item) {
+      const roomId = item.room_id
+      const fileId = item.id
       const targetTab = this.tabs.find(
-        tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === item.id,
+        tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === fileId,
       )
 
       if (targetTab) {
@@ -140,9 +142,20 @@ export default {
         await this.$store.dispatch('tab/changeTabType', {
           id: this.tab.id,
           type: TAB_TYPES.FILE,
-          values: { roomId: item.room_id, fileId: item.id, name: item.name, extname: item.extname },
+          values: { roomId, fileId, name: item.name, extname: item.extname },
         })
       }
+      for (const commit of this.file(fileId).commits) {
+        for (const comment of commit.comments) {
+          await this.$store.dispatch('file/watchComment', {
+            roomId,
+            fileId,
+            commitId: commit.id,
+            commentId: comment.id,
+          })
+        }
+      }
+      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
     },
     changeFolder(folder) {
       return this.$store.dispatch('tab/changeTabType', {

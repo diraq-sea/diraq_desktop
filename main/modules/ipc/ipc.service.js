@@ -30,6 +30,7 @@ const {
   REMOVE_TAB,
   CHANGE_TAB_TYPE,
   ADD_COMMENT,
+  WATCH_COMMENT,
   ADD_COMMIT,
   FETCH_TMP_INFO,
   SAVE_COMMIT_FILE,
@@ -188,6 +189,10 @@ module.exports = {
   [ADD_COMMENT]: async ({ roomId, fileId, commitId, comment }) =>
     // prettier-ignore
     (await axios.post(`room/${roomId}/file/${fileId}/commit/${commitId}/comment`, { comment })).data,
+
+  [WATCH_COMMENT]: async ({ roomId, fileId, commitId, commentId }) =>
+    // prettier-ignore
+    (await axios.put(`room/${roomId}/file/${fileId}/commit/${commitId}/comment/${commentId}`)).data,
 
   [ADD_COMMIT]: async ({ roomId, fileId, id, message }) =>
     (await axios.post(`room/${roomId}/file/${fileId}/commit`, { id, message })).data,

@@ -1,6 +1,7 @@
 import { GET_USER_INFO, FETCH_MEMBERS } from '~~/common/ipcTypes'
 
 export const state = () => ({
+  id: null,
   name: null,
   email: null,
   icon: null,
@@ -14,7 +15,8 @@ export const getters = {
 }
 
 export const mutations = {
-  setUserInfo(state, { name, email, icon }) {
+  setUserInfo(state, { id, name, email, icon }) {
+    state.id = id
     state.name = name
     state.email = email
     state.icon = icon
