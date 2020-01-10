@@ -118,7 +118,10 @@ module.exports = {
       )
       corrStore.writeFileInfo(fileandhash.filename, fileandhash.commitId)
     }
-    return fileandhash.file
+    fileandhash.commit = (await axios.get(
+      `/room/${roomId}/file/${fileandhash.file.id}/commit/${fileandhash.commitId}`,
+    )).data
+    return fileandhash
   },
 
   [FETCH_FILE]: async ({ roomId, fileId }) => {

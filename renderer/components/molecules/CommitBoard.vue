@@ -31,7 +31,7 @@
               </a>
             </div>
           </div>
-          <div class="committer-message">{{ commit.message }}</div>
+          <!-- <div class="committer-message">{{ commit.message }}</div> -->
           <div
             v-show="!showcomments[commit.id]"
             style="cursor: pointer; color: gray"
@@ -208,7 +208,7 @@ export default {
       const roomId = this.file.room_id
       const fileId = this.file.id
       await this.$store.dispatch('file/fetchFile', { roomId, fileId })
-    }, 3000)
+    }, 5000)
   },
   beforeDestroy() {
     clearInterval(this.intervalId)
@@ -303,10 +303,10 @@ export default {
     change_viewingCommit(commitId) {
       this.viewingId = commitId
       for (const key in this.showcomments) {
-        if (key === commitId) {
-          this.showcomments[key] = true
+        if (Number(key) === commitId) {
+          this.$set(this.showcomments, key, true)
         } else {
-          this.showcomments[key] = false
+          this.$set(this.showcomments, key, false)
         }
       }
     },
@@ -314,8 +314,8 @@ export default {
       const roomId = this.file.room_id
       const fileId = this.file.id
       const commitId = commit.id
-      await this.$store.dispatch('file/viewFile', { roomId, fileId, commitId })
       this.change_viewingCommit(commitId)
+      await this.$store.dispatch('file/viewFile', { roomId, fileId, commitId })
       this.scrolltoaCommit(commitId)
     },
     Warning(warningText) {

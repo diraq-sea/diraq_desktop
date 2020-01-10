@@ -69,13 +69,6 @@ export default {
       intervalId: null,
     }
   },
-  async created() {
-    await this.$store.dispatch('room/fetchRooms')
-    for (const room of this.rooms) {
-      await this.$store.dispatch('room/fetchRoomInfo', room.id)
-      room.open = false
-    }
-  },
   computed: {
     ...mapState('room', ['rooms', 'roomId']),
     ...mapState('tab', ['tabs']),
@@ -150,12 +143,15 @@ export default {
     for (const room of this.rooms) {
       const roomId = room.id
       await this.$store.dispatch('room/fetchRoomInfo', roomId)
-      for (const item of this.roomInfo(roomId).items) {
-        const fileId = item.id
-        await this.$store.dispatch('file/fetchFile', { roomId, fileId })
+      if (this.roomInfo(roomId)) {
+        for (const item of this.roomInfo(roomId).items) {
+          const fileId = item.id
+          await this.$store.dispatch('file/fetchFile', { roomId, fileId })
+        }
       }
       room.open = false
     }
+  },
 
   async mounted() {
     this.intervalId = await setInterval(async () => {
@@ -163,11 +159,10 @@ export default {
       for (const room of this.rooms) {
         await this.$store.dispatch('room/fetchRoomInfo', room.id)
       }
-    }, 3000)
+    }, 30000)
   },
   beforeDestroy() {
     clearInterval(this.intervalId)
-
   },
   methods: {
     async openRoomNamePrompt() {
