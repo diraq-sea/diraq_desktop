@@ -5,6 +5,7 @@ import {
   CREATE_NEW,
   DROP_FILE,
   ADD_MEMBERS,
+  ADD_COMMENT,
 } from '~~/common/ipcTypes'
 import { DELETE_FILE_IN_ROOM } from '../../common/ipcTypes'
 import { ROLE_TYPES } from '../../common/roleTypes'
@@ -63,8 +64,12 @@ export const actions = {
   },
 
   async dropFile({ dispatch }, params) {
+    const roomId = params.roomId
     const item = await this.$ipc(DROP_FILE, params)
-    await dispatch('fetchRoomInfo', params.roomId)
+    const fileId = item.file.id
+    const commitId = item.commitId
+    await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, comment: item.commit.message })
+    await dispatch('fetchRoomInfo', roomId)
     return item
   },
 

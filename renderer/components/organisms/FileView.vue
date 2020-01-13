@@ -80,11 +80,10 @@ export default {
   async created() {
     const roomId = this.currentTab.values.roomId
     const fileId = this.currentTab.values.fileId
-    await this.$store.dispatch('file/fetchFile', { roomId, fileId })
-
     await Promise.all([
-      this.$store.dispatch('room/fetchRoomInfo', this.roomId),
-      this.$store.dispatch('user/fetchUsers', this.roomId),
+      this.$store.dispatch('file/fetchFile', { roomId, fileId }),
+      this.$store.dispatch('room/fetchRoomInfo', roomId),
+      this.$store.dispatch('user/fetchUsers', roomId),
     ])
     this.loading = false
   },
