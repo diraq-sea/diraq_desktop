@@ -85,12 +85,14 @@ export default {
       this.$store.dispatch('room/fetchRoomInfo', roomId),
       this.$store.dispatch('user/fetchUsers', roomId),
     ])
-    const commits = this.file(fileId).commits
-    await this.$store.dispatch('file/viewFile', {
-      roomId,
-      fileId,
-      commitId: commits[commits.length - 1].id,
-    })
+    if (!this.currentCommit(fileId)) {
+      const commits = this.file(fileId).commits
+      await this.$store.dispatch('file/viewFile', {
+        roomId,
+        fileId,
+        commitId: commits[commits.length - 1].id,
+      })
+    }
     this.loading = false
   },
   methods: {
