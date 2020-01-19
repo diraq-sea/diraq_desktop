@@ -200,8 +200,7 @@ export default {
     },
   },
   async mounted() {
-    const commits = this.file.commits
-    const commitId = commits[commits.length - 1].id
+    const commitId = this.currentCommit.id
     this.scrolltoaCommit(commitId)
 
     this.intervalId = await setInterval(async () => {
@@ -303,7 +302,10 @@ export default {
     change_viewingCommit(commitId) {
       this.viewingId = commitId
       for (const key in this.showcomments) {
-        if (Number(key) === commitId) {
+        if (
+          String(commitId) === key ||
+          this.file.commits.find(commit => String(commit.id) === key).comments.length === 1
+        ) {
           this.$set(this.showcomments, key, true)
         } else {
           this.$set(this.showcomments, key, false)
