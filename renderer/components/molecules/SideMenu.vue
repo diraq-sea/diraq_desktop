@@ -197,6 +197,7 @@ export default {
       )
       const roomId = item.room_id
       const fileId = item.id
+      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
       if (targetTab) {
         await this.$store.dispatch('tab/changeCurrentTab', targetTab.id)
       } else {
