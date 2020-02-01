@@ -132,6 +132,7 @@ export default {
     async openFile(item) {
       const roomId = item.room_id
       const fileId = item.id
+      await this.$store.dispatch('file/fetchFile', { roomId, fileId })
       const targetTab = this.tabs.find(
         tab => tab.type === TAB_TYPES.FILE && tab.values.fileId === fileId,
       )
