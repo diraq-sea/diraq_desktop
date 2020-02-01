@@ -86,6 +86,23 @@ jobs:
           command: yarn build --macos --windows
       - store_artifacts:
           path: build
+    ##
+    # deploy for develop
+    ##
+    build:
+      working_directory: ~/repo
+      environment:
+        - AWS_S3_BUCKET_NAME: diraq-develop-s3
+      docker:
+        - image: innovatorjapan/awscli:latest
+      steps:
+        - checkout
+        - run:
+          name: Deploy to S3 if branch is Master.
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "release" ]; then
+              aws s3 sync ~/repo s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
+            fi
 
   ##
   # Workflow: weekly
@@ -132,7 +149,7 @@ workflows:
           context: desktop
     triggers:
       - schedule:
-          cron: "0 0 * * 6" # Every Saturday 9:00 AM
+          cron: '0 0 * * 6' # Every Saturday 9:00 AM
           filters:
             branches:
               only:
