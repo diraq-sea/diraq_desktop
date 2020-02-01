@@ -69,20 +69,6 @@ jobs:
       - run:
           name: Run lint
           command: yarn lint:script && yarn lint:style
-      - run:
-          name: 依存パッケージのインストールやアプリのビルドなど
-          command: npm i && npm run ...
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y awscli
-      - run:
-          name: Deploy to S3 if branch is Master.
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "release" ]; then
-              aws s3 sync ~/diraq-sea/diraq_desktop s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
-            fi
 
   ##
   # Workflow: packaging
@@ -100,6 +86,20 @@ jobs:
           command: yarn build --macos --windows
       - store_artifacts:
           path: build
+      - run:
+          name: 依存パッケージのインストールやアプリのビルドなど
+          command: npm i && npm run ...
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y awscli
+      - run:
+          name: Deploy to S3 if branch is Master.
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "release" ]; then
+              aws s3 sync ~/diraq-sea/diraq_desktop s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
+            fi
 
   ##
   # Workflow: weekly
