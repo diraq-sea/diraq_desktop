@@ -24,13 +24,11 @@
     "files": [
       "dist"
     ],
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "diraq-sea",
-        "repo": "desktop-releases"
-      }
-    ],
+    "publish": {
+      "provider": "s3",
+      "bucket": "diraq-develop-s3",
+      "region": "ap-northeast-1"
+    },
     "dmg": {
       "contents": [
         {
@@ -118,7 +116,6 @@
     "stylelint-config-prettier": "5.2.0",
     "stylelint-config-standard": "18.3.0",
     "stylelint-order": "3.0.0",
-    "stylelint-webpack-plugin": "0.10.5",
-    "webpack": "4.36.1"
+    "stylelint-webpack-plugin": "0.10.5"
   }
 }

@@ -5,154 +5,68 @@ executors:
     working_directory: ~/project
     docker:
       - image: circleci/node:10.15
-    environment:
-      CACHE_CONDITION: develop
   builder:
     working_directory: ~/project
     docker:
       - image: electronuserland/builder:wine-mono
-    environment:
-      CACHE_CONDITION: build
 
 commands:
-  generate_cache_condition_file:
-    steps:
-      - run:
-          name: Generate condition file for cache
-          command: echo ${CACHE_CONDITION} > .cache_condition
-  restore_packages:
+  install_packages:
     steps:
       - restore_cache:
           name: Restore dependencies
-          key: dependencies-{{ .Environment.CACHE_KEY }}-{{ checksum ".cache_condition" }}-{{ checksum "yarn.lock" }}
-  save_packages:
-    steps:
+          key: dependencies-v1-{{ checksum "package-lock.json" }}
       - run:
           name: Install dependencies
-          command: yarn install --frozen-lockfile --non-interactive
+          command: echo "package-lock=false" >> .npmrc && npm install
       - save_cache:
           name: Cache dependencies
-          key: dependencies-{{ .Environment.CACHE_KEY }}-{{ checksum ".cache_condition" }}-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
-            - node_modules
-  persist_data:
-    steps:
-      - persist_to_workspace:
-          root: .
+          key: dependencies-v1-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-  attach_data:
-    steps:
-      - attach_workspace:
-          at: .
 
 jobs:
-  ##
-  # Workflow: commit
-  ##
-  setup:
+  test:
     executor:
       name: default
     steps:
       - checkout
-      - generate_cache_condition_file
-      - restore_packages
-      - save_packages
-      - persist_data
-  lint:
-    executor:
-      name: default
-    steps:
-      - checkout
-      - attach_data
+      - install_packages
       - run:
           name: Run lint
-          command: yarn lint:script && yarn lint:style
+          command: npm run lint
   fordeploy:
-    executor:
-      name: default
-    steps:
-      - checkout
-      - run:
-          name: application build
-          command: npm i && npm run build
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y awscli
-      - run:
-          name: Deploy to S3 if branch is Master.
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "release" ]; then
-              aws s3 sync ~/project s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
-            fi
-
-  ##
-  # Workflow: packaging
-  ##
-  build:
     executor:
       name: builder
     steps:
       - checkout
-      - generate_cache_condition_file
-      - restore_packages
-      - save_packages
+      - install_packages
       - run:
           name: Build Electron application
-          command: yarn build --macos --windows
-      - store_artifacts:
-          path: build
-
-  ##
-  # Workflow: weekly
-  ##
+          command: npm run build -- --linux --windows --publish always
   audit:
     executor:
       name: default
     steps:
       - checkout
-      - generate_cache_condition_file
-      - restore_packages
       - run:
           name: Run a security audit
-          command: yarn audit
-      - run:
-          name: Check for outdated packages
-          command: sh .circleci/outdated.sh
-          when: always
+          command: npm audit
 
 workflows:
   commit:
     jobs:
-      - setup:
-          context: desktop
-          filters:
-            branches:
-              ignore:
-                - build
-      - lint:
-          context: desktop
-          requires:
-            - setup
+      - test
       - fordeploy:
-          context: desktop
           requires:
-            - setup
-  packaging:
-    jobs:
-      - build:
-          context: desktop
+            - test
           filters:
             branches:
               only:
-                - build
+                - release
   weekly:
     jobs:
-      - audit:
-          context: desktop
+      - audit
     triggers:
       - schedule:
           cron: '0 0 * * 6' # Every Saturday 9:00 AM
@@ -160,4 +74,3 @@ workflows:
             branches:
               only:
                 - develop
-                - build
