@@ -101,7 +101,7 @@ export default {
     folders() {
       return this.roomInfo(this.roomId).items.reduce((list, { folder }) => {
         const matched = folder.match(new RegExp(`^${this.tab.values.folder}/(.+?)(/|$)`))
-        return matched && list.indexOf(matched[1]) === -1 ? [...list, matched[1]] : list
+        return matched && !list.includes(matched[1]) ? [...list, matched[1]] : list
       }, [])
     },
     files() {

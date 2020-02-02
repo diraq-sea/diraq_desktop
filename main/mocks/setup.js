@@ -24,7 +24,7 @@ const createParams = (relativePath, url, baseURL) => {
     .slice(1)
     .split('/')
     .forEach((dir, i) => {
-      if (/^_/.test(dirList[i])) {
+      if (dirList[i].startsWith('_')) {
         params[dirList[i].slice(1)] = /^\d+$/.test(dir) ? +dir : dir
       }
     })

@@ -7,13 +7,10 @@ module.exports = {
     'plugin:nuxt/recommended',
     'plugin:prettier/recommended',
     'prettier/standard',
+    'prettier/unicorn',
     'prettier/vue',
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'development' ? 0 : 2,
-
-    // Delete when `@nuxtjs/eslint-config` is updated
-    'no-useless-rename': 2,
-    'object-shorthand': 2,
+    'no-console': process.env.NODE_ENV === 'development' ? 'off' : 'error',
   },
 }

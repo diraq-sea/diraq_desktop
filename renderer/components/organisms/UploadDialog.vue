@@ -68,8 +68,8 @@
 </template>
 
 <script>
-import FILE_EXT_TYPES from '~~/common/fileExtTypes'
 import getEntryList from '../utils/getEntryList.js'
+import FILE_EXT_TYPES from '~~/common/fileExtTypes'
 const platform = require('../../../common/platform')
 
 export default {
