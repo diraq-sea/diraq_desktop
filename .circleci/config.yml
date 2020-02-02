@@ -69,6 +69,26 @@ jobs:
       - run:
           name: Run lint
           command: yarn lint:script && yarn lint:style
+  deploy:
+      - checkout
+      - run:
+        name: 依存パッケージのインストールやアプリのビルドなど
+        command: |
+          npm i
+          npm run build
+    - run:
+        name: Install AWS CLI
+        command: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+    - run:
+        name: Deploy to S3 if branch is Master.
+        command: |
+          if [ "${CIRCLE_BRANCH}" == "release" ]; then
+            aws s3 sync ~/project s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
+          fi
+
+
 
   ##
   # Workflow: packaging
@@ -105,6 +125,7 @@ jobs:
           command: sh .circleci/outdated.sh
           when: always
 
+
 workflows:
   commit:
     jobs:
@@ -115,6 +136,10 @@ workflows:
               ignore:
                 - build
       - lint:
+          context: desktop
+          requires:
+            - setup
+      - deploy:
           context: desktop
           requires:
             - setup
@@ -132,9 +157,10 @@ workflows:
           context: desktop
     triggers:
       - schedule:
-          cron: "0 0 * * 6" # Every Saturday 9:00 AM
+          cron: '0 0 * * 6' # Every Saturday 9:00 AM
           filters:
             branches:
               only:
                 - develop
                 - build
+                - release
