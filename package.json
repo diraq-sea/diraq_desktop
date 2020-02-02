@@ -24,13 +24,11 @@
     "files": [
       "dist"
     ],
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "diraq-sea",
-        "repo": "desktop-releases"
-      }
-    ],
+    "publish": {
+      "provider": "s3",
+      "bucket": "diraq-develop-s3",
+      "region": "ap-northeast-1"
+    },
     "dmg": {
       "contents": [
         {
