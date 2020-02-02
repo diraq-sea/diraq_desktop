@@ -26,7 +26,7 @@ commands:
             - node_modules
 
 jobs:
-  setup:
+  test:
     executor:
       name: default
     steps:
@@ -37,23 +37,13 @@ jobs:
           command: npm run lint
   fordeploy:
     executor:
-      name: default
+      name: builder
     steps:
       - checkout
+      - install_packages
       - run:
-          name: application build
-          command: npm i && npm run build
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y awscli
-      - run:
-          name: Deploy to S3 if branch is Master.
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "release" ]; then
-              aws s3 sync ~/project s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
-            fi
+          name: Build Electron application
+          command: npm run build -- --linux --windows --publish always
   audit:
     executor:
       name: default
@@ -66,10 +56,14 @@ jobs:
 workflows:
   commit:
     jobs:
-      - setup
+      - test
       - fordeploy:
           requires:
-            - setup
+            - test
+          filters:
+            branches:
+              only:
+                - release
   weekly:
     jobs:
       - audit
