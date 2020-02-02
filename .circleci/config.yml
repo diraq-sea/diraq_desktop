@@ -69,29 +69,25 @@ jobs:
       - run:
           name: Run lint
           command: yarn lint:script && yarn lint:style
-  deploy:
+  fordeploy:
     executor:
       name: default
     steps:
       - checkout
       - run:
-        name: 依存パッケージのインストールやアプリのビルドなど
-        command: |
-          npm i
-          npm run build
-    - run:
-        name: Install AWS CLI
-        command: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
-    - run:
-        name: Deploy to S3 if branch is Master.
-        command: |
-          if [ "${CIRCLE_BRANCH}" == "release" ]; then
-            aws s3 sync ~/project s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
-          fi
-
-
+          name: application build
+          command: npm i && npm run build
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y awscli
+      - run:
+          name: Deploy to S3 if branch is Master.
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "release" ]; then
+              aws s3 sync ~/project s3://${AWS_S3_BUCKET_NAME_DEVELOP}/ --exact-timestamps --delete
+            fi
 
   ##
   # Workflow: packaging
@@ -128,7 +124,6 @@ jobs:
           command: sh .circleci/outdated.sh
           when: always
 
-
 workflows:
   commit:
     jobs:
@@ -142,7 +137,7 @@ workflows:
           context: desktop
           requires:
             - setup
-      - deploy:
+      - fordeploy:
           context: desktop
           requires:
             - setup
@@ -166,4 +161,3 @@ workflows:
               only:
                 - develop
                 - build
-                - release
