@@ -70,6 +70,9 @@ jobs:
           name: Run lint
           command: yarn lint:script && yarn lint:style
   deploy:
+    executor:
+      name: default
+    steps:
       - checkout
       - run:
         name: 依存パッケージのインストールやアプリのビルドなど
