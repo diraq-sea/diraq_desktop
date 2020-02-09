@@ -15,7 +15,7 @@
             <span class="committer-name">{{ user(commit.user_id).name }}</span>
             <span class="committer-date">{{ formattedDate(commit.date) }}</span>
             <div class="file-controls">
-              <div class="file-controls-icon" title="View file" @click="viewFile(commit)">
+              <div class="file-controls-icon" title="View file" @click="viewFile(commit.id)">
                 <i class="fas fa-eye" />
               </div>
               <div class="file-controls-icon" title="Edit file" @click="editFile(commit)">
@@ -268,12 +268,14 @@ export default {
         await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
         await this.$store.dispatch('file/fetchFile', { roomId, fileId })
         this.commitComment = ''
+        const commits = this.file.commits
+        await this.viewFile(commits[commits.length - 1].id)
         this.$set(this.showcomments, this.currentCommit.id, true)
         this.change_viewingCommit(this.currentCommit.id)
       }
     },
     async editFile(commit) {
-      this.viewFile(commit)
+      this.viewFile(commit.id)
       if (this.isModified) {
         this.Warning('You should upload your changes before editing other files.')
         return
@@ -312,10 +314,9 @@ export default {
         }
       }
     },
-    async viewFile(commit) {
+    async viewFile(commitId) {
       const roomId = this.file.room_id
       const fileId = this.file.id
-      const commitId = commit.id
       this.change_viewingCommit(commitId)
       await this.$store.dispatch('file/viewFile', { roomId, fileId, commitId })
       this.scrolltoaCommit(commitId)
