@@ -50,8 +50,8 @@ const windowStore = require('../../store/window.store')
 const tmpStore = require('../../store/tmpfile.store')
 const commitStore = require('../../store/commit.store')
 const corrStore = require('../../store/corr.store')
-const ngrok = require('../../store/ngrok')
-const { TMP_FILES_DIR, TMP_FILE } = require('../../const')
+// const ngrok = require('../../store/ngrok')
+const { TMP_FILES_DIR, TMP_FILE, S3_URL } = require('../../const')
 const fetchAndSaveFile = require('../../utils/fetchAndSaveFile')
 const open = require('../../utils/open')
 
@@ -126,9 +126,11 @@ module.exports = {
 
   [FETCH_FILE]: async ({ roomId, fileId }) => {
     const filedata = (await axios.get(`room/${roomId}/file/${fileId}`)).data
-    const url = ngrok.proxyUrl
+    const url = S3_URL
+    // const url = ngrok.proxyUrl
+    // localhost用URL
     for (let i = 0; i < filedata.commits.length; i++) {
-      filedata.commits[i].url = `${url}/mybucket/${filedata.commits[i].url}`
+      filedata.commits[i].url = `${url}/${filedata.commits[i].url}`
     }
     return filedata
   },

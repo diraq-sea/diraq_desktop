@@ -2,7 +2,7 @@ const path = require('path')
 const HOME_DIR = require('os').homedir()
 const CONFIG_DIR = path.join(HOME_DIR, '.diraq_study')
 
-const { API_BASE_URL, MOCK_ENABLED, NODE_ENV, _NUXT_URL_ } = process.env
+const { API_BASE_URL, MOCK_ENABLED, NODE_ENV, _NUXT_URL_, S3_URL } = process.env
 
 module.exports = {
   CONFIG_DIR,
@@ -24,5 +24,6 @@ module.exports = {
   API_BASE_URL: API_BASE_URL || 'http://localhost:8080/v1',
   PLATFORM: { win32: 'win', darwin: 'mac', linux: 'linux' }[process.platform],
   MOCK_ENABLED: MOCK_ENABLED ? MOCK_ENABLED === 'true' : NODE_ENV === 'development',
+  S3_URL,
   // MINIO_PORT: 9000,
 }
