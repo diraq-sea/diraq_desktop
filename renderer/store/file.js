@@ -43,10 +43,6 @@ export const actions = {
   async fetchFile({ commit }, { roomId, fileId }) {
     const file = await this.$ipc(FETCH_FILE, { roomId, fileId })
     commit('setFile', file)
-    // commit('setCurrentCommitId', {
-    //   fileId: file.id,
-    //   id: file.commits[file.commits.length - 1].id,
-    // })
   },
   async editFile(store, params) {
     await this.$ipc(EDIT_FILE, params)
