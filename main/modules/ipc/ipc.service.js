@@ -130,7 +130,7 @@ module.exports = {
     const url = ngrok.proxyUrl
     // localhost用URL
     for (let i = 0; i < filedata.commits.length; i++) {
-      filedata.commits[i].url = `${url}/${filedata.commits[i].url}`
+      filedata.commits[i].url = `${url}/mybucket/${filedata.commits[i].url}`
     }
     return filedata
   },
