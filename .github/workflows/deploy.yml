@@ -35,5 +35,8 @@ jobs:
       - name: Build and Deploy
         run: npm run build -- --publish always
         env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          MOCK_ENABLED: ${{ secrets.MOCK_ENABLED }}
+          S3_URL: ${{ secrets.S3_URL }}
