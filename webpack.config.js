@@ -2,7 +2,7 @@ import path from 'path'
 import webpack from 'webpack'
 import pkg from './package'
 
-const { API_BASE_URL, MOCK_ENABLED, NODE_ENV, _NUXT_URL_, S3_URL } = process.env
+const { API_BASE_URL, MOCK_ENABLED, NODE_ENV, S3_URL } = process.env
 
 export default {
   entry: { main: path.join(__dirname, 'main') },
@@ -43,7 +43,7 @@ export default {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify({ API_BASE_URL, MOCK_ENABLED, NODE_ENV, _NUXT_URL_, S3_URL }),
+      'process.env': JSON.stringify({ API_BASE_URL, MOCK_ENABLED, NODE_ENV, S3_URL }),
     }),
     new webpack.NoEmitOnErrorsPlugin(),
   ],
