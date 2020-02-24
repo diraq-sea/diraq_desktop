@@ -53,7 +53,8 @@
       "icon": "main/static/icons/icon.ico"
     },
     "linux": {
-      "icon": "main/static/icons"
+      "icon": "main/static/icons",
+      "target": "AppImage"
     }
   },
   "husky": {
